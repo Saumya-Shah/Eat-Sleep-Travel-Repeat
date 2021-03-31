@@ -2,18 +2,43 @@
      AS (SELECT *
          FROM   restaurants
          WHERE  city = 'Las Vegas'),
-     food_specific
+     food_specific_indian
+     AS (SELECT *
+         FROM   city_restaurants
+                natural JOIN restaurants_features rf
+         WHERE  Upper(rf.categories) LIKE '%INDIAN,%'
+                AND rf.covid = 'True' 
+         ORDER  BY rf.stars desc,
+                   rf.review_count desc
+         FETCH first 5 ROWS only),
+    food_specific_chinese
      AS (SELECT *
          FROM   city_restaurants
                 natural JOIN restaurants_features rf
          WHERE  Upper(rf.categories) LIKE '%CHINESE,%'
-                AND rf.covid = 'True'),
+                AND rf.covid = 'True' 
+         ORDER  BY rf.stars desc,
+                   rf.review_count desc
+         FETCH first 5 ROWS only),
+    food_specific_italian
+     AS (SELECT *
+         FROM   city_restaurants
+                natural JOIN restaurants_features rf
+         WHERE  Upper(rf.categories) LIKE '%ITALIAN,%'
+                AND rf.covid = 'True' 
+         ORDER  BY rf.stars desc,
+                   rf.review_count desc
+         FETCH first 5 ROWS only),
      final_table
      AS (SELECT *
-         FROM   food_specific
-         ORDER  BY stars desc,
-                   review_count desc
-         FETCH first 10 ROWS only)
+         FROM   food_specific_indian 
+         UNION 
+         SELECT * 
+         FROM food_specific_italian 
+         UNION 
+         SELECT * 
+         FROM food_specific_chinese         
+         )
 SELECT *
 FROM   final_table
        natural JOIN restaurants_pics rp;  
