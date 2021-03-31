@@ -42,3 +42,22 @@ SELECT *
 FROM final_table
 NATURAL JOIN restaurants
 ORDER BY distance;
+
+
+
+
+ WITH distance_table
+     AS (SELECT Round(111.138 * Sqrt(Power(((latitude) - 45.62), 2)
+                                     + Power(((longitude) + 72.94), 2)), 4) AS
+                distance,
+                business_id
+         FROM   restaurants),
+     distance_table_top
+     AS (SELECT *
+         FROM   distance_table
+         WHERE  distance < 5)
+SELECT *
+FROM   distance_table_top
+       natural JOIN restaurants
+ORDER  BY distance
+FETCH first 50 ROWS only;  
