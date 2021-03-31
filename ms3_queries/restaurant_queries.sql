@@ -70,6 +70,46 @@ ORDER BY distance;
 
 
 
+ WITH distance_table
+     AS (SELECT Round(111.138 * Sqrt(Power(((latitude) - 45.62), 2)
+                                     + Power(((longitude) + 72.94), 2)), 4) AS
+                distance,
+                business_id,
+                postal_code
+         FROM   restaurants),
+     features_joined
+     AS (SELECT *
+         FROM   distance_table
+                natural JOIN restaurants_features),
+     grouped_postal_code
+     AS (SELECT postal_code,
+                Avg(stars) AS avg_rate
+         FROM   features_joined
+         GROUP  BY ( postal_code )),
+     grouped_area_features
+     AS (SELECT *
+         FROM   grouped_postal_code
+                natural JOIN features_joined),
+     top_rating
+     AS (SELECT *
+         FROM   grouped_area_features
+         WHERE  stars >= avg_rate),
+     time_table
+     AS (SELECT business_id
+         FROM   restaurants_time
+         WHERE  monday_start < '15:00'
+                AND monday_end > '15:00'),
+     final_table
+     AS (SELECT *
+         FROM   time_table
+                natural JOIN top_rating)
+SELECT *
+FROM   final_table
+       natural JOIN restaurants
+WHERE  distance < 50
+ORDER  BY distance
+FETCH first 10 ROWS only;  
+
 
  WITH distance_table
      AS (SELECT Round(111.138 * Sqrt(Power(((latitude) - 45.62), 2)
