@@ -1,3 +1,4 @@
+-- Selects top 5 rated Indian, Chinese, Italian restaurants in Las Vegas
  WITH city_restaurants
      AS (SELECT *
          FROM   restaurants
@@ -21,7 +22,7 @@
                    rf.review_count desc
          FETCH first 5 ROWS only),
     food_specific_italian
-     AS (SELECT *
+     AS (SELECT * 
          FROM   city_restaurants
                 natural JOIN restaurants_features rf
          WHERE  Upper(rf.categories) LIKE '%ITALIAN,%'
@@ -30,20 +31,21 @@
                    rf.review_count desc
          FETCH first 5 ROWS only),
      final_table
-     AS (SELECT *
+     AS (SELECT food_specific_indian.*, 'INDIAN' AS CUISINE
          FROM   food_specific_indian 
          UNION 
-         SELECT * 
+         SELECT food_specific_italian.*, 'ITALIAN' AS CUISINE
          FROM food_specific_italian 
          UNION 
-         SELECT * 
+         SELECT food_specific_chinese.*, 'CHINESE' AS CUISINE
          FROM food_specific_chinese         
-         )
-SELECT *
-FROM   final_table
-       natural JOIN restaurants_pics rp;  
-
-
+         ),
+    output 
+    AS (SELECT *
+       FROM final_table ft
+       NATURAL JOIN restaurants_pics rp)
+SELECT name, address, city, state, postal_code, cuisine, stars, review_count, parking, photo_id, caption
+FROM   output order by cuisine;
 
 
 WITH distance_table AS
