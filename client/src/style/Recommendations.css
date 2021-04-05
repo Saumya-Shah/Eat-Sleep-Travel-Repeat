@@ -1,0 +1,21 @@
+.header-container,
+.results-container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.header-container .headers,
+.results-container .restaurantResults {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 40px;
+}
+
+.restaurantResults .name,
+.restaurantResults .address,
+.restaurantResults .city,
+.restaurantResults .state,
+.headers .header {
+  flex: 1 0 25%;
+}
