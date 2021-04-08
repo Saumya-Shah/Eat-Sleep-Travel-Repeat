@@ -3,7 +3,6 @@ select r.business_id, r.name, r.address, r.city, rf.stars, rf.categories
 from restaurants r join restaurants_features rf
 on r.business_id = rf.business_id;
 /* 
-TODO:
 easy query: find all cities(in the united states) that are within 3-hour flight distance to user's location and the flight is non-stop or one-stop
 */
 with current_location as (
@@ -31,7 +30,6 @@ order by distance
 fetch next 100 rows only
 ;
 /* 
-TODO:
 easy query: find all flights that meets the user defined search attributes
 1. source city
 2. destination city
@@ -73,8 +71,6 @@ user_define as(
     select distinct 1 as stops
     from biao0
 )
-
-
 select *
 from biao2
 where sourceCity = 'Chicago'
