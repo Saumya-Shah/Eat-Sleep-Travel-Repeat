@@ -2,6 +2,7 @@ create materialized view restaurants_full (business_id, name, address, city, sta
 select r.business_id, r.name, r.address, r.city, rf.stars, rf.categories 
 from restaurants r join restaurants_features rf
 on r.business_id = rf.business_id;
+
 /* 
 easy query: find all cities(in the united states) that are within 3-hour flight distance to user's location and the flight is non-stop or one-stop
 */
@@ -27,55 +28,9 @@ zero_stop as (
 select *
 from zero_stop
 order by distance
-fetch next 100 rows only
-;
-/* 
-easy query: find all flights that meets the user defined search attributes
-1. source city
-2. destination city
-3. non-stop, one-stop or two-stop
-4. no traveling outside of the original country
-*/
-with biao0 as (
-select distinct ap1.city as sourceCity, ap2.city as destCity, 0 as Stops, ap1.airportid as startid, ap2.airportid as tarid
-from Routes R, Airports ap1, Airports ap2
-where R.source_airportid=ap1.airportid and R.destination_airportid=ap2.airportid and ap1.country='United States' and ap2.country='United States'),
-zero_stop as(
-select sourceCity, destCity, Stops
-from biao0
-),
-biao1 as(
-select distinct b1.sourceCity, b1.destCity as mid, b2.destCity, 1 as Stops
-from biao0 b1, biao0 b2
-where b1.destCity=b2.sourceCity and b1.destCity <> b2.destCity and b1.tarid=b2.startid
-),
+fetch next 100 rows only;
 
-biao21 as(
-select distinct b2.sourceCity as sourceCity, b2.mid, b1.sourceCity as mid2, b1.destCity as destCity, 2 as Stops
-from biao0 b1, biao1 b2
 
-where b2.destCity=b1.sourceCity and b2.destCity <> b1.destCity
-),
-
-biao22 as(
-select distinct b1.sourceCity as sourceCity, b2.sourceCity as mid, b2.mid as mid2, b2.destCity as destCity, 2 as Stops
-from biao0 b1, biao1 b2
-where b1.destCity=b2.sourceCity and b2.destCity <> b1.destCity 
-),
-
-biao2 as(
-select * from biao21
-union
-select * from biao22),
-user_define as(
-    select distinct 1 as stops
-    from biao0
-)
-select *
-from biao2
-where sourceCity = 'Chicago'
-
-;
 /* 
 easy query: recommend user with 10 cities to travel to in the united states
 popular city defination: the city that appears as "destination" in routes table most frequently and has most restaurants with star>3
@@ -95,6 +50,46 @@ select pfc.city
 from popular_flight_city pfc join city_restaurants_cnt cr on pfc.city = cr.city
 order by flt_cnt,rest_cnt DESC 
 fetch next 10 rows only;
+
+
+/* 
+complex query: find all flights that meets the user defined search attributes
+1. source city
+2. destination city
+3. non-stop, one-stop or two-stop
+4. no traveling outside of the original country
+*/
+with biao0 as (
+    select distinct ap1.city as sourceCity, ap2.city as destCity, 0 as Stops, ap1.airportid as startid, ap2.airportid as tarid
+    from Routes R, Airports ap1, Airports ap2
+    where R.source_airportid=ap1.airportid and R.destination_airportid=ap2.airportid and ap1.country='United States' and ap2.country='United States'),
+zero_stop as(
+    select sourceCity, destCity, Stops
+    from biao0),
+biao1 as(
+    select distinct b1.sourceCity, b1.destCity as mid, b2.destCity, 1 as Stops
+    from biao0 b1, biao0 b2
+    where b1.destCity=b2.sourceCity and b1.destCity <> b2.destCity and b1.tarid=b2.startid),
+biao21 as(
+    select distinct b2.sourceCity as sourceCity, b2.mid, b1.sourceCity as mid2, b1.destCity as destCity, 2 as Stops
+    from biao0 b1, biao1 b2
+    where b2.destCity=b1.sourceCity and b2.destCity <> b1.destCity),
+biao22 as(
+    select distinct b1.sourceCity as sourceCity, b2.sourceCity as mid, b2.mid as mid2, b2.destCity as destCity, 2 as Stops
+    from biao0 b1, biao1 b2
+    where b1.destCity=b2.sourceCity and b2.destCity <> b1.destCity ),
+biao2 as(
+    select * from biao21
+    union
+    select * from biao22),
+user_define as(
+    select distinct 1 as stops
+    from biao0
+)
+select *
+from biao2
+where sourceCity = 'Chicago';
+
 
 /* 
 complex query: recommend user with 5 trips(city+restaurant) inside the united states such that
@@ -148,6 +143,7 @@ join restaurants_full rest3 on tpc.city3 = rest3.city
 where rest1.stars > 4 and rest2.stars > 4 and rest3.stars > 4
 ORDER BY RAND()
 fetch next 10 rows only;
+
 
 /* 
 complex query: recommend several restaurants for three users from different cities to meet
