@@ -4,7 +4,7 @@ from restaurants r join restaurants_features rf
 on r.business_id = rf.business_id;
 
 /* 
-easy query: find all cities(in the united states) that are within 3-hour flight distance to user's location and the flight is non-stop or one-stop
+query 1(easy): find all cities(in the united states) that are within 3-hour flight distance to user's location and the flight is non-stop or one-stop
 */
 with current_location as (
     select latitude,longitude,airportid
@@ -32,7 +32,7 @@ fetch next 100 rows only;
 
 
 /* 
-easy query: recommend user with 10 cities to travel to in the united states
+query 2(easy): recommend user with 10 cities to travel to in the united states
 popular city defination: the city that appears as "destination" in routes table most frequently and has most restaurants with star>3
 */
 with popular_flight_city as (
@@ -53,7 +53,7 @@ fetch next 10 rows only;
 
 
 /* 
-complex query: find all flights that meets the user defined search attributes
+query 3(easy): find all flights that meets the user defined search attributes
 1. source city
 2. destination city
 3. non-stop, one-stop or two-stop
@@ -92,7 +92,7 @@ where sourceCity = 'Chicago';
 
 
 /* 
-complex query: recommend user with 10 trips(city+restaurant) inside the united states such that
+query 4(complex): recommend user with 10 trips(city+restaurant) inside the united states such that
 1. all the 3 cities in the trip are popular cities(defined in the previous query)
 2. flights connecting the cities are all non-stop flights and the estimated flight time(based on distance) is less than 3 hours
 3. restaruants have the best total rating stars
@@ -146,7 +146,7 @@ fetch next 10 rows only;
 
 
 /* 
-complex query: recommend several restaurants for three users from different cities to meet
+query 5(complex): recommend several restaurants for three users from different cities to meet
 1. the three users spend roughly the same amount of time on the flight and the time is minimzed
 2. the meet city is a popular city(defined in the previous query)
 3. the cuisine of the restaurants should match at least one of the cuisines requested by users
