@@ -92,7 +92,7 @@ where sourceCity = 'Chicago';
 
 
 /* 
-complex query: recommend user with 5 trips(city+restaurant) inside the united states such that
+complex query: recommend user with 10 trips(city+restaurant) inside the united states such that
 1. all the 3 cities in the trip are popular cities(defined in the previous query)
 2. flights connecting the cities are all non-stop flights and the estimated flight time(based on distance) is less than 3 hours
 3. restaruants have the best total rating stars
