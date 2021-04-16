@@ -13,9 +13,13 @@ export default class Login extends React.Component {
       passwordReg: "",
       firstnameReg: "",
       lastnameReg: "",
+      usernameLog: "",
+      passwordLog: "",
+      loginStatus: "",
     };
 
     this.submitRegistration = this.submitRegistration.bind(this);
+    this.submitLogin = this.submitLogin.bind(this);
   }
 
   submitRegistration() {
@@ -27,6 +31,21 @@ export default class Login extends React.Component {
       lastname: this.state.lastnameReg,
     }).then((response) => {
       console.log(response);
+    });
+  }
+
+  submitLogin() {
+    console.log("Submit login called");
+    Axios.post("http://localhost:8082/login", {
+      username: this.state.usernameLog,
+      password: this.state.passwordLog,
+    }).then((response) => {
+      console.log(response);
+      if (response.data.message) {
+        this.setState({ loginStatus: response.data.message });
+      } else {
+        this.setState({ loginStatus: "Hello " + response.data[0][0] });
+      }
     });
   }
 
@@ -69,15 +88,34 @@ export default class Login extends React.Component {
             className="register-btn"
             onClick={this.submitRegistration}
           >
-            Submit
+            Register
           </button>
         </div>
         <div className="login">
           <h1>Login</h1>
-          <input type="text" placeholder="Username" />
-          <input type="password" placeholder="Password" />
-          <button>Login</button>
+          <input
+            type="text"
+            placeholder="User Name"
+            onChange={(e) => {
+              this.setState({ usernameLog: e.target.value });
+            }}
+          ></input>
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => {
+              this.setState({ passwordLog: e.target.value });
+            }}
+          ></input>
+          <button
+            id="registerBtn"
+            className="register-btn"
+            onClick={this.submitLogin}
+          >
+            Login
+          </button>
         </div>
+        <h2>{this.state.loginStatus}</h2>
       </div>
     );
   }

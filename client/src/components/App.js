@@ -8,7 +8,7 @@ export default class App extends React.Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/" render={() => <Recommendations />} />
+            <Route exact path="/" render={() => <Login />} />
             <Route path="/recommendations" render={() => <Recommendations />} />
             <Route path="/login" render={() => <Login />} />
           </Switch>
