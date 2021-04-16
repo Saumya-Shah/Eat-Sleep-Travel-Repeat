@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/recommendations/:state_name", routes.getRecs);
+app.post("/register", routes.register);
 app.get("/test", routes.getRecs);
 
 app.listen(8082, () => {

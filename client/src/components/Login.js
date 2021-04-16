@@ -2,7 +2,7 @@ import React from "react";
 import PageNavbar from "./PageNavbar";
 import "../style/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import Axios from "axios";
+import Axios from "axios";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -20,16 +20,15 @@ export default class Login extends React.Component {
 
   submitRegistration() {
     console.log("Submit registration called");
+    Axios.post("http://localhost:8082/register", {
+      username: this.state.usernameReg,
+      password: this.state.passwordReg,
+      firstname: this.state.firstnameReg,
+      lastname: this.state.lastnameReg,
+    }).then((response) => {
+      console.log(response);
+    });
   }
-  //   Axios.post("http://localhost:8082/register", {
-  //     username: this.state.usernameReg,
-  //     password: this.state.passwordReg,
-  //     firstname: this.state.firstnameReg,
-  //     lastname: this.state.lastnameReg,
-  //   }).then((response) => {
-  //     console.log(response);
-  //   });
-  // }
 
   render() {
     return (

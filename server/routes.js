@@ -1,4 +1,6 @@
 const oracledb = require("oracledb");
+oracledb.autoCommit = true;
+const { user } = require("./db-config.js");
 const dbConfig = require("./db-config.js");
 
 dbConfig.connectionLimit = 10;
@@ -27,6 +29,27 @@ const getRecs = async (req, res) => {
   }
 };
 
+const register = async (req, res) => {
+  try {
+    console.log("inside final register");
+    console.log(req.body);
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const username = req.body.username;
+    const password = req.body.password;
+
+    var query = `INSERT INTO user_creds (first_name, last_name, user_name, pwd) VALUES ('Saumya', 'Shah', 'saumya1997', 'saumya123')`;
+    console.log(query);
+    const result = await connection.execute(query);
+    console.log(result);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+};
+
 module.exports = {
   getRecs: getRecs,
+  register: register,
 };
