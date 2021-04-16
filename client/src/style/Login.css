@@ -1,0 +1,21 @@
+body {
+  background-color: lightgrey;
+  color: lightgrey;
+}
+
+.Login {
+  text-align: center;
+}
+
+.registration,
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+input {
+  width: 250px;
+  height: 40px;
+}

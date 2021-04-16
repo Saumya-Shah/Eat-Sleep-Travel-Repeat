@@ -6,14 +6,20 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json);
 
 app.get("/recommendations/:state_name", routes.getRecs);
+// app.post("/register/", (req, res) => {
+//   console.log("called");
+//   res.end();
+// });
 app.get("/test", routes.getRecs);
 
-app.listen(8082, () => {
-  console.log(`Server listening on PORT 8082`);
+app.listen(8084, () => {
+  console.log(`Server listening on PORT 8084`);
 });
 
 process.on("SIGINT", function () {
