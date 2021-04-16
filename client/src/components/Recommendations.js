@@ -26,9 +26,8 @@ export default class Recommendations extends React.Component {
   }
 
   submitrestaurant() {
-    console.log("submitting restaurant");
     fetch(
-      "http://localhost:8084/recommendations/" + this.state.restaurantName,
+      "http://localhost:8082/recommendations/" + this.state.restaurantName,
       {
         method: "GET", // The type of HTTP request.
       }
