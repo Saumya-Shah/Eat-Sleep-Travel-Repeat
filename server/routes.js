@@ -2,7 +2,9 @@ const oracledb = require("oracledb");
 oracledb.autoCommit = true;
 const { user } = require("./db-config.js");
 const dbConfig = require("./db-config.js");
+const bcrypt = require("bcrypt");
 
+const saltRounds = 10;
 dbConfig.connectionLimit = 10;
 let connection;
 async function set_connection() {
@@ -38,13 +40,15 @@ const register = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
+    hash = bcrypt.hashSync(password, saltRounds);
+
     var query = `INSERT INTO user_creds (first_name, last_name, user_name, pwd) VALUES (:first_name, :last_name, :user_name, :pwd)`;
     console.log(query);
     const result = await connection.execute(query, [
       firstname,
       lastname,
       username,
-      password,
+      hash,
     ]);
     console.log(result);
   } catch (err) {
@@ -60,16 +64,29 @@ const login = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    var query = `SELECT * FROM user_creds WHERE user_name= :username AND pwd= :password`;
+    var query = `SELECT * FROM user_creds WHERE user_name= :username`;
     console.log(query);
-    const result = await connection.execute(query, [username, password]);
+    const result = await connection.execute(query, [username], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
     console.log(result);
     if (result.rows.length > 0) {
-      res.json(result.rows);
+      bcrypt.compare(password, result.rows[0].PWD, (err, ans) => {
+        console.log(ans);
+        if (ans) {
+          console.log("Password matched!!");
+          req.session.user = result.rows[0];
+          console.log(req.session.user);
+          res.json(result.rows);
+        } else {
+          console.log("Not matched");
+          res.json({ message: "Wrong username/password combination!" });
+        }
+      });
       console.log("Found");
     } else {
       console.log("Not Found");
-      res.json({ message: "Wrong username/password combination!" });
+      res.json({ message: "User doesn't exist!" });
     }
   } catch (err) {
     console.log(err);

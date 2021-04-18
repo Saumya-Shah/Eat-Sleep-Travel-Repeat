@@ -4,6 +4,7 @@ import "../style/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 
+Axios.defaults.withCredentials = true;
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -44,8 +45,18 @@ export default class Login extends React.Component {
       if (response.data.message) {
         this.setState({ loginStatus: response.data.message });
       } else {
-        this.setState({ loginStatus: "Hello " + response.data[0][0] });
+        this.setState({ loginStatus: "Hello " + response.data[0].FIRST_NAME });
       }
+    });
+  }
+
+  componentDidMount() {
+    Axios.get("http://localhost:8082/login").then((response) => {
+      console.log(response.data);
+      if (response.data.loggedIn)
+        this.setState({
+          loginStatus: "Hello " + response.data.user.FIRST_NAME,
+        });
     });
   }
 
