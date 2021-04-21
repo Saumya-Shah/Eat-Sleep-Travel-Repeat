@@ -15,10 +15,48 @@ set_connection();
 
 const getRecs = async (req, res) => {
   try {
-    var state_name = req.params.state_name;
 
-    var query = `SELECT * FROM restaurants WHERE state = :state_name FETCH first 5 ROWS only`;
-    const result = await connection.execute(query, [state_name], {
+    var cru = req.body.cru;
+    var city_name = req.body.city;
+
+let query=`with city_restaurants as (select * from restaurants where city=:city_name),
+ food_indian as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%INDIAN,%' and rf.covid='True'
+ order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
+ food_italian as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%ITALIAN,%' and rf.covid='True'
+ order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
+ food_chinese as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%CHINESE,%' and rf.covid='True'
+ order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
+ final_table as( (select food_indian.*,'INDIAN' as cruisine from food_indian) union
+ (select food_italian.*,'ITALIAN' as cruisine from food_italian) union
+ (select food_chinese.*,'CHINESE' as cruisine from food_chinese) ),
+  output as (select * from final_table ft natural join restaurants_pics rp)
+  select name, address,city,state from output`;
+
+
+    if (cru==="Indian"){
+
+      query =  `WITH city_restaurants AS (SELECT * FROM restaurants WHERE city = :city_name),
+          output AS ( SELECT * FROM city_restaurants natural JOIN restaurants_features rf
+         WHERE rf.covid = 'True' and Upper(rf.categories)  LIKE '%INDIAN,%' ORDER BY rf.stars desc, rf.review_count desc FETCH first 5 ROWS only)
+         select name,address,city,state from output `;
+    }
+    else if (cru==="Chinese"){
+      query = `WITH city_restaurants AS  ( SELECT * FROM restaurants WHERE city = :city_name  ),
+         output AS ( SELECT * FROM city_restaurants natural JOIN restaurants_features rf 
+          WHERE rf.covid = 'True' and Upper(rf.categories) LIKE '%CHINESE,%' ORDER BY rf.stars desc, rf.review_count desc 
+        FETCH first 5 ROWS only )
+         SELECT name, address, city, state FROM output `;
+    }
+    else if (cru==="Italian"){
+      query=`WITH city_restaurants AS (SELECT * FROM restaurants WHERE city = :city_name),
+          output AS ( SELECT * FROM city_restaurants natural JOIN restaurants_features rf
+         WHERE rf.covid = 'True' and Upper(rf.categories)  LIKE '%ITALIAN,%' ORDER BY rf.stars desc, rf.review_count desc 
+         FETCH first 5 ROWS only)
+         select name,address,city,state from output `;
+    }
+    
+
+    const result = await connection.execute(query, [city_name], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
     console.log(result.metaData);

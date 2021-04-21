@@ -28,7 +28,8 @@ app.use(
     cookie: { expires: 60 * 60 * 24 },
   })
 );
-app.get("/recommendations/:state_name", routes.getRecs);
+
+app.post("/recommendations", routes.getRecs);
 app.post("/register", routes.register);
 app.post("/login", routes.login);
 app.get("/login", (req, res) => {
