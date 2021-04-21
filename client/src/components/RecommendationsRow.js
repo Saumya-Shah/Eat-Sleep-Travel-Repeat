@@ -1,6 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Box, Flex, Image } from "rebass";
+import StarRatings from "react-star-ratings";
+
 export default class RecommendationsRow extends React.Component {
   /* ---- Q2 (Recommendations) ---- */
   render() {
@@ -15,6 +17,15 @@ export default class RecommendationsRow extends React.Component {
             <p>
               {this.props.address} , {this.props.city}, {this.props.state}
             </p>
+            <StarRatings
+              rating={3}
+              starRatedColor="ffffff"
+              numberOfStars={5}
+              name="rating"
+              starDimension="20px"
+              starSpacing="1px"
+            ></StarRatings>
+            <p> 10 reviews</p>
           </Box>
         </Flex>
       </div>
