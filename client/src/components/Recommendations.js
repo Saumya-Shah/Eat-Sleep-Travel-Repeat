@@ -1,5 +1,4 @@
 import React from "react";
-import PageNavbar from "./PageNavbar";
 import RecommendationsRow from "./RecommendationsRow";
 import "../style/Recommendations.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -107,10 +106,8 @@ handlecrusineNameChange(e) {
   render() {
     return (
       <div className="Recommendations">
-        <PageNavbar active="recommendations" />
-
         <div className="container recommendations-container">
-          <div className="jumbotron">
+          <div className="jumbotron jumbotron-custom">
             <div className="h5">Restaurant Recommendations</div>
             <br></br>
             <div className="input-container">
@@ -147,20 +144,6 @@ handlecrusineNameChange(e) {
             </div>
             <div className="header-container">
               <div className="h6">You may like ...</div>
-              <div className="headers">
-                <div className="header">
-                  <strong>Name</strong>
-                </div>
-                <div className="header">
-                  <strong>Address</strong>
-                </div>
-                <div className="header">
-                  <strong>City</strong>
-                </div>
-                <div className="header">
-                  <strong>State</strong>
-                </div>
-              </div>
             </div>
             <div className="results-container" id="results">
               {this.state.recrestaurants}

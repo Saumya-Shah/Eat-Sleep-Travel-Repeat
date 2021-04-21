@@ -1,5 +1,4 @@
 import React from "react";
-import PageNavbar from "./PageNavbar";
 import "../style/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
@@ -17,12 +16,13 @@ export default class Login extends React.Component {
       usernameLog: "",
       passwordLog: "",
       loginStatus: "",
-      loggedIn: "",
+      loggedIn: false,
     };
 
     this.submitRegistration = this.submitRegistration.bind(this);
     this.render_login_page = this.render_login_page.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   submitRegistration() {
@@ -55,6 +55,13 @@ export default class Login extends React.Component {
     });
   }
 
+  handleLogout() {
+    console.log("Logging out");
+    Axios.get("http://localhost:8082/logout").then((response) => {
+      this.setState({ loggedIn: false });
+    });
+  }
+
   componentDidMount() {
     Axios.get("http://localhost:8082/login").then((response) => {
       // console.log(response.data);
@@ -72,37 +79,52 @@ export default class Login extends React.Component {
   render_login_page() {
     if (this.state.loggedIn === true) {
       console.log("Logged In");
-      return <h1> {this.state.loginStatus + ", welcome! "}</h1>;
+      return (
+        <div className="registration">
+          <h1> {this.state.loginStatus + ", welcome! "}</h1>
+          <button
+            id="registerBtn"
+            className="button2"
+            onClick={this.handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      );
     } else {
       // console.log("Not logged in, trying to render");
       return (
         <div>
           {" "}
           <div className="registration">
-            <h1>Registration</h1>
-            <label>First Name</label>
+            <h2>Register</h2>
+            <label className="label">First Name </label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ firstnameReg: e.target.value });
               }}
             ></input>
-            <label>Last Name</label>
+            <label className="label">Last Name</label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ lastnameReg: e.target.value });
               }}
             ></input>
-            <label>User Name</label>
+            <label className="label">User Name</label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ usernameReg: e.target.value });
               }}
             ></input>
-            <label>Password</label>
+            <label className="label">Password</label>
             <input
+              className="defaultTextBox"
               type="password"
               onChange={(e) => {
                 this.setState({ passwordReg: e.target.value });
@@ -110,15 +132,22 @@ export default class Login extends React.Component {
             ></input>
             <button
               id="registerBtn"
-              className="register-btn"
+              className="button2"
               onClick={this.submitRegistration}
             >
               Register
             </button>
           </div>
+          <br />
+          <br />
           <div className="login">
-            <h1>Login</h1>
+            <h3>
+              {" "}
+              Already have an account? <br />
+              Login
+            </h3>
             <input
+              className="defaultTextBox"
               type="text"
               placeholder="User Name"
               onChange={(e) => {
@@ -126,6 +155,7 @@ export default class Login extends React.Component {
               }}
             ></input>
             <input
+              className="defaultTextBox"
               type="password"
               placeholder="Password"
               onChange={(e) => {
@@ -133,8 +163,8 @@ export default class Login extends React.Component {
               }}
             ></input>
             <button
+              className="button2"
               id="registerBtn"
-              className="register-btn"
               onClick={this.submitLogin}
             >
               Login
@@ -148,7 +178,6 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="Login">
-        <PageNavbar active="login" />
         {this.render_login_page()}
         <h2>{this.state.loggedIn}</h2>
       </div>

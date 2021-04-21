@@ -33,12 +33,18 @@ app.post("/recommendations", routes.getRecs);
 app.post("/register", routes.register);
 app.post("/login", routes.login);
 app.get("/login", (req, res) => {
-  if (req.session.user) {
+  if (req.session.user != null) {
     res.send({ loggedIn: true, user: req.session.user });
   } else {
     res.send({ loggedIn: false });
   }
 });
+
+app.get("/logout", (req, res) => {
+  req.session.user = null;
+  res.send({ loggedIn: false });
+});
+
 app.get("/test", routes.getRecs);
 
 app.listen(8082, () => {
