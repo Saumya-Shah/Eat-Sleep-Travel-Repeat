@@ -18,6 +18,6 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mysql": "^2.17.1",
-    "oracledb": "^5.1.0"
+    "oracledb": "github:oracle/node-oracledb#v5.1.0"
   }
 }
