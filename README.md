@@ -5,3 +5,10 @@ Based on the passion and demand to travel and enjoy delicious food post pandemic
 This is a class project for CIS 550.
 
 Contributors: Megha Mishra, Saumya Shah, Shumin Yuan, Zhuo Chen
+
+
+Install oracle db as per the instructions here: http://oracle.github.io/node-oracledb/INSTALL.html
+
+Run `npm install` from client and server directory.
+
+Run `npm start` from client and server directory.
