@@ -1,5 +1,4 @@
 import React from "react";
-import PageNavbar from "./PageNavbar";
 import "../style/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
@@ -17,12 +16,13 @@ export default class Login extends React.Component {
       usernameLog: "",
       passwordLog: "",
       loginStatus: "",
-      loggedIn: "",
+      loggedIn: false,
     };
 
     this.submitRegistration = this.submitRegistration.bind(this);
     this.render_login_page = this.render_login_page.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   submitRegistration() {
@@ -55,6 +55,13 @@ export default class Login extends React.Component {
     });
   }
 
+  handleLogout() {
+    console.log("Logging out");
+    Axios.get("http://localhost:8082/logout").then((response) => {
+      this.setState({ loggedIn: false });
+    });
+  }
+
   componentDidMount() {
     Axios.get("http://localhost:8082/login").then((response) => {
       // console.log(response.data);
@@ -72,7 +79,18 @@ export default class Login extends React.Component {
   render_login_page() {
     if (this.state.loggedIn === true) {
       console.log("Logged In");
-      return <h1> {this.state.loginStatus + ", welcome! "}</h1>;
+      return (
+        <div className="registration">
+          <h1> {this.state.loginStatus + ", welcome! "}</h1>
+          <button
+            id="registerBtn"
+            className="button2"
+            onClick={this.handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      );
     } else {
       // console.log("Not logged in, trying to render");
       return (
@@ -160,7 +178,6 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="Login">
-        {/* <PageNavbar active="login" /> */}
         {this.render_login_page()}
         <h2>{this.state.loggedIn}</h2>
       </div>

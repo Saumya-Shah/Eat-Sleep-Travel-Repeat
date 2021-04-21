@@ -4,6 +4,8 @@ import Recommendations from "./Recommendations";
 import Login from "./Login";
 import SideNavbar from "./SideNavbar";
 import Personals from "./Personals";
+import PrivateRoute from "./PrivateRoute";
+
 export default class App extends React.Component {
   render() {
     return (
@@ -12,9 +14,9 @@ export default class App extends React.Component {
           <SideNavbar />
           <Switch>
             <Route exact path="/" render={() => <Login />} />
-            <Route path="/recommendations" render={() => <Recommendations />} />
+            <PrivateRoute path="/recommendations" component={Recommendations} />
             <Route path="/login" render={() => <Login />} />
-            <Route path="/personals" render={() => <Personals />} />
+            <PrivateRoute path="/personals" component={Personals} />
           </Switch>
         </Router>
       </div>
