@@ -1,8 +1,20 @@
 .Login {
-  color: lightgrey;
+  color: black;
   text-align: center;
 }
-
+.defaultTextBox {
+  padding: 10px;
+  height: 40px;
+  position: relative;
+  left: 0;
+  outline: none;
+  border: 1px solid #cccccc;
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: cccccc;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-top: 5px;
+}
 .registration,
 .login {
   display: flex;
@@ -10,8 +22,26 @@
   justify-content: center;
   align-items: center;
 }
+.label {
+  margin-bottom: -5px;
+}
 
 input {
   width: 250px;
   height: 40px;
+}
+
+.button2 {
+  display: block;
+  align-items: center;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: cccccc;
+}
+
+.button2:hover {
+  background-color: aliceblue;
 }

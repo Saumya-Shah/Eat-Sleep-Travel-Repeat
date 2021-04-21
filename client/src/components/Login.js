@@ -79,30 +79,34 @@ export default class Login extends React.Component {
         <div>
           {" "}
           <div className="registration">
-            <h1>Registration</h1>
-            <label>First Name</label>
+            <h2>Register</h2>
+            <label className="label">First Name </label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ firstnameReg: e.target.value });
               }}
             ></input>
-            <label>Last Name</label>
+            <label className="label">Last Name</label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ lastnameReg: e.target.value });
               }}
             ></input>
-            <label>User Name</label>
+            <label className="label">User Name</label>
             <input
+              className="defaultTextBox"
               type="text"
               onChange={(e) => {
                 this.setState({ usernameReg: e.target.value });
               }}
             ></input>
-            <label>Password</label>
+            <label className="label">Password</label>
             <input
+              className="defaultTextBox"
               type="password"
               onChange={(e) => {
                 this.setState({ passwordReg: e.target.value });
@@ -110,15 +114,22 @@ export default class Login extends React.Component {
             ></input>
             <button
               id="registerBtn"
-              className="register-btn"
+              className="button2"
               onClick={this.submitRegistration}
             >
               Register
             </button>
           </div>
+          <br />
+          <br />
           <div className="login">
-            <h1>Login</h1>
+            <h3>
+              {" "}
+              Already have an account? <br />
+              Login
+            </h3>
             <input
+              className="defaultTextBox"
               type="text"
               placeholder="User Name"
               onChange={(e) => {
@@ -126,6 +137,7 @@ export default class Login extends React.Component {
               }}
             ></input>
             <input
+              className="defaultTextBox"
               type="password"
               placeholder="Password"
               onChange={(e) => {
@@ -133,8 +145,8 @@ export default class Login extends React.Component {
               }}
             ></input>
             <button
+              className="button2"
               id="registerBtn"
-              className="register-btn"
               onClick={this.submitLogin}
             >
               Login
@@ -148,7 +160,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="Login">
-        <PageNavbar active="login" />
+        {/* <PageNavbar active="login" /> */}
         {this.render_login_page()}
         <h2>{this.state.loggedIn}</h2>
       </div>

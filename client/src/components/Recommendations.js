@@ -77,10 +77,8 @@ export default class Recommendations extends React.Component {
   render() {
     return (
       <div className="Recommendations">
-        <PageNavbar active="recommendations" />
-
         <div className="container recommendations-container">
-          <div className="jumbotron">
+          <div className="jumbotron jumbotron-custom">
             <div className="h5">Restaurant Recommendations</div>
             <br></br>
             <div className="input-container">
@@ -102,20 +100,6 @@ export default class Recommendations extends React.Component {
             </div>
             <div className="header-container">
               <div className="h6">You may like ...</div>
-              <div className="headers">
-                <div className="header">
-                  <strong>Name</strong>
-                </div>
-                <div className="header">
-                  <strong>Address</strong>
-                </div>
-                <div className="header">
-                  <strong>City</strong>
-                </div>
-                <div className="header">
-                  <strong>State</strong>
-                </div>
-              </div>
             </div>
             <div className="results-container" id="results">
               {this.state.recrestaurants}
