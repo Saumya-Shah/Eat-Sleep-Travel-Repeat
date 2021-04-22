@@ -11,32 +11,32 @@ export default class Recommendations extends React.Component {
 
     this.state = {
       restaurantName: "Las Vegas",
-      crusine:"all",
+      crusine: "all",
       recrestaurants: [],
     };
-    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
-    this.handlecrusineNameChange = this.handlecrusineNameChange.bind( this);
+    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(
+      this
+    );
+    this.handlecrusineNameChange = this.handlecrusineNameChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
-    
   }
-
 
   handlerestaurantNameChange(e) {
     this.setState({
       restaurantName: e.target.value,
     });
   }
-// changed here crusine
-handlecrusineNameChange(e) {
-  this.setState({
-    crusine: e,
-  });
-}
+  // changed here crusine
+  handlecrusineNameChange(e) {
+    this.setState({
+      crusine: e,
+    });
+  }
 
   submitrestaurant() {
     // let cru = this.state.crusine;
     // let rest = this.state.restaurantName;
-    
+
     // if (rest===""){
     //   rest="PA";
     // }
@@ -47,26 +47,24 @@ handlecrusineNameChange(e) {
 
     // console.log(rest);
     // console.log(cru);
-   
 
-    const url = new URL('http://localhost:8082/recommendations/');
+    const url = new URL("http://localhost:8082/recommendations/");
 
     // const queryParams = {rest: rest, cru: cru};
     // Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
     // console.log(url);
 
-   Axios.post(
-      url,  {
-      cru :this.state.crusine,
-      city:this.state.restaurantName,
-      }      
-    ).then(
+    Axios.post(url, {
+      cru: this.state.crusine,
+      city: this.state.restaurantName,
+    })
+      .then(
         (res) => {
           // Convert the response data to a JSON.
           console.log("in client");
           console.log(res);
           console.log("before return   ==========      ");
-          return res.data
+          return res.data;
         },
         (err) => {
           // Print the error if there is one.
@@ -87,6 +85,8 @@ handlecrusineNameChange(e) {
                 address={restaurantObj.ADDRESS}
                 city={restaurantObj.CITY}
                 state={restaurantObj.STATE}
+                stars={restaurantObj.STARS}
+                reviews={restaurantObj.REVIEW_COUNT}
               />
             )
           );
@@ -120,12 +120,19 @@ handlecrusineNameChange(e) {
                 className="restaurant-input"
               />
 
-          <select onChange={(val) => this.handlecrusineNameChange(val.target.value)} className="btn btn-sm btn-outline-secondary dropdown-toggle">
-              <option value="Indian">Indian</option>
-              <option value="Chinese" >Chinese</option>
-              <option value="Italian">Italian</option>
-              <option selected value="All">all</option>
-          </select>
+              <select
+                onChange={(val) =>
+                  this.handlecrusineNameChange(val.target.value)
+                }
+                className="btn btn-sm btn-outline-secondary dropdown-toggle"
+              >
+                <option value="Indian">Indian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Italian">Italian</option>
+                <option selected value="All">
+                  all
+                </option>
+              </select>
               {/* <input
                 type="text"
                 placeholder="Enter crusine Name"

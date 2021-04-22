@@ -18,14 +18,14 @@ export default class RecommendationsRow extends React.Component {
               {this.props.address} , {this.props.city}, {this.props.state}
             </p>
             <StarRatings
-              rating={3}
+              rating={this.props.stars}
               starRatedColor="ffffff"
               numberOfStars={5}
               name="rating"
               starDimension="20px"
               starSpacing="1px"
             ></StarRatings>
-            <p> 10 reviews</p>
+            <p> {this.props.reviews} reviews</p>
           </Box>
         </Flex>
       </div>

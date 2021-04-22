@@ -9576,6 +9576,13 @@
     "@babel/runtime" "^7.12.1"
     "tailwindcss" ">=1.9.6"
 
+"react-native-radio-button-group@^1.0.3":
+  "integrity" "sha512-4zLOHi0sLjBOTBG+t+Rmx3syvS2P5AccRsnMljJn3kBLMm6vbIdxhYcmxb1IFikk1B/GnJTwdsHMJop8AxX4/A=="
+  "resolved" "https://registry.npmjs.org/react-native-radio-button-group/-/react-native-radio-button-group-1.0.3.tgz"
+  "version" "1.0.3"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-overlays@^2.1.0":
   "integrity" "sha512-tHPGTZosbQSo82yb9x4YCsmJJtspKvAPL5kXVnyoB2Z5UoAU3VetIuh2VblfVT408us5nLJd9uDtwI3xWDHS6w=="
   "resolved" "https://registry.npmjs.org/react-overlays/-/react-overlays-2.1.0.tgz"

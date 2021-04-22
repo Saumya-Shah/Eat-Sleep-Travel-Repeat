@@ -58,7 +58,7 @@ export default class Login extends React.Component {
   handleLogout() {
     console.log("Logging out");
     Axios.get("http://localhost:8082/logout").then((response) => {
-      this.setState({ loggedIn: false });
+      this.setState({ loggedIn: false, loginStatus: "" });
     });
   }
 
@@ -170,6 +170,7 @@ export default class Login extends React.Component {
               Login
             </button>
           </div>{" "}
+          <p>{this.state.loginStatus}</p>
         </div>
       );
     }

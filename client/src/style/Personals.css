@@ -1,4 +1,4 @@
-/* .header-container,
+.header-container,
 .results-container {
   display: flex;
   flex-flow: column wrap;
@@ -12,10 +12,8 @@
   height: 40px;
 }
 
-.restaurantResults .name,
-.restaurantResults .address,
-.restaurantResults .city,
-.restaurantResults .state,
-.headers .header {
-  flex: 1 0 25%;
-} */
+.jumbotron-custom {
+  width: 100%;
+  background-color: rgba(68, 66, 68, 0.11);
+  text-align: Center;
+}

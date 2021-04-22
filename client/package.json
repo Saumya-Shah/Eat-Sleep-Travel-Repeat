@@ -15,6 +15,7 @@
     "react-dropdown": "^1.6.4",
     "react-icons": "^4.2.0",
     "react-minimal-side-navigation": "^1.8.0",
+    "react-native-radio-button-group": "^1.0.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-star-ratings": "^2.3.0",

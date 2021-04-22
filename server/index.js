@@ -46,7 +46,7 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/test", routes.getRecs);
-
+app.get("/get_favs", routes.getFavoriteRestaurants);
 app.listen(8082, () => {
   console.log(`Server listening on PORT 8082`);
 });
