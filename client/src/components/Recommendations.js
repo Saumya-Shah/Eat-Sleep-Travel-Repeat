@@ -14,13 +14,18 @@ export default class Recommendations extends React.Component {
       recrestaurants: [],
       Latitude: 0,
       Longitude: 0,
+      time_start:'',
+      time_end:'23:59',
       flag: 1,
+      day:'',
       
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
     this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
+    this.handletimestartChange=  this.handletimestartChange.bind(this);
+    this.handletimeendChange = this.handletimeendChange.bind(this);
 
 
   }
@@ -70,6 +75,16 @@ export default class Recommendations extends React.Component {
     console.log(" =========================INSIDE UPDATE=====================");
     console.log("this.state.Latitude", this.state.Latitude);
     console.log("this.state.Longitude", this.state.Longitude);
+
+    let date = new Date();
+    let hours = date.getHours().toString();
+    let minutes = date.getMinutes().toString();
+    let time_now=hours+":"+minutes;
+    console.log("time_now",time_now);
+
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];    
+    var day = days[ date.getDay() ];
+
     const url = new URL('http://localhost:8082/recommendations/');
     Axios.post(
       url, {
@@ -77,7 +92,11 @@ export default class Recommendations extends React.Component {
       lon: this.state.Longitude,
       cru: this.state.crusine,
       city: this.state.restaurantName,
+      ts:time_now,
+      te:this.state.time_end,
+      day:day,
       flag: 1,
+     
     }
     ).then(
       (res) => {
@@ -92,7 +111,7 @@ export default class Recommendations extends React.Component {
       .then(
         (restaurantList) => {
           if (!restaurantList) return;
-          console.log(restaurantList);
+          console.log("restaurantList",restaurantList);
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
           const RecommendationsRowDivs = restaurantList.map(
@@ -114,6 +133,8 @@ export default class Recommendations extends React.Component {
           this.setState({
             recrestaurants: RecommendationsRowDivs,
             restaurantName: restaurantList[0].CITY,
+            day:day,
+            time_start:time_now,
           });
         },
         (err) => {
@@ -131,6 +152,18 @@ export default class Recommendations extends React.Component {
       restaurantName: e.target.value,
     });
   }
+
+  handletimestartChange(e) {
+    this.setState({
+      time_start: e.target.value,
+    });
+  }
+
+  handletimeendChange(e) {
+    this.setState({
+      time_end: e.target.value,
+    });
+  }
   // changed here crusine
 
 
@@ -144,6 +177,9 @@ export default class Recommendations extends React.Component {
       lon: this.state.Longitude,
       cru: this.state.crusine,
       city: this.state.restaurantName,
+      ts:this.state.time_start,
+      te:this.state.time_end,
+      day:this.state.day,
       flag: 0
     }
     ).then(
@@ -211,15 +247,30 @@ export default class Recommendations extends React.Component {
                 id="restaurantName"
                 className="restaurant-input"
               />
-
-
+                <input
+                type="text"
+                placeholder="Enter start time"
+                value={this.state.time_start}
+                onChange={this.handletimestartChange}
+                id="starttime"
+                className="restaurant-input"
+              />
+                <input
+                type="text"
+                placeholder="Enter end time"
+                value={this.state.time_end}
+                onChange={this.handletimeendChange}
+                id="endtime"
+                className="restaurant-input"
+              />
+           <br></br>
             <label>Italian</label>
             <input type="checkbox" value='ITALIAN' onChange={this.onChange.bind(this)} />
             <label>Indian</label>
             <input type="checkbox" value='INDIAN' onChange={this.onChange.bind(this)} />
             <label>Chinese</label>
             <input type="checkbox" value='CHINESE' onChange={this.onChange.bind(this)} />
-      
+           
               <button
                 id="submitrestaurantBtn"
                 className="submit-btn"

@@ -20,9 +20,13 @@ const getRecs = async (req, res) => {
     var lat= req.body.lat;
     var lon= req.body.lon;
     var fl=req.body.flag;
+    var ts=req.body.ts;
+    var te=req.body.te;
+    var ds=req.body.day+"_start";
+    var de=req.body.day+"_end";
     var result="";
     let query="";
-
+    console.log(ds,de);
     if (fl==1){
       query=`WITH distance_table AS ( SELECT round(   111.138 * sqrt(  power(((Latitude) - :lat), 2) + power(((Longitude) + abs(:lon)), 2) ), 4) 
       AS distance, business_id FROM  Restaurants ),
@@ -31,10 +35,13 @@ const getRecs = async (req, res) => {
       grouped_postal_code AS (  SELECT   postal_code,  Avg(stars) AS avg_rate   FROM  features_joined GROUP BY (postal_code)),
     grouped_area_features AS (  SELECT  *  FROM grouped_postal_code natural JOIN features_joined ORDER BY distance),
     top_rating AS (  SELECT * FROM grouped_area_features  WHERE stars >= avg_rate ORDER BY distance),
-      output as (select * from top_rating cr natural join restaurants_pics rp)
+    time_table AS (SELECT business_id FROM  restaurants_time   WHERE friday_start < :ts  AND friday_end > :te),
+    final_table AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
+      output as (select * from final_table cr natural join restaurants_pics rp)
         select name, address,city,state,stars,review_count from output ORDER BY distance fetch first 10 rows only`;
 
-        result = await connection.execute(query, [lat,lon], {
+
+        result = await connection.execute(query, [lat,lon,ts,te], {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
      }
@@ -43,13 +50,16 @@ const getRecs = async (req, res) => {
 else{
     if (cru.length===1){
       let s='%'+cru[0]+',%';
+     
       query=`with city_restaurants as (select * from restaurants where UPPER(city)=:city_name),
       food as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like :s  and rf.covid='True'
       order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
-        output as (select * from food ft natural join restaurants_pics rp)
+      time_table AS (SELECT business_id FROM  restaurants_time    WHERE friday_start < :ts  AND friday_end > :te),
+      final_table AS (  SELECT  *  FROM  time_table natural  JOIN food),
+        output as (select * from final_table cr natural join restaurants_pics rp)
         select name, address,city,state ,stars,review_count from output`;
 
-        result = await connection.execute(query, [city_name,s], {
+        result = await connection.execute(query, [city_name,s,ts,te], {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
     }
@@ -62,12 +72,13 @@ else{
       order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
       food2 as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like :s2 and rf.covid='True'
       order by rf.stars desc, rf.review_count desc fetch first 5 rows only),
-      final_table as( (select * from food1) union
-      (select * from food2)),
-       output as (select * from final_table ft natural join restaurants_pics rp)
+      final_table as( (select * from food1) union(select * from food2)),
+      time_table AS (SELECT business_id FROM  restaurants_time    WHERE friday_start < :ts  AND friday_end > :te),
+      final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN final_table),
+       output as (select * from final_table2 ft natural join restaurants_pics rp)
        select name, address,city,state ,stars,review_count from output`;
 
-        result = await connection.execute(query, [city_name,s1,s2], {
+        result = await connection.execute(query, [city_name,s1,s2,ts,te], {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }); 
     }
@@ -83,24 +94,26 @@ else{
       final_table as( (select food_indian.*,'INDIAN' as cruisine from food_indian) union
       (select food_italian.*,'ITALIAN' as cruisine from food_italian) union
       (select food_chinese.*,'CHINESE' as cruisine from food_chinese) ),
-        output as (select * from final_table ft natural join restaurants_pics rp)
+      time_table AS (SELECT business_id FROM  restaurants_time  WHERE friday_start < :ts  AND friday_end > :te),
+      final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN final_table),
+       output as (select * from final_table2 ft natural join restaurants_pics rp)
         select name, address,city,state ,stars,review_count from output`;
 
-        result = await connection.execute(query, [city_name], {
+        result = await connection.execute(query, [city_name,ts,te], {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         }); 
   }
   else{
-    console
+    console.log(" in elseeeeeeeeeeeeeeeeee");
+    console.log(te,ts);
     query=`WITH city_name_closest AS (select * from restaurants where  UPPER(city)=:city_name),
     features_joined AS (   SELECT    *   FROM  city_name_closest natural JOIN restaurants_features),
-    grouped_postal_code AS (  SELECT   postal_code,  Avg(stars) AS avg_rate   FROM  features_joined GROUP BY (postal_code)),
-  grouped_area_features AS (  SELECT  *  FROM grouped_postal_code natural JOIN features_joined),
-  top_rating AS (  SELECT * FROM grouped_area_features  WHERE stars >= avg_rate ),
-    output as (select * from top_rating cr natural join restaurants_pics rp)
+  time_table AS (SELECT business_id FROM  restaurants_time   WHERE friday_start < :ts  AND friday_end > :te),
+  final_table AS (  SELECT  *  FROM  time_table natural  JOIN features_joined),
+   output as (select * from final_table ft natural join restaurants_pics rp)
       select name, address,city,state,stars,review_count from output fetch first 10 rows only`;
 
-      result = await connection.execute(query, [city_name], {
+      result = await connection.execute(query, [city_name,ts,te], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
       }); 
   }
