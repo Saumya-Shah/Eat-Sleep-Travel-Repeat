@@ -10,18 +10,39 @@ export default class Recommendations extends React.Component {
 
     this.state = {
       restaurantName: "Las Vegas",
-      crusine: "all",
+      crusine: [],
       recrestaurants: [],
       Latitude: 0,
       Longitude: 0,
       flag: 1,
+      
     };
-    this.componentDidMount = this.componentDidMount(this);
+    // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
     this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
-    this.handlecrusineNameChange = this.handlecrusineNameChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
 
+
+  }
+
+  onChange(e) {
+    // current array of options
+    const options = this.state.crusine
+    let index
+
+    // check if the check box is checked or unchecked
+    if (e.target.checked) {
+      // add the numerical value of the checkbox to options array
+      options.push(e.target.value);
+    } else {
+      // or remove the value from the unchecked checkbox from the array
+      index = options.indexOf(e.target.value);
+      options.splice(index, 1);
+    }
+
+    // update the state with the new array of options
+    this.setState({ crusine: options });
+    console.log(this.state.crusine);
 
   }
 
@@ -111,11 +132,7 @@ export default class Recommendations extends React.Component {
     });
   }
   // changed here crusine
-  handlecrusineNameChange(e) {
-    this.setState({
-      crusine: e,
-    });
-  }
+
 
   submitrestaurant() {
 
@@ -195,27 +212,14 @@ export default class Recommendations extends React.Component {
                 className="restaurant-input"
               />
 
-              <select
-                onChange={(val) =>
-                  this.handlecrusineNameChange(val.target.value)
-                }
-                className="btn btn-sm btn-outline-secondary dropdown-toggle"
-              >
-                <option value="Indian">Indian</option>
-                <option value="Chinese">Chinese</option>
-                <option value="Italian">Italian</option>
-                <option selected value="All">
-                  all
-                  </option>
-              </select>
-              {/* <input
-                  type="text"
-                  placeholder="Enter crusine Name"
-                  value={this.state.crusine}
-                  onChange={this.handlecrusineNameChange}
-                  id="crusinetName"
-                  className="crusine-input"
-                /> */}
+
+            <label>Italian</label>
+            <input type="checkbox" value='ITALIAN' onChange={this.onChange.bind(this)} />
+            <label>Indian</label>
+            <input type="checkbox" value='INDIAN' onChange={this.onChange.bind(this)} />
+            <label>Chinese</label>
+            <input type="checkbox" value='CHINESE' onChange={this.onChange.bind(this)} />
+      
               <button
                 id="submitrestaurantBtn"
                 className="submit-btn"
