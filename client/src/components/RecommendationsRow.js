@@ -28,6 +28,7 @@ export default class RecommendationsRow extends React.Component {
             <p> {this.props.reviews} reviews</p>
           </Box>
         </Flex>
+        <hr class="solid" />
       </div>
     );
   }
