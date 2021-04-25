@@ -1,6 +1,7 @@
 import React from "react";
 import RecommendationsRow from "./RecommendationsRow";
 import "../style/Recommendations.css";
+import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 
@@ -18,6 +19,7 @@ export default class Recommendations extends React.Component {
       time_end:'23:59',
       flag: 1,
       day:'',
+      star:1,
       
     };
     // this.componentDidMount = this.componentDidMount(this);
@@ -26,26 +28,23 @@ export default class Recommendations extends React.Component {
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange=  this.handletimestartChange.bind(this);
     this.handletimeendChange = this.handletimeendChange.bind(this);
+    this.handleRadioChange=this.handleRadioChange.bind(this);
 
 
   }
 
   onChange(e) {
-    // current array of options
+
     const options = this.state.crusine
     let index
-
-    // check if the check box is checked or unchecked
     if (e.target.checked) {
-      // add the numerical value of the checkbox to options array
+
       options.push(e.target.value);
     } else {
-      // or remove the value from the unchecked checkbox from the array
+
       index = options.indexOf(e.target.value);
       options.splice(index, 1);
     }
-
-    // update the state with the new array of options
     this.setState({ crusine: options });
     console.log(this.state.crusine);
 
@@ -71,8 +70,9 @@ export default class Recommendations extends React.Component {
 
 
 
+
   getUpdate() {
-    console.log(" =========================INSIDE UPDATE=====================");
+  
     console.log("this.state.Latitude", this.state.Latitude);
     console.log("this.state.Longitude", this.state.Longitude);
 
@@ -84,7 +84,7 @@ export default class Recommendations extends React.Component {
 
     var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];    
     var day = days[ date.getDay() ];
-
+  
     const url = new URL('http://localhost:8082/recommendations/');
     Axios.post(
       url, {
@@ -96,6 +96,7 @@ export default class Recommendations extends React.Component {
       te:this.state.time_end,
       day:day,
       flag: 1,
+      star:this.state.star,
      
     }
     ).then(
@@ -164,7 +165,14 @@ export default class Recommendations extends React.Component {
       time_end: e.target.value,
     });
   }
-  // changed here crusine
+
+  handleRadioChange(event) {
+    let s=parseInt(event.target.value)
+    console.log(" s iss", s)
+    this.setState({
+      star: s,
+    });
+  }
 
 
   submitrestaurant() {
@@ -180,6 +188,7 @@ export default class Recommendations extends React.Component {
       ts:this.state.time_start,
       te:this.state.time_end,
       day:this.state.day,
+      star:this.state.star,
       flag: 0
     }
     ).then(
@@ -233,6 +242,7 @@ export default class Recommendations extends React.Component {
 
 
     return (
+      
       <div className="Recommendations">
         <div className="container recommendations-container">
           <div className="jumbotron jumbotron-custom">
@@ -270,7 +280,28 @@ export default class Recommendations extends React.Component {
             <input type="checkbox" value='INDIAN' onChange={this.onChange.bind(this)} />
             <label>Chinese</label>
             <input type="checkbox" value='CHINESE' onChange={this.onChange.bind(this)} />
-           
+            {/* <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> */}
+            <div class="txt-center">
+              <form>
+              <div class="rating">
+                 
+                  <input id="star5" name="star" type="radio" value="5" class="radio-btn hide" checked={this.state.star.toString() === "5"}  onChange={this.handleRadioChange} />
+                  <label for="star5">☆</label>
+                  <input id="star4" name="star" type="radio" value="4" class="radio-btn hide" checked={this.state.star.toString() === "4"}  onChange={this.handleRadioChange} />
+                  <label for="star4">☆</label>
+                  <input id="star3" name="star" type="radio" value="3" class="radio-btn hide" checked={this.state.star.toString() === "3"}  onChange={this.handleRadioChange} />
+                  <label for="star3">☆</label>
+                  <input id="star2" name="star" type="radio" value="2" class="radio-btn hide" checked={this.state.star.toString() === "2"}  onChange={this.handleRadioChange} />
+                  <label for="star2">☆</label>
+                  <input id="star1" name="star" type="radio" value="1" class="radio-btn hide" checked={this.state.star.toString() === "1"}  onChange={this.handleRadioChange} />
+                  <label for="star1">☆</label>
+                  <div class="clear"></div>
+              </div>
+              </form>
+          </div>
+
+                    
+
               <button
                 id="submitrestaurantBtn"
                 className="submit-btn"
