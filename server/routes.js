@@ -319,4 +319,6 @@ module.exports = {
   register: register,
   login: login,
   getFavoriteRestaurants: getFavoriteRestaurants,
+  getCity: getCity,
+  FlightSearch: FlightSearch,
 };
