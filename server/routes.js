@@ -177,9 +177,123 @@ const getFavoriteRestaurants = async (req, res) => {
     console.log("end");
   }
 };
+
+
+
+
+const FlightSearch = async (req, res) => {
+  /* TODO: FINISH FLIGHT SEARCH PAGE */
+  try {
+    var sourceCity = req.params.sourceCity;
+    var destCity = req.params.destCity;
+    var stops = req.params.stops;
+    console.log(sourceCity,"here!");
+    
+
+
+
+    var query = `select 1 as sourceCity, 1 as destCity, 1 as time, 1 as airlineid
+    from airports
+    where city='Chicago'`;
+    const result = await connection.execute(query, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    console.log(result.metaData);
+    console.log(result.rows[0]);
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+};
+
+const getCity = async (req, res) => {
+  try {
+    var city_name = req.params.city_name;
+    console.log("[getCity]:city name obtained:", city_name);
+    var query = `with current_location as (
+      select
+          latitude,
+          longitude,
+          airportid
+      from
+          airports
+      where
+          name= :city_name
+  ),
+  distance_table as (
+      select
+          round(
+              111.138 * sqrt(
+                  power(((ap.Latitude) - cl.latitude), 2) + power(((ap.Longitude) - cl.longitude), 2)
+              ),
+              4
+          ) as distance,
+          city,
+          name
+      from
+          airports ap,
+          current_location cl
+  ),
+  city_within_range as(
+      select
+          ap.airportid,
+          ap.name,
+          ap.city,
+          dt.distance,
+          dt.distance / 500 as flight_time
+      from
+          airports ap,
+          distance_table dt
+      where
+          dt.distance / 500 <= 3
+          and dt.name = ap.name
+      order by
+          dt.distance ASC
+  ),
+  zero_stop as (
+      select
+          distinct r.destination_airportid as destination_id,
+          cwr.city,
+          cwr.distance,
+          0 as stop
+      from
+          routes r,
+          airports ap,
+          city_within_range cwr,
+          current_location cl
+      where
+          r.destination_airportid = cwr.airportid
+          and r.source_airportid = cl.airportid
+  )
+  select
+      *
+  from
+      zero_stop
+  order by
+      distance fetch next 5 rows only`;
+    const result = await connection.execute(query, [city_name], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    console.log("result got!");
+    console.log(result.metaData);
+    console.log(result.rows[0]);
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+};
+
+
 module.exports = {
   getRecs: getRecs,
   register: register,
   login: login,
   getFavoriteRestaurants: getFavoriteRestaurants,
+  getCity: getCity,
+  FlightSearch: FlightSearch,
+  
 };

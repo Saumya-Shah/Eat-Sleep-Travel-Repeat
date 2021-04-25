@@ -1,0 +1,18 @@
+.header-container,
+.results-container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.header-container .headers,
+.results-container .CityResults {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 40px;
+}
+
+.CityResults .city,
+.headers .header {
+  flex: 1 0 25%;
+}

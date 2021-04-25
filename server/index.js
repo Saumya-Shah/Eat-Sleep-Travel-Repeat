@@ -32,6 +32,7 @@ app.use(
 app.post("/recommendations", routes.getRecs);
 app.post("/register", routes.register);
 app.post("/login", routes.login);
+
 app.get("/login", (req, res) => {
   if (req.session.user != null) {
     res.send({ loggedIn: true, user: req.session.user });
@@ -46,6 +47,10 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/test", routes.getRecs);
+app.get("/cityaroundme/:city_name",routes.getCity);
+app.get("/FlightSearch/:sourceCity/:destCity/:stops",routes.FlightSearch);
+
+
 app.get("/get_fav_res", routes.getFavoriteRestaurants);
 app.get("/get_visited_res", routes.getFavoriteRestaurants);
 app.get("/get_fav_places", routes.getFavoriteRestaurants);
