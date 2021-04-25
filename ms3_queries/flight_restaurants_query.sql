@@ -120,12 +120,25 @@ order by
     rest_cnt DESC fetch next 10 rows only;
 
 /* 
- query 3(easy): find all flights that meets the user defined search attributes
+ query 3(easy): flight search based on:
  1. source city
  2. destination city
  3. non-stop, one-stop or two-stop
  4. no traveling outside of the original country
+
+ return format:
+ (source_airport, dest_airport, time, airlineid) 
  */
+-- case1: non-stop case
+select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 4) as time, airlineid
+from routes
+join airports sa on sa.airportid = routes.source_airportid
+join airports da on da.airportid = routes.destination_airportid
+where sa.city = 'Chicago' and da.city = 'New York';
+
+-- TODO: case2: one-stop case
+-- TODO: case3: two-stop case
+
 with biao0 as (
     select
         distinct ap1.city as sourceCity,
