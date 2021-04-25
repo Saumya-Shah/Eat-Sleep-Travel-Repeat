@@ -11,18 +11,30 @@ export default class FlightSearch extends React.Component {
     this.state = {
       sourceCity: "",
       destCity: "",
-      stops: [0,1,2],
-      routes:[],
+      stops: [],
+      selectstop:"",
+      routes:[]
     };
 
-    this.handlesourceCitysearch = this.sourceCitysearch.bind(this);
+    this.handlesourceCitysearch = this.handlesourceCitysearch.bind(this);
     this.handledestCitysearch = this.handledestCitysearch.bind(this);
     this.handlestopsselect = this.handlestopsselect.bind(this);
     this.submitall = this.submitall.bind(this);
   }
 
 
-
+  componentDidMount(){
+    let stopDivs = [0,1,2].map((stop,i) =>(
+      <option className="stopChoice" value={stop}>
+          {stop}
+      </option>
+    ));
+    this.setState(
+      {
+        stops: stopDivs
+      }
+    );
+  };
 
 
   handlesourceCitysearch(e) {
@@ -39,90 +51,113 @@ export default class FlightSearch extends React.Component {
 		
 	};
 
-  handlestopselect(){
-    fetch(
-      "http://localhost:8082/FlightSearch/",
-      {
-        method: "GET", // The type of HTTP request.
-      }
-    )
-      .then(
-        (res) => {
-          // Convert the response data to a JSON.
-          console.log("in client");
-          console.log(res);
-          return res.json();
-        },
-        (err) => {
-          // Print the error if there is one.
-          console.log(err);
-        }
-      )
-      .then(
-        (resList) => {
-          if (!resList) return;
-          // Map each keyword in this.state.keywords to an HTML element:
-          // A button which triggers the showrestaurants function for each keyword.
+  handlestopsselect(e){
+    
 
-          // Set the state of the keywords list to the value returned by the HTTP response from the server.
-          this.setState({
-            sourceCity: ResRowDivs,
-          });
-        },
-        (err) => {
-          // Print the error if there is one.
-          console.log(err);
-        }
-      );
+    this.setState({
+      selectstop: e.target.value
+    });
   }
+	
+  submitall(){
+    console.log(this.state.selectstop);
+    fetch(
+      "http://localhost:8082/FlightSearch/" + this.state.sourceCity + "/" + this.state.destCity + "/" + this.state.selectstop,
+      {
+        method: "GET"
+      })
+        .then(res => res.json())
+        .then(selectroute =>{
+          console.log(this.state.destCity,this.state.sourceCity);
+          console.log(selectroute);
+          
+          let routeDivs = selectroute.map((routeObj,i) =>(
+            <FlightSearchRow
+              sourceCity = {routeObj.SOURCECITY}
+              destCity={routeObj.DESTCITY}
+              time={routeObj.TIME}
+              airlineid={routeObj.AIRLINEID}
+            />
+          ));
+
+          this.setState(
+            {
+              routes: routeDivs
+            }
+          )
+          console.log("Routes:",this.state.routes);
+        })
+        .catch(err => console.log(err))
+      };
+
+
+
+
+
 
   render() {
     return (
-      <div className="Cityaroundme">
-        <PageNavbar active="cityaroundme" />
+      <div className="FlightSearch">
+        <PageNavbar active="FlightSearch" />
 
-        <div className="container cityaroundme-container">
+        <div className="container flightsearch-container">
           <div className="jumbotron">
-            <div className="h5">City Aroundme</div>
+            <div className="h5">FlightSearch</div>
             <br></br>
-            <div className="input-container">
-              <input
-                type="text"
-                placeholder="Enter City Name"
-                value={this.state.cityName}
-                onChange={this.handleCitysearch}
-                id="cityName"
-                className="city-input"
-              />
-              <button
-                id="submitcityBtn"
-                className="submit-btn"
-                onClick={this.submitCity}
-              >
-                Submit
-              </button>
+            <div className="dropdown-container">Stops:{"\t"}
+                <select value={this.state.selectstop} onChange={this.handlestopsselect} 
+                className="dropdown" id="stopsDropdown">
+                    {this.state.stops}
+                </select>
             </div>
+            <div className="input-container">
+                <input
+                type="text"
+                placeholder="Enter sourceCity Name"
+                value={this.state.sourceCity}
+                onChange={this.handlesourceCitysearch}
+                id="sourceCityName"
+                className="sourceCity-input"
+                />
+                <input
+                type="text"
+                placeholder="Enter destCity Name"
+                value={this.state.destCity}
+                onChange={this.handledestCitysearch}
+                id="destCityName"
+                className="destCity-input"
+                />
+
+
+                <button className="submit-btn" id="submitBtn" onClick={this.submitall}>Submit</button>
+            
+            </div>
+          </div>
+          <div className="jumbotron">
             <div className="header-container">
-              <div className="h6">Where you are ...</div>
+              <div className="h6">Your plan ...</div>
               <div className="headers">
                 <div className="header">
-                  <strong>Destination_ID</strong>
+                  <strong>sourceCity</strong>
                 </div>  
                 <div className="header">
-                  <strong>City</strong>
+                  <strong>destCity</strong>
                 </div> 
                 <div className="header">
-                  <strong>Distance</strong>
-                </div>            
+                  <strong>Time</strong>
+                </div>  
+                <div className="header">
+                  <strong>airlineid</strong>
+                </div>          
               </div>
             </div>
             <div className="results-container" id="results">
-              {this.state.city}
+              {this.state.routes}
             </div>
             
           </div>
         </div>
       </div>
     );
-  }
-}
+  };
+};

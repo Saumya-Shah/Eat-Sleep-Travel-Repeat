@@ -211,18 +211,24 @@ const getFavoriteRestaurants = async (req, res) => {
   }
 };
 
+
+
+
 const FlightSearch = async (req, res) => {
   /* TODO: FINISH FLIGHT SEARCH PAGE */
   try {
     var sourceCity = req.params.sourceCity;
     var destCity = req.params.destCity;
     var stops = req.params.stops;
-    var ssss = 123;
+    console.log(sourceCity,"here!");
+    
 
 
 
-    var query = `SELECT * FROM restaurants WHERE state = :state_name FETCH first 5 ROWS only`;
-    const result = await connection.execute(query, [state_name], {
+    var query = `select 1 as sourceCity, 1 as destCity, 1 as time, 1 as airlineid
+    from airports
+    where city='Chicago'`;
+    const result = await connection.execute(query, [], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
     console.log(result.metaData);
@@ -322,4 +328,5 @@ module.exports = {
   getFavoriteRestaurants: getFavoriteRestaurants,
   getCity: getCity,
   FlightSearch: FlightSearch,
+  
 };

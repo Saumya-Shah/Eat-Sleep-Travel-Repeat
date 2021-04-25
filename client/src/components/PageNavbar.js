@@ -11,7 +11,7 @@ export default class PageNavbar extends React.Component {
   }
 
   componentDidMount() {
-    const pageList = ["login", "personals", "recommendations", "cityaroundme"];
+    const pageList = ["login", "personals", "recommendations", "cityaroundme","FlightSearch"];
 
     let navbarDivs = pageList.map((page, i) => {
       if (this.props.active === page) {
