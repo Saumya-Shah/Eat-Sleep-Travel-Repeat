@@ -46,6 +46,8 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/test", routes.getRecs);
+app.get("/cityaroundme/:city_name",routes.getCity);
+app.get("/FlightSearch/:sourceCity/:destCity/",routes.FlightSearch);
 app.get("/get_fav_res", routes.getFavoriteRestaurants);
 app.get("/get_visited_res", routes.getFavoriteRestaurants);
 app.get("/get_fav_places", routes.getFavoriteRestaurants);

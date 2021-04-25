@@ -5,6 +5,8 @@ import Login from "./Login";
 import SideNavbar from "./SideNavbar";
 import Personals from "./Personals";
 import PrivateRoute from "./PrivateRoute";
+import Cityaroundme from "./Cityaroundme";
+import FlightSearch from "./FlightSearch";
 
 export default class App extends React.Component {
   render() {
@@ -17,6 +19,8 @@ export default class App extends React.Component {
             <PrivateRoute path="/recommendations" component={Recommendations} />
             <Route path="/login" render={() => <Login />} />
             <PrivateRoute path="/personals" component={Personals} />
+            <Route path="/cityaroundme" render={() => <Cityaroundme />} />
+            <Route path="/FlightSearch" render={() => <FlightSearch />} />
           </Switch>
         </Router>
       </div>
