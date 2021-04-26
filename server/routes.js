@@ -37,12 +37,12 @@ const getRecs = async (req, res) => {
       grouped_postal_code AS (  SELECT   postal_code,  Avg(stars) AS avg_rate   FROM  features_joined GROUP BY (postal_code)),
     grouped_area_features AS (  SELECT  *  FROM grouped_postal_code natural JOIN features_joined ORDER BY distance),
     top_rating AS (  SELECT * FROM grouped_area_features  WHERE stars >= avg_rate ORDER BY distance),
-    time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts  AND `+de+` > :te),
+    time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
     final_table AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
       output as (select * from final_table cr natural join restaurants_pics rp)
         select name, address,city,state,stars,review_count from output ORDER BY distance fetch first 10 rows only`;
 
-        result = await connection.execute(query, [lat,lon,ts,te], {
+        result = await connection.execute(query, [lat,lon,ts], {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
      }
@@ -74,14 +74,14 @@ else{
           
     query=`with city_restaurants as (select * from restaurants where  UPPER(city)=:city_name), `+ q + 
     `top_rating AS (  SELECT * FROM final_table  WHERE stars >= :str ),
-    time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts  AND `+de+` > :te),
+    time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
     final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
             output as (select * from final_table2 ft natural join restaurants_pics rp)
             select name, address,city,state ,stars,review_count from output fetch first 10 rows only`;
 
 
           console.log(query);
-              result = await connection.execute(query, [city_name,str,ts,te], {
+              result = await connection.execute(query, [city_name,str,ts], {
                 outFormat: oracledb.OUT_FORMAT_OBJECT,
               }); 
   }
