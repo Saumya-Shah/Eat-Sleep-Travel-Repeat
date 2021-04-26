@@ -130,105 +130,41 @@ order by
  (source_airport, dest_airport, time, airlineid) 
  */
 -- case1: non-stop case
-select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 4) as time, airlineid
+select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
 from routes
 join airports sa on sa.airportid = routes.source_airportid
 join airports da on da.airportid = routes.destination_airportid
 where sa.city = 'Chicago' and da.city = 'New York';
 
--- TODO: case2: one-stop case
+-- case2: one-stop case
+with from_source as(
+  select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+  from routes
+  join airports sa on sa.airportid = routes.source_airportid
+  join airports da on da.airportid = routes.destination_airportid
+  where sa.city = 'Chicago'
+),
+to_dest as(
+  select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+  from routes
+  join airports sa on sa.airportid = routes.source_airportid
+  join airports da on da.airportid = routes.destination_airportid
+  where da.city = 'New York'
+)
+select a2.name as source_airport, td.source_airport as mid_airport, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_2, td.airlineid as airlineid_1
+from to_dest td join airports a1 on a1.name = td.source_airport
+join routes on routes.destination_airportid = a1.airportid
+join airports a2 on a2.airportid = routes.source_airportid
+where a2.city = 'Chicago'
+union
+select fs.source_airport as source_airport, fs.dest_airport as mid_airport, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid as airlineid_1, routes.airlineid as airlineid_2
+from from_source fs join airports a1 on a1.name = fs.dest_airport
+join routes on routes.source_airportid = a1.airportid
+join airports a2 on a2.airportid = routes.destination_airportid
+where a2.city = 'New York'
+order by time asc;
 -- TODO: case3: two-stop case
 
-with biao0 as (
-    select
-        distinct ap1.city as sourceCity,
-        ap2.city as destCity,
-        0 as Stops,
-        ap1.airportid as startid,
-        ap2.airportid as tarid
-    from
-        Routes R,
-        Airports ap1,
-        Airports ap2
-    where
-        R.source_airportid = ap1.airportid
-        and R.destination_airportid = ap2.airportid
-        and ap1.country = 'United States'
-        and ap2.country = 'United States'
-),
-zero_stop as(
-    select
-        sourceCity,
-        destCity,
-        Stops
-    from
-        biao0
-),
-biao1 as(
-    select
-        distinct b1.sourceCity,
-        b1.destCity as mid,
-        b2.destCity,
-        1 as Stops
-    from
-        biao0 b1,
-        biao0 b2
-    where
-        b1.destCity = b2.sourceCity
-        and b1.destCity <> b2.destCity
-        and b1.tarid = b2.startid
-),
-biao21 as(
-    select
-        distinct b2.sourceCity as sourceCity,
-        b2.mid,
-        b1.sourceCity as mid2,
-        b1.destCity as destCity,
-        2 as Stops
-    from
-        biao0 b1,
-        biao1 b2
-    where
-        b2.destCity = b1.sourceCity
-        and b2.destCity <> b1.destCity
-),
-biao22 as(
-    select
-        distinct b1.sourceCity as sourceCity,
-        b2.sourceCity as mid,
-        b2.mid as mid2,
-        b2.destCity as destCity,
-        2 as Stops
-    from
-        biao0 b1,
-        biao1 b2
-    where
-        b1.destCity = b2.sourceCity
-        and b2.destCity <> b1.destCity
-),
-biao2 as(
-    select
-        *
-    from
-        biao21
-    union
-    select
-        *
-    from
-        biao22
-),
-user_define as(
-    select
-        distinct 1 as stops
-    from
-        biao0
-)
-select
-    *
-from
-    biao2
-where
-    sourceCity = 'Chicago';
 
 /* 
  query 4(complex): recommend user with 10 trips(city+restaurant) inside the united states such that
