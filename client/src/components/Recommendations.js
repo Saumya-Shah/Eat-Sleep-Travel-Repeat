@@ -27,7 +27,6 @@ export default class Recommendations extends React.Component {
     this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange=  this.handletimestartChange.bind(this);
-    this.handletimeendChange = this.handletimeendChange.bind(this);
     this.handleRadioChange=this.handleRadioChange.bind(this);
 
 
@@ -158,13 +157,12 @@ export default class Recommendations extends React.Component {
     this.setState({
       time_start: e.target.value,
     });
+
+    console.log("this.state.time_start",this.state.time_start);
   }
 
-  handletimeendChange(e) {
-    this.setState({
-      time_end: e.target.value,
-    });
-  }
+
+
 
   handleRadioChange(event) {
     let s=parseInt(event.target.value)
@@ -243,6 +241,7 @@ export default class Recommendations extends React.Component {
 
     return (
       
+
       <div className="Recommendations">
         <div className="container recommendations-container">
           <div className="jumbotron jumbotron-custom">
@@ -258,29 +257,32 @@ export default class Recommendations extends React.Component {
                 className="restaurant-input"
               />
                 <input
-                type="text"
+                type="time"
                 placeholder="Enter start time"
                 value={this.state.time_start}
                 onChange={this.handletimestartChange}
                 id="starttime"
                 className="restaurant-input"
               />
-                <input
-                type="text"
-                placeholder="Enter end time"
-                value={this.state.time_end}
-                onChange={this.handletimeendChange}
-                id="endtime"
-                className="restaurant-input"
-              />
+
            <br></br>
+           <fieldset>
+          <legend>Choose your Crusine</legend>
+            <div>
             <label>Italian</label>
             <input type="checkbox" value='ITALIAN' onChange={this.onChange.bind(this)} />
+            </div>
+            <div>
             <label>Indian</label>
             <input type="checkbox" value='INDIAN' onChange={this.onChange.bind(this)} />
+            </div>
+             <div>
             <label>Chinese</label>
             <input type="checkbox" value='CHINESE' onChange={this.onChange.bind(this)} />
-            {/* <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> */}
+
+            </div>
+            </fieldset>
+       
             <div class="txt-center">
               <form>
               <div class="rating">
