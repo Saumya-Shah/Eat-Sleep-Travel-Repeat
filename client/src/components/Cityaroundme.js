@@ -77,8 +77,6 @@ export default class Cityaroundme extends React.Component {
   render() {
     return (
       <div className="Cityaroundme">
-        <PageNavbar active="cityaroundme" />
-
         <div className="container cityaroundme-container">
           <div className="jumbotron">
             <div className="h5">City Aroundme</div>

@@ -12,7 +12,7 @@ export default class FlightSearch extends React.Component {
       sourceCity: "",
       destCity: "",
       stops: [],
-      selectstop:"",
+      selectstop:"0",
       routes:[]
     };
 
@@ -52,8 +52,6 @@ export default class FlightSearch extends React.Component {
 	};
 
   handlestopsselect(e){
-    
-
     this.setState({
       selectstop: e.target.value
     });
@@ -98,8 +96,6 @@ export default class FlightSearch extends React.Component {
   render() {
     return (
       <div className="FlightSearch">
-        <PageNavbar active="FlightSearch" />
-
         <div className="container flightsearch-container">
           <div className="jumbotron">
             <div className="h5">FlightSearch</div>
