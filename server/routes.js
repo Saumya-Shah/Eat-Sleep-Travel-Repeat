@@ -187,15 +187,49 @@ const FlightSearch = async (req, res) => {
     var sourceCity = req.params.sourceCity;
     var destCity = req.params.destCity;
     var stops = req.params.stops;
-    console.log(sourceCity,"here!");
-    
-
-
-
-    var query = `select 1 as sourceCity, 1 as destCity, 1 as time, 1 as airlineid
-    from airports
-    where city='Chicago'`;
-    const result = await connection.execute(query, [], {
+    if (stops == 0){ // non-stop routes
+      console.log("[FlightSearch]: non stop case!");
+      var query = `select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+      from routes
+      join airports sa on sa.airportid = routes.source_airportid
+      join airports da on da.airportid = routes.destination_airportid
+      where sa.city =:sourceCity and da.city =:destCity`;
+    }else if(stops == 1){ // one-stop routes
+      console.log("[FlightSearch]: one stop case!");
+      var query = `with from_source as(
+        select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+        from routes
+        join airports sa on sa.airportid = routes.source_airportid
+        join airports da on da.airportid = routes.destination_airportid
+        where sa.city =:destCity
+      ),
+      to_dest as(
+        select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+        from routes
+        join airports sa on sa.airportid = routes.source_airportid
+        join airports da on da.airportid = routes.destination_airportid
+        where da.city =:sourceCity
+      )
+      select a2.name as source_airport, td.source_airport as mid_airport, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_2, td.airlineid as airlineid_1
+      from to_dest td join airports a1 on a1.name = td.source_airport
+      join routes on routes.destination_airportid = a1.airportid
+      join airports a2 on a2.airportid = routes.source_airportid
+      where a2.city =:sourceCity
+      union
+      select fs.source_airport as source_airport, fs.dest_airport as mid_airport, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid as airlineid_1, routes.airlineid as airlineid_2
+      from from_source fs join airports a1 on a1.name = fs.dest_airport
+      join routes on routes.source_airportid = a1.airportid
+      join airports a2 on a2.airportid = routes.destination_airportid
+      where a2.city =:destCity
+      order by time asc`;
+    }else{//TODO: two-stop routes
+      var query = `select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
+      from routes
+      join airports sa on sa.airportid = routes.source_airportid
+      join airports da on da.airportid = routes.destination_airportid
+      where sa.city =:sourceCity and da.city =:destCity`;
+    }
+    const result = await connection.execute(query, [sourceCity, destCity], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
     console.log(result.metaData);
