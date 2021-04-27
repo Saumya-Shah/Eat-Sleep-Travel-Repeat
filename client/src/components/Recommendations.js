@@ -257,7 +257,7 @@ export default class Recommendations extends React.Component {
                 className="restaurant-input"
               />
                 <input
-                type="time"
+                type="text"
                 placeholder="Enter start time"
                 value={this.state.time_start}
                 onChange={this.handletimestartChange}
