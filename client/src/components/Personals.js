@@ -69,12 +69,14 @@ export default class Personals extends React.Component {
           const RecommendationsRowDivs = restaurantList.map(
             (restaurantObj, i) => (
               <RecommendationsRow
+                business_id={restaurantObj.BUSINESS_ID}
                 name={restaurantObj.NAME}
                 address={restaurantObj.ADDRESS}
                 city={restaurantObj.CITY}
                 state={restaurantObj.STATE}
                 stars={restaurantObj.STARS}
                 reviews={restaurantObj.REVIEW_COUNT}
+                flag2={10}
               />
             )
           );
