@@ -236,7 +236,7 @@ export default class Recommendations extends React.Component {
                 id="restaurantName"
                 className="restaurant-input"
               />
-              <input
+                <input
                 type="text"
                 placeholder="Enter start time"
                 value={this.state.time_start}

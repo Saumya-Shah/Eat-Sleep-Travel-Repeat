@@ -1,5 +1,4 @@
 import React from "react";
-import PageNavbar from "./PageNavbar";
 import CityaroundmeRow from "./CityaroundmeRow";
 import "../style/Cityaroundme.css";
 import "bootstrap/dist/css/bootstrap.min.css";
