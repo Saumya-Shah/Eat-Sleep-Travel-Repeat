@@ -4,14 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 import RecommendationsRow from "./RecommendationsRow";
 import { RadioGroup, RadioButton } from "react-radio-buttons";
-import { GiTrophiesShelf } from "react-icons/gi";
 
 export default class Personals extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      visitedRestaurants: [],
       favRestaurants: <h5>"You have no favorite restaurants!"</h5>,
       visitedRestaurants: <h5>"You have no visited restaurants!"</h5>,
       favCities: <h5>"You have no favorite cities!"</h5>,
