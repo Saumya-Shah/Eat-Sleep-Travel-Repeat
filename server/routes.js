@@ -178,6 +178,26 @@ const getFavoriteRestaurants = async (req, res) => {
   }
 };
 
+const getVisitedRestaurants = async (req, res) => {
+  try {
+    console.log(req.session.user.USER_NAME);
+    const user_name = req.session.user.USER_NAME;
+    var query = `with fav_restaurants as (select * from restaurants r join user_visited_restaurants ufr on r.business_id = ufr.BID where ufr.user_name=:user_name),
+    restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features)
+    select * from restaurants_with_feats`;
+    const result = await connection.execute(query, [user_name], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    console.log(result.rows);
+    console.log("get fav restaurants works!");
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+};
+
 
 
 
@@ -327,6 +347,7 @@ module.exports = {
   register: register,
   login: login,
   getFavoriteRestaurants: getFavoriteRestaurants,
+  getVisitedRestaurants: getVisitedRestaurants,
   getCity: getCity,
   FlightSearch: FlightSearch,
   

@@ -25,3 +25,7 @@
 .radio_buttons:selection {
   background-color: #ffffff;
 }
+
+.dropdown_color{
+  color: #000000
+}
