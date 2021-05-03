@@ -12,3 +12,7 @@ Install oracle db as per the instructions here: http://oracle.github.io/node-ora
 Run `npm install` from client and server directory.
 
 Run `npm start` from client and server directory.
+
+*note: for Mac users(Catalina and above), please add this line below into "scripts" of package.json file under the server folder:
+
+"postinstall": "ln -s $HOME/Downloads/instantclient_19_8/libclntsh.dylib $(npm root)/oracledb/build/Release",
