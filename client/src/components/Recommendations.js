@@ -4,6 +4,7 @@ import "../style/Recommendations.css";
 import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
+import DropDownCity from "./ResCityDropdown";
 
 export default class Recommendations extends React.Component {
   constructor(props) {
@@ -20,15 +21,20 @@ export default class Recommendations extends React.Component {
       flag: 1,
       day: "",
       star: 1,
+      citiesDropdown: <DropDownCity onInputChange={this.onCityInputChange}></DropDownCity>,
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
-    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(
-      this
-    );
+    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
+    this.onCityInputChange = this.onCityInputChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange = this.handletimestartChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+  }
+
+
+  onCityInputChange(e,{value}){
+    console.log("changedddd",value);
   }
 
   onChange(e) {
@@ -41,7 +47,7 @@ export default class Recommendations extends React.Component {
       options.splice(index, 1);
     }
     this.setState({ crusine: options });
-    console.log(this.state.crusine);
+    // console.log(this.state.crusine);
   }
 
   componentDidMount() {
@@ -196,7 +202,7 @@ export default class Recommendations extends React.Component {
           if (!restaurantList) return;
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
-          console.log(restaurantList);
+          // console.log(restaurantList);
 
           const RecommendationsRowDivs = restaurantList.map(
             (restaurantObj, i) => (
@@ -279,7 +285,6 @@ export default class Recommendations extends React.Component {
                   />
                 </div>
               </fieldset>
-
               <div class="txt-center">
                 <form>
                   <div class="rating">
@@ -337,12 +342,13 @@ export default class Recommendations extends React.Component {
                   </div>
                 </form>
               </div>
-
+              {this.state.citiesDropdown}
               <button
                 id="submitrestaurantBtn"
                 className="submit-btn"
                 onClick={this.submitrestaurant}
               >
+                
                 Submit
               </button>
             </div>

@@ -8,8 +8,6 @@ import Rating from "@material-ui/lab/Rating";
 export default class RecommendationsRow extends React.Component {
   /* ---- Q2 (Recommendations) ---- */
 
-
-
   addtofav(e) {  
         const url = new URL("http://localhost:8082/recommendations/");
     if (this.props.flag2==11){

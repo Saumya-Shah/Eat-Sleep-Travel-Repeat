@@ -97,7 +97,7 @@ else{
           select business_id, name, address,city,state ,stars,review_count from output fetch first 10 rows only`;
 
 
-        console.log(query);
+        // console.log(query);
             result = await connection.execute(query, [city_name,str,ts], {
               outFormat: oracledb.OUT_FORMAT_OBJECT,
             }); 
@@ -108,14 +108,14 @@ else{
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
 const register = async (req, res) => {
 try {
-  console.log("inside final register");
-  console.log(req.body);
+  // console.log("inside final register");
+  // console.log(req.body);
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const username = req.body.username;
@@ -124,61 +124,61 @@ try {
   hash = bcrypt.hashSync(password, saltRounds);
 
   var query = `INSERT INTO user_creds (first_name, last_name, user_name, pwd) VALUES (:first_name, :last_name, :user_name, :pwd)`;
-  console.log(query);
+  // console.log(query);
   const result = await connection.execute(query, [
     firstname,
     lastname,
     username,
     hash,
   ]);
-  console.log(result);
+  // console.log(result);
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
 const login = async (req, res) => {
 try {
-  console.log("inside final register");
+  // console.log("inside final register");
   const username = req.body.username;
   const password = req.body.password;
 
   var query = `SELECT * FROM user_creds WHERE user_name= :username`;
-  console.log(query);
+  // console.log(query);
   const result = await connection.execute(query, [username], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  console.log(result);
+  // console.log(result);
   if (result.rows.length > 0) {
     bcrypt.compare(password, result.rows[0].PWD, (err, ans) => {
-      console.log(ans);
+      // console.log(ans);
       if (ans) {
-        console.log("Password matched!!");
+        // console.log("Password matched!!");
         req.session.user = result.rows[0];
-        console.log(req.session.user);
+        // console.log(req.session.user);
         res.json(result.rows);
       } else {
-        console.log("Not matched");
+        // console.log("Not matched");
         res.json({ message: "Wrong username/password combination!" });
       }
     });
-    console.log("Found");
+    // console.log("Found");
   } else {
-    console.log("Not Found");
+    // console.log("Not Found");
     res.json({ message: "User doesn't exist!" });
   }
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
 const getFavoriteRestaurants = async (req, res) => {
 try {
-  console.log(req.session.user.USER_NAME);
+  // console.log(req.session.user.USER_NAME);
   const user_name = req.session.user.USER_NAME;
   var query = `with fav_restaurants as (select * from restaurants r join user_fav_restaurants ufr on r.business_id = ufr.BID where ufr.user_name=:user_name),
   restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features)
@@ -186,19 +186,19 @@ try {
   const result = await connection.execute(query, [user_name], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  console.log(result.rows);
-  console.log("get fav restaurants works!");
+  // console.log(result.rows);
+  // console.log("get fav restaurants works!");
   res.json(result.rows);
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
 const getVisitedRestaurants = async (req, res) => {
   try {
-    console.log(req.session.user.USER_NAME);
+    // console.log(req.session.user.USER_NAME);
     const user_name = req.session.user.USER_NAME;
     var query = `with fav_restaurants as (select * from restaurants r join user_visited_restaurants ufr on r.business_id = ufr.BID where ufr.user_name=:user_name),
     restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features)
@@ -206,17 +206,30 @@ const getVisitedRestaurants = async (req, res) => {
     const result = await connection.execute(query, [user_name], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
-    console.log(result.rows);
-    console.log("get fav restaurants works!");
+    // console.log(result.rows);
+    // console.log("get fav restaurants works!");
     res.json(result.rows);
   } catch (err) {
     console.log(err);
   } finally {
-    console.log("end");
+    // console.log("end");
   }
 };
 
-
+const getRestaurantsCities = async (req, res) => {
+  try {
+    var query = `select distinct UPPER(city) as CITY from restaurants order by CITY`;
+    const result = await connection.execute(query, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    res.json(result.rows);
+    // console.log(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    // console.log("end");
+  }
+};
 
 
 const FlightSearch = async (req, res) => {
@@ -226,14 +239,14 @@ try {
   var destCity = req.params.destCity;
   var stops = req.params.stops;
   if (stops == 0){ // non-stop routes
-    console.log("[FlightSearch]: non stop case!");
+    // console.log("[FlightSearch]: non stop case!");
     var query = `select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
     from routes
     join airports sa on sa.airportid = routes.source_airportid
     join airports da on da.airportid = routes.destination_airportid
     where sa.city =:sourceCity and da.city =:destCity`;
   }else if(stops == 1){ // one-stop routes
-    console.log("[FlightSearch]: one stop case!");
+    // console.log("[FlightSearch]: one stop case!");
     var query = `with from_source as(
       select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
       from routes
@@ -270,20 +283,20 @@ try {
   const result = await connection.execute(query, [sourceCity, destCity], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  console.log(result.metaData);
-  console.log(result.rows[0]);
+  // console.log(result.metaData);
+  // console.log(result.rows[0]);
   res.json(result.rows);
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
 const getCity = async (req, res) => {
 try {
   var city_name = req.params.city_name;
-  console.log("[getCity]:city name obtained:", city_name);
+  // console.log("[getCity]:city name obtained:", city_name);
   var query = `with current_location as (
     select
         latitude,
@@ -348,14 +361,14 @@ order by
   const result = await connection.execute(query, [city_name], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  console.log("result got!");
-  console.log(result.metaData);
-  console.log(result.rows[0]);
+  // console.log("result got!");
+  // console.log(result.metaData);
+  // console.log(result.rows[0]);
   res.json(result.rows);
 } catch (err) {
   console.log(err);
 } finally {
-  console.log("end");
+  // console.log("end");
 }
 };
 
@@ -368,5 +381,6 @@ module.exports = {
   getVisitedRestaurants: getVisitedRestaurants,
   getCity: getCity,
   FlightSearch: FlightSearch,
+  getRestaurantsCities: getRestaurantsCities,
   
 };

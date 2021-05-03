@@ -52,6 +52,7 @@ app.get("/FlightSearch/:sourceCity/:destCity/:stops",routes.FlightSearch);
 
 
 app.get("/get_fav_res", routes.getFavoriteRestaurants);
+app.get("/get_res_cities", routes.getRestaurantsCities);
 app.get("/get_visi_res", routes.getVisitedRestaurants);
 app.get("/get_fav_places", routes.getFavoriteRestaurants);
 app.get("/get_visited_places", routes.getFavoriteRestaurants);
