@@ -29,7 +29,6 @@ export default class DropDownCity extends React.Component {
         );
     }
 
-
     render() { 
         return <Dropdown placeholder='City' 
         search 

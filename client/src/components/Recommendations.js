@@ -21,7 +21,8 @@ export default class Recommendations extends React.Component {
       flag: 1,
       day: "",
       star: 1,
-      citiesDropdown: <DropDownCity onInputChange={this.onCityInputChange}></DropDownCity>,
+      currentLoc: "",
+      citiesDropdown: "",
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
@@ -34,7 +35,10 @@ export default class Recommendations extends React.Component {
 
 
   onCityInputChange(e,{value}){
-    console.log("changedddd",value);
+    console.log("changedddd",this);
+    this.setState({
+      restaurantName: value,
+    });
   }
 
   onChange(e) {
@@ -62,6 +66,7 @@ export default class Recommendations extends React.Component {
         }
       );
     };
+    this.setState({citiesDropdown: <DropDownCity onInputChange={this.onCityInputChange}></DropDownCity>})
 
     function error() {
       console.log("Unable to retrieve your location");
@@ -140,6 +145,7 @@ export default class Recommendations extends React.Component {
           this.setState({
             recrestaurants: RecommendationsRowDivs,
             restaurantName: restaurantList[0].CITY,
+            currentLoc: restaurantList[0].CITY,
             day: day,
             time_start: time_now,
           });
@@ -173,9 +179,11 @@ export default class Recommendations extends React.Component {
     });
   }
 
-  submitrestaurant() {
+  async submitrestaurant() {
     const url = new URL("http://localhost:8082/recommendations/");
-
+    if (this.state.restaurantName==="Current Location"){
+      await this.setState({restaurantName: this.state.currentLoc});
+    }
     Axios.post(url, {
       lat: this.state.Latitude,
       lon: this.state.Longitude,
@@ -240,14 +248,7 @@ export default class Recommendations extends React.Component {
             <div className="h5">Restaurant Recommendations</div>
             <br></br>
             <div className="input-container">
-              <input
-                type="text"
-                placeholder="Enter restaurant Name"
-                value={this.state.restaurantName}
-                onChange={this.handlerestaurantNameChange}
-                id="restaurantName"
-                className="restaurant-input"
-              />
+              
                 <input
                 type="text"
                 placeholder="Enter start time"
