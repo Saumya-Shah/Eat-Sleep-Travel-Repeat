@@ -12,14 +12,13 @@ export default class RecommendationsRow extends React.Component {
 
   addtofav(e) {  
         const url = new URL("http://localhost:8082/recommendations/");
-    if (this.props.flag2==11){
-        if (e.target.checked) {
+    if (this.props.flag2==11){      
           Axios.post(
             url, {
             bid:this.props.business_id,       
             flag: 2
           })   
-      }
+      
     }
     else{
       Axios.post(
@@ -64,8 +63,8 @@ export default class RecommendationsRow extends React.Component {
 
           </Box>
        
-         <label>{text_msg} </label>
-          <input type="checkbox" value='favourite' onChange={this.addtofav.bind(this)} />
+        
+          <input type="button" value={text_msg} onClick={this.addtofav.bind(this)} />
 
 
         </Flex>
