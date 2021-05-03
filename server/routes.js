@@ -217,10 +217,7 @@ const getVisitedRestaurants = async (req, res) => {
 };
 
 
-
-
 const FlightSearch = async (req, res) => {
-/* TODO: FINISH FLIGHT SEARCH PAGE */
 try {
   var sourceCity = req.params.sourceCity;
   var destCity = req.params.destCity;
@@ -231,7 +228,7 @@ try {
     from routes
     join airports sa on sa.airportid = routes.source_airportid
     join airports da on da.airportid = routes.destination_airportid
-    where sa.city =:sourceCity and da.city =:destCity`;
+    where sa.city =:sourceCity and da.city =:destCity fetch next 5 rows only`;
   }else if(stops == 1){ // one-stop routes
     console.log("[FlightSearch]: one stop case!");
     var query = `with from_source as(
@@ -259,13 +256,38 @@ try {
     join routes on routes.source_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.destination_airportid
     where a2.city =:destCity
-    order by time asc`;
-  }else{//TODO: two-stop routes
-    var query = `select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
-    from routes
-    join airports sa on sa.airportid = routes.source_airportid
-    join airports da on da.airportid = routes.destination_airportid
-    where sa.city =:sourceCity and da.city =:destCity`;
+    order by time asc fetch next 5 rows only`;
+  }else{//two stop routes
+    var query = `with from_source as(
+      select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+      from routes r1
+      join airports sa on sa.airportid = r1.source_airportid
+      join airports ma on ma.airportid = r1.destination_airportid
+      join routes r2 on r2.source_airportid = ma.airportid
+      join airports da on da.airportid = r2.destination_airportid
+      where sa.airportid <> da.airportid and sa.city =:sourceCity
+    ),
+    to_dest as(
+      select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+      from routes r1
+      join airports sa on sa.airportid = r1.source_airportid
+      join airports ma on ma.airportid = r1.destination_airportid
+      join routes r2 on r2.source_airportid = ma.airportid
+      join airports da on da.airportid = r2.destination_airportid
+      where sa.airportid <> da.airportid and da.city =:destCity
+    )
+    select a2.name as source_airport, td.source_airport as mid_airport_1, td.mid_airport as mid_airport_2, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_1, td.airlineid_1 as airlineid_2, td.airlineid_2 as airlineid_3
+    from to_dest td join airports a1 on a1.name = td.source_airport
+    join routes on routes.destination_airportid = a1.airportid
+    join airports a2 on a2.airportid = routes.source_airportid
+    where a2.city =:sourceCity
+    union
+    select fs.source_airport as source_airport, fs.mid_airport as mid_airport_1, fs.dest_airport as mid_airport_2, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid_1, fs.airlineid_2, routes.airlineid as airlineid_3
+    from from_source fs join airports a1 on a1.name = fs.dest_airport
+    join routes on routes.source_airportid = a1.airportid
+    join airports a2 on a2.airportid = routes.destination_airportid
+    where a2.city =:destCity
+    order by time asc fetch next 5 rows only`;
   }
   const result = await connection.execute(query, [sourceCity, destCity], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
