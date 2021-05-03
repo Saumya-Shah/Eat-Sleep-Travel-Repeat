@@ -15,7 +15,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       } else {
         setLoggedIn(false);
       }
-      console.log(isLoggedIn);
       setLoading(false);
     });
   }, []);

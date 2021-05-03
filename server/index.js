@@ -25,7 +25,7 @@ app.use(
     secret: "cis550fp",
     resave: false,
     saveUninitialized: false,
-    cookie: { expires: 60 * 60 * 24 },
+    cookie: { expires: 60 * 60 * 24 *1000},
   })
 );
 
@@ -52,7 +52,7 @@ app.get("/FlightSearch/:sourceCity/:destCity/:stops",routes.FlightSearch);
 
 
 app.get("/get_fav_res", routes.getFavoriteRestaurants);
-app.get("/get_visited_res", routes.getFavoriteRestaurants);
+app.get("/get_visi_res", routes.getVisitedRestaurants);
 app.get("/get_fav_places", routes.getFavoriteRestaurants);
 app.get("/get_visited_places", routes.getFavoriteRestaurants);
 app.listen(8082, () => {
