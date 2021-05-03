@@ -10,15 +10,15 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Cityaroundme",
+    title: "Nearby",
     path: "/cityaroundme",
-    icon: <FaIcon.FaArrowAltCircleRight />,
+    icon: <FaIcon.FaCity />,
     cName: "nav-text",
   },
   {
-    title: "FlightSearch",
+    title: "Flight",
     path: "/FlightSearch",
-    icon: <FaIcon.FaArrowAltCircleRight />,
+    icon: <FaIcon.FaPlaneDeparture />,
     cName: "nav-text",
   },
   {
