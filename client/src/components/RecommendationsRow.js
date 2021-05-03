@@ -1,8 +1,9 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Box, Flex, Image } from "rebass";
-import StarRatings from "react-star-ratings";
 import Axios from "axios";
+import Rating from "@material-ui/lab/Rating";
+
 
 export default class RecommendationsRow extends React.Component {
   /* ---- Q2 (Recommendations) ---- */
@@ -50,14 +51,15 @@ export default class RecommendationsRow extends React.Component {
             <p>
               {this.props.address} , {this.props.city}, {this.props.state}
             </p>
-            <StarRatings
-              rating={this.props.stars}
-              starRatedColor="ffffff"
-              numberOfStars={5}
+            <Rating
+              value={this.props.stars}
+              numberOfStars={5.0}
               name="rating"
-              starDimension="20px"
-              starSpacing="1px"
-            ></StarRatings>
+              precision={0.5}
+              readOnly
+              size="small"
+              max={5}
+            ></Rating>
             <p> {this.props.reviews} reviews</p>
 
           </Box>

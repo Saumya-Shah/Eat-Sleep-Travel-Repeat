@@ -105,7 +105,7 @@ export default class Personals extends React.Component {
             <div className="h3">My Gems</div>
             <br></br>
             <Dropdown >
-              <Dropdown.Toggle variant="success" id="dropdown-basic" className="dropdown_color">
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic" className="dropdown_color">
                 {this.state.button_text}
               </Dropdown.Toggle>
 
