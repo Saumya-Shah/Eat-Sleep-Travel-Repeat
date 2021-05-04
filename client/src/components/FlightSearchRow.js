@@ -7,7 +7,7 @@ export default class FlightSearchRow_NONSTOP extends React.Component {
   /* ---- Q2 (Recommendations) ---- */
   render() {
     const renderAirportSwitch = () =>{
-      if (this.props.mid_airport == null){
+      if (this.props.mid_airport == null && this.props.mid_airport_1 == null){
         return(
         <div className="flex-row-container">
         <div className="flex-row-item">{this.props.source_airport}</div>
@@ -44,7 +44,7 @@ export default class FlightSearchRow_NONSTOP extends React.Component {
       }
     }
   return(
-    {renderAirportSwitch()}
+    renderAirportSwitch()
 
   );
   }

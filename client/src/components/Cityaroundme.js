@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import "../style/Cityaroundme.css";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import * as GiIcon from "react-icons/gi";
 
 export default class Cityaroundme extends React.Component {
   constructor(props) {
@@ -81,12 +82,19 @@ export default class Cityaroundme extends React.Component {
       .then((res) => {
         const routeRows = res.map(
           (routeObj, i) => ( 
+            <Card className="card_item">
+                <Card.Body>
             <Row className="justify-content-md-center">
+              <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
               <Col md="auto">{routeObj.SOURCE_AIRPORT}</Col>
+              <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
               <Col md="auto">{routeObj.DEST_AIRPORT}</Col>
+              <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
               <Col >{routeObj.TIME}h</Col>
               <Col >airlineid:{routeObj.AIRLINEID}</Col>
             </Row>
+            </Card.Body>
+              </Card>
           )
         );
         this.setState({routes: routeRows});
