@@ -323,9 +323,9 @@ try {
   var lon = req.body.lon;
   console.log(lat, lon);
   var query = `with nearby_cities_dist as(
-    select a1.city, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
+    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
     from airports a1
-    group by a1.city
+    group by a1.city, a1.country
 )
 select *
 from nearby_cities_dist

@@ -60,7 +60,7 @@ export default class Cityaroundme extends React.Component {
             (CityObj, i) => (
               <Card className="card_item" key={i}>
                 <Card.Body>
-                  <Card.Title className="shopTitle">{CityObj.CITY}</Card.Title>
+                  <Card.Title className="shopTitle">{CityObj.CITY}, {CityObj.COUNTRY}</Card.Title>
                   <Card.Text>distance: {CityObj.DISTANCE}km</Card.Text>
                   <Button variant="primary" >Détails</Button>
                 </Card.Body>
