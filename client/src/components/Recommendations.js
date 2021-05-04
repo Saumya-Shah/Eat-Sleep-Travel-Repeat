@@ -135,6 +135,7 @@ export default class Recommendations extends React.Component {
                 stars={restaurantObj.STARS}
                 reviews={restaurantObj.REVIEW_COUNT}
                 flag2={11}
+                pic={restaurantObj.PHOTO_ID}
 
               />
             )
@@ -223,7 +224,8 @@ export default class Recommendations extends React.Component {
                 stars={restaurantObj.STARS}
                 reviews={restaurantObj.REVIEW_COUNT}
                 flag2={11}
-                
+                pic={restaurantObj.PHOTO_ID}
+
               />
             )
           );

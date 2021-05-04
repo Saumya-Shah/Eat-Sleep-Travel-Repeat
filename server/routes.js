@@ -56,8 +56,8 @@ try {
   top_rating AS (  SELECT * FROM grouped_area_features  WHERE stars >= avg_rate ORDER BY distance),
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
-    output as (select * from final_table cr natural join restaurants_pics rp)
-      select business_id, name, address,city,state,stars,review_count from output ORDER BY distance fetch first 10 rows only`;
+    output as (select * from final_table cr natural join restaurants_pics2 rp)
+      select business_id, name, address,city,state,stars,review_count, photo_id from output ORDER BY distance fetch first 10 rows only`;
 
       result = await connection.execute(query, [lat,lon,ts], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -93,8 +93,8 @@ else{
   `top_rating AS (  SELECT * FROM final_table  WHERE stars >= :str ),
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
-          output as (select * from final_table2 ft natural join restaurants_pics rp)
-          select business_id, name, address,city,state ,stars,review_count from output fetch first 10 rows only`;
+          output as (select * from final_table2 ft natural join restaurants_pics2 rp)
+          select business_id, name, address,city,state ,stars,review_count, photo_id from output fetch first 10 rows only`;
 
 
         // console.log(query);
@@ -181,7 +181,7 @@ try {
   // console.log(req.session.user.USER_NAME);
   const user_name = req.session.user.USER_NAME;
   var query = `with fav_restaurants as (select * from restaurants r join user_fav_restaurants ufr on r.business_id = ufr.BID where ufr.user_name=:user_name),
-  restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features)
+  restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features natural join restaurants_pics2)
   select * from restaurants_with_feats`;
   const result = await connection.execute(query, [user_name], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -201,7 +201,7 @@ const getVisitedRestaurants = async (req, res) => {
     // console.log(req.session.user.USER_NAME);
     const user_name = req.session.user.USER_NAME;
     var query = `with fav_restaurants as (select * from restaurants r join user_visited_restaurants ufr on r.business_id = ufr.BID where ufr.user_name=:user_name),
-    restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features)
+    restaurants_with_feats as (select * from fav_restaurants natural join restaurants_features natural join restaurants_pics2)
     select * from restaurants_with_feats`;
     const result = await connection.execute(query, [user_name], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,

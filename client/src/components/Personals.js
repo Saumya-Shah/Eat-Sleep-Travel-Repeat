@@ -84,6 +84,8 @@ export default class Personals extends React.Component {
                 stars={restaurantObj.STARS}
                 reviews={restaurantObj.REVIEW_COUNT}
                 flag2={10}
+                pic={restaurantObj.PHOTO_ID}
+
               />
             )
           );
