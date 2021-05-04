@@ -7,8 +7,11 @@ import FlightSearchRow_ONESTOP from "./FlightSearchRow";
 import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
 import "../style/FlightSearch.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import picture from "../style/flight.jpg";
+import {View, Image, StyleSheet} from "react-native";
 
 export default class FlightSearch extends React.Component {
+  
   constructor(props) {
     super(props);
 
@@ -76,6 +79,7 @@ export default class FlightSearch extends React.Component {
                 dest_airport={routeObj.DEST_AIRPORT}
                 time={routeObj.TIME}
                 airlineid={routeObj.AIRLINEID}
+                
               />
             ));
           }else if (this.state.selectstop == 1){// one stop
@@ -117,6 +121,9 @@ export default class FlightSearch extends React.Component {
   render() {
     return (
       <div className="FlightSearch">
+          <div className="flight_photo">
+            <img src={picture} height="200" width="300"  alt="BigCo Inc. logo"/>
+          </div>
         <div className="container flightsearch-container">
           <div className="jumbotron">
             <h1 className="text-center">Flight Search</h1>
@@ -153,9 +160,11 @@ export default class FlightSearch extends React.Component {
             <Button bsStyle="primary" size="lg" onClick={this.submitall} block>Find Recommended Flights!</Button>
           </div>
           <div className="jumbotron">
-            <div className="results-container" id="results">
+            <div className="results-container-flight" id="results">
               {this.state.routes}
+             
             </div>
+            
           </div>
         </div>
       </div>
