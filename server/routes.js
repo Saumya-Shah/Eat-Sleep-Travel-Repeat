@@ -317,13 +317,13 @@ try {
 }
 };
 
-const getCity = async (req, res) => {
+const getNearbyCity = async (req, res) => {
 try {
   var lat = req.body.lat;
   var lon = req.body.lon;
   console.log(lat, lon);
   var query = `with nearby_cities_dist as(
-    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
+    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 0)) as distance
     from airports a1
     group by a1.city, a1.country
 )
@@ -342,6 +342,40 @@ fetch next 5 rows only`;
 }
 };
 
+const getPopularCity = async (req, res) => {
+  try {
+    var query = `with popular_flight_city as (
+      select ap.city as city, count(*) AS flt_cnt
+      from Routes r join airports ap on r.destination_airportid = ap.airportid
+      where ap.country = 'United States'
+      group by ap.city
+  ),
+  city_restaurants_cnt as (
+      select
+          city,
+          count(restaurants.business_id) as rest_cnt
+      from
+          restaurants
+          join restaurants_features on restaurants_features.business_id = restaurants.business_id
+      where
+          restaurants_features.stars > 3
+      group by
+          city
+  )
+  select pfc.city
+  from popular_flight_city pfc join city_restaurants_cnt cr on pfc.city = cr.city
+  order by flt_cnt+rest_cnt DESC fetch next 5 rows only`;
+    const result = await connection.execute(query, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+  };
+
 
 module.exports = {
   getRecs: getRecs,
@@ -349,7 +383,8 @@ module.exports = {
   login: login,
   getFavoriteRestaurants: getFavoriteRestaurants,
   getVisitedRestaurants: getVisitedRestaurants,
-  getCity: getCity,
+  getNearbyCity: getNearbyCity,
+  getPopularCity: getPopularCity,
   FlightSearch: FlightSearch,
   getRestaurantsCities: getRestaurantsCities,
   

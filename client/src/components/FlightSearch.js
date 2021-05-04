@@ -1,7 +1,5 @@
 import React from "react";
 import { InputGroup, DropdownButton, FormControl, Dropdown, Button} from 'react-bootstrap';
-// import DropdownButton from 'react-bootstrap/DropdownButton'
-// import Dropdown from 'react-bootstrap/Dropdown'
 import FlightSearchRow_NONSTOP from "./FlightSearchRow";
 import FlightSearchRow_ONESTOP from "./FlightSearchRow";
 import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
@@ -162,7 +160,6 @@ export default class FlightSearch extends React.Component {
           <div className="jumbotron">
             <div className="results-container-flight" id="results">
               {this.state.routes}
-             
             </div>
             
           </div>
