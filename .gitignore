@@ -1,3 +1,5 @@
 node_modules
 public/
 .env
+res_pics/
+client/package-lock.json

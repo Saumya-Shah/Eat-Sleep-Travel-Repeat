@@ -41,7 +41,9 @@ export default class RecommendationsRow extends React.Component {
       <div className="restaurantResults">
         <Flex className="custom-flex" alignItems="center">
           <Box width={1 / 3}>
-            <Image src="https://loremflickr.com/150/150/bar?random=1" />
+            <div className="square">
+            <Image  src={"/res_pics/"+this.props.pic} />
+            </div>
           </Box>
           <Box width={2 / 3} ml="auto">
             <h5>{this.props.name}</h5>
@@ -60,11 +62,7 @@ export default class RecommendationsRow extends React.Component {
             <p> {this.props.reviews} reviews</p>
 
           </Box>
-       
-        
           <input type="button" value={text_msg} onClick={this.addtofav.bind(this)} />
-
-
         </Flex>
         <hr class="solid" />
       </div>
