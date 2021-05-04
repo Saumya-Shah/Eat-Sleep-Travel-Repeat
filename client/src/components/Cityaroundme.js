@@ -1,6 +1,7 @@
 import React from "react";
-import CityaroundmeRow from "./CityaroundmeRow";
+import { Card, CardGroup, Button} from 'react-bootstrap';
 import "../style/Cityaroundme.css";
+import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default class Cityaroundme extends React.Component {
@@ -8,35 +9,41 @@ export default class Cityaroundme extends React.Component {
     super(props);
 
     this.state = {
-      cityName: "",
+      Latitude: 0,
+      Longitude: 0,
       city: [],
     };
 
-    this.handleCitysearch = this.handleCitysearch.bind(
-      this
-    );
-    this.submitCity = this.submitCity.bind(this);
   }
+  componentDidMount() {
+    const success = (position) => {
+      this.setState(
+        {
+          Latitude: position.coords.latitude,
+          Longitude: position.coords.longitude,
+        },
+        () => {
+          this.submitCity();
+        }
+      );
+    };
+    function error() {
+      console.log("Unable to retrieve your location");
+    }
 
-  handleCitysearch(e) {
-    this.setState({
-      cityName: e.target.value,
-    });
+    navigator.geolocation.getCurrentPosition(success, error);
   }
 
   submitCity() {
-    fetch(
-      "http://localhost:8082/cityaroundme/" + this.state.cityName,
-      {
-        method: "GET", // The type of HTTP request.
-      }
-    )
+    const url = new URL("http://localhost:8082/cityaroundme/");
+    Axios.post(url, {
+      lat: this.state.Latitude,
+      lon: this.state.Longitude,
+    })
       .then(
         (res) => {
-          // Convert the response data to a JSON.
-          console.log("in client");
           console.log(res);
-          return res.json();
+          return res.data;
         },
         (err) => {
           // Print the error if there is one.
@@ -48,19 +55,18 @@ export default class Cityaroundme extends React.Component {
           if (!CityList) return;
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
-          console.log("here!");
           console.log(CityList);
-
           const CityRowDivs = CityList.map(
             (CityObj, i) => (
-              <CityaroundmeRow
-                destination_id={CityObj.DESTINATION_ID}  
-                city={CityObj.CITY}
-                distance={CityObj.DISTANCE}
-              />
+              <Card className="card_item" key={i}>
+                <Card.Body>
+                  <Card.Title className="shopTitle">{CityObj.CITY}, {CityObj.COUNTRY}</Card.Title>
+                  <Card.Text>distance: {CityObj.DISTANCE}km</Card.Text>
+                  <Button variant="primary" >Détails</Button>
+                </Card.Body>
+              </Card>
             )
           );
-          console.log(CityRowDivs);
           // Set the state of the keywords list to the value returned by the HTTP response from the server.
           this.setState({
             city: CityRowDivs,
@@ -78,43 +84,9 @@ export default class Cityaroundme extends React.Component {
       <div className="Cityaroundme">
         <div className="container cityaroundme-container">
           <div className="jumbotron">
-            <div className="h5">City Aroundme</div>
+          <h1 className="text-center">Nearby Cities</h1>
             <br></br>
-            <div className="input-container">
-              <input
-                type="text"
-                placeholder="Enter City Name"
-                value={this.state.cityName}
-                onChange={this.handleCitysearch}
-                id="cityName"
-                className="city-input"
-              />
-              <button
-                id="submitcityBtn"
-                className="submit-btn"
-                onClick={this.submitCity}
-              >
-                Submit
-              </button>
-            </div>
-            <div className="header-container">
-              <div className="h6">Where you are ...</div>
-              <div className="headers">
-                <div className="header">
-                  <strong>Destination_ID</strong>
-                </div>  
-                <div className="header">
-                  <strong>City</strong>
-                </div> 
-                <div className="header">
-                  <strong>Distance</strong>
-                </div>            
-              </div>
-            </div>
-            <div className="results-container" id="results">
-              {this.state.city}
-            </div>
-            
+            <CardGroup className="card_container">{this.state.city}</CardGroup>            
           </div>
         </div>
       </div>

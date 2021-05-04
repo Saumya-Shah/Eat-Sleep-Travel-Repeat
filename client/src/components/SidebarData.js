@@ -10,7 +10,7 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Nearby",
+    title: "Trip",
     path: "/cityaroundme",
     icon: <FaIcon.FaCity />,
     cName: "nav-text",

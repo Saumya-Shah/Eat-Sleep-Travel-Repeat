@@ -47,7 +47,8 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/test", routes.getRecs);
-app.get("/cityaroundme/:city_name",routes.getCity);
+// app.get("/cityaroundme/",routes.getCity);
+app.post("/cityaroundme/", routes.getCity);
 app.get("/FlightSearch/:sourceCity/:destCity/:stops",routes.FlightSearch);
 
 

@@ -319,80 +319,26 @@ try {
 
 const getCity = async (req, res) => {
 try {
-  var city_name = req.params.city_name;
-  // console.log("[getCity]:city name obtained:", city_name);
-  var query = `with current_location as (
-    select
-        latitude,
-        longitude,
-        airportid
-    from
-        airports
-    where
-        name= :city_name
-),
-distance_table as (
-    select
-        round(
-            111.138 * sqrt(
-                power(((ap.Latitude) - cl.latitude), 2) + power(((ap.Longitude) - cl.longitude), 2)
-            ),
-            4
-        ) as distance,
-        city,
-        name
-    from
-        airports ap,
-        current_location cl
-),
-city_within_range as(
-    select
-        ap.airportid,
-        ap.name,
-        ap.city,
-        dt.distance,
-        dt.distance / 500 as flight_time
-    from
-        airports ap,
-        distance_table dt
-    where
-        dt.distance / 500 <= 3
-        and dt.name = ap.name
-    order by
-        dt.distance ASC
-),
-zero_stop as (
-    select
-        distinct r.destination_airportid as destination_id,
-        cwr.city,
-        cwr.distance,
-        0 as stop
-    from
-        routes r,
-        airports ap,
-        city_within_range cwr,
-        current_location cl
-    where
-        r.destination_airportid = cwr.airportid
-        and r.source_airportid = cl.airportid
+  var lat = req.body.lat;
+  var lon = req.body.lon;
+  console.log(lat, lon);
+  var query = `with nearby_cities_dist as(
+    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
+    from airports a1
+    group by a1.city, a1.country
 )
-select
-    *
-from
-    zero_stop
-order by
-    distance fetch next 5 rows only`;
-  const result = await connection.execute(query, [city_name], {
+select *
+from nearby_cities_dist
+order by distance ASC
+fetch next 5 rows only`;
+  const result = await connection.execute(query, [lat, lon], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  // console.log("result got!");
-  // console.log(result.metaData);
-  // console.log(result.rows[0]);
   res.json(result.rows);
 } catch (err) {
   console.log(err);
 } finally {
-  // console.log("end");
+  console.log("end");
 }
 };
 
