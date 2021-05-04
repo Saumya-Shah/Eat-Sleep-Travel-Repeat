@@ -18,69 +18,17 @@ from
     join restaurants_features rf on r.business_id = rf.business_id;
 
 /* 
- query 1(easy): find all cities(in the united states) that are within 3-hour flight distance to user's location and the flight is non-stop or one-stop
+ query 1(easy): Find nearby cities(in the united states) that are within 3-hour flight distance to user's location 
  */
-with current_location as (
-    select
-        latitude,
-        longitude,
-        airportid
-    from
-        airports
-    where
-        name like '%Saint%'
-),
-distance_table as (
-    select
-        round(
-            111.138 * sqrt(
-                power(((ap.Latitude) - cl.latitude), 2) + power(((ap.Longitude) - cl.longitude), 2)
-            ),
-            4
-        ) as distance,
-        city,
-        name
-    from
-        airports ap,
-        current_location cl
-),
-city_within_range as(
-    select
-        ap.airportid,
-        ap.name,
-        ap.city,
-        dt.distance,
-        dt.distance / 500 as flight_time
-    from
-        airports ap,
-        distance_table dt
-    where
-        dt.distance / 500 <= 3
-        and dt.name = ap.name
-    order by
-        dt.distance ASC
-),
-zero_stop as (
-    select
-        distinct r.destination_airportid as destination_id,
-        cwr.city,
-        cwr.distance,
-        0 as stop
-    from
-        routes r,
-        airports ap,
-        city_within_range cwr,
-        current_location cl
-    where
-        r.destination_airportid = cwr.airportid
-        and r.source_airportid = cl.airportid
+with nearby_cities_dist as(
+    select a1.city, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
+    from airports a1
+    group by a1.city
 )
-select
-    *
-from
-    zero_stop
-order by
-    distance fetch next 100 rows only;
+select *
+from nearby_cities_dist
+order by distance ASC
+fetch next 20 rows only;
 
 /* 
  query 2(easy): recommend user with 10 cities to travel to in the united states
