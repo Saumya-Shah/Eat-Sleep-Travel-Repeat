@@ -271,18 +271,18 @@ three_popular_city as (
         tpc1.source_city <> tpc2.destination_city
 )
 select
-    city1,
-    rest1.name,
-    rest1.address,
-    rest1.stars,
-    city2,
-    rest2.name,
-    rest2.address,
-    rest2.stars,
-    city3,
-    rest3.name,
-    rest3.address,
-    rest3.stars
+    city1 as city1,
+    rest1.name as rest1,
+    rest1.address as add1,
+    rest1.stars as star1,
+    city2 as city2,
+    rest2.name as rest2,
+    rest2.address as add2,
+    rest2.stars as star2,
+    city3 as city3,
+    rest3.name as rest3,
+    rest3.address as add3,
+    rest3.stars as star3
 from
     three_popular_city tpc
     join restaurants_full rest1 on tpc.city1 = rest1.city
