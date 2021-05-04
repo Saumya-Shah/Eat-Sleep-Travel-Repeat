@@ -1,4 +1,7 @@
 import React from "react";
+import { InputGroup, DropdownButton, FormControl, Dropdown, Button} from 'react-bootstrap';
+// import DropdownButton from 'react-bootstrap/DropdownButton'
+// import Dropdown from 'react-bootstrap/Dropdown'
 import FlightSearchRow_NONSTOP from "./FlightSearchRow";
 import FlightSearchRow_ONESTOP from "./FlightSearchRow";
 import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
@@ -12,29 +15,19 @@ export default class FlightSearch extends React.Component {
     this.state = {
       sourceCity: "",
       destCity: "",
-      stops: [],
-      selectstop:"0",
+      selectstop:"Select Stop",
       routes:[]
     };
 
     this.handlesourceCitysearch = this.handlesourceCitysearch.bind(this);
     this.handledestCitysearch = this.handledestCitysearch.bind(this);
-    this.handlestopsselect = this.handlestopsselect.bind(this);
+    this.handleNonStop = this.handleNonStop.bind(this);
+    this.handleOneStop = this.handleOneStop.bind(this);
+    this.handleTwoStop = this.handleTwoStop.bind(this);
     this.submitall = this.submitall.bind(this);
   }
 
-
   componentDidMount(){
-    let stopDivs = [0,1,2].map((stop,i) =>(
-      <option className="stopChoice" value={stop}>
-          {stop}
-      </option>
-    ));
-    this.setState(
-      {
-        stops: stopDivs
-      }
-    );
   };
 
   handlesourceCitysearch(e) {
@@ -49,9 +42,19 @@ export default class FlightSearch extends React.Component {
 		});
 		
 	};
-  handlestopsselect(e){
+  handleNonStop(){
     this.setState({
-      selectstop: e.target.value
+      selectstop: 0
+    });
+  }
+  handleOneStop(){
+    this.setState({
+      selectstop: 1
+    });
+  }
+  handleTwoStop(){
+    this.setState({
+      selectstop: 2
     });
   }
 	
@@ -112,201 +115,50 @@ export default class FlightSearch extends React.Component {
       };
 
   render() {
-    if(this.state.selectstop == 0){
-      return (
-        <div className="FlightSearch">
-          <div className="container flightsearch-container">
-            <div className="jumbotron">
-              <div className="h5">Flight Search</div>
-              <br></br>
-              <div className="dropdown-container">Stops:{"\t"}
-                  <select value={this.state.selectstop} onChange={this.handlestopsselect} 
-                  className="dropdown" id="stopsDropdown">
-                      {this.state.stops}
-                  </select>
-              </div>
-              <div className="input-container">
-                  <input
-                  type="text"
-                  placeholder="Enter sourceCity Name"
-                  value={this.state.sourceCity}
-                  onChange={this.handlesourceCitysearch}
-                  id="sourceCityName"
-                  className="sourceCity-input"
-                  />
-                  <input
-                  type="text"
-                  placeholder="Enter destCity Name"
-                  value={this.state.destCity}
-                  onChange={this.handledestCitysearch}
-                  id="destCityName"
-                  className="destCity-input"
-                  />
-                  <button className="submit-btn" id="submitBtn" onClick={this.submitall}>Submit</button>
-              </div>
-            </div>
-            <div className="jumbotron">
-              <div className="header-container">
-                <div className="h6">Available Airlines</div>
-                <div className="headers">
-                  <div className="header">
-                    <strong>Source Airport</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Destination Airport</strong>
-                  </div> 
-                  <div className="header">
-                    <strong>Time(h)</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Airline ID</strong>
-                  </div>          
-                </div>
-              </div>
-              <div className="results-container" id="results">
-                {this.state.routes}
-              </div>
-              
+    return (
+      <div className="FlightSearch">
+        <div className="container flightsearch-container">
+          <div className="jumbotron">
+            <h1 className="text-center">Flight Search</h1>
+            <br></br>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <DropdownButton id="dropdown-basic-button" title={this.state.selectstop}>
+                  <Dropdown.Item as="button">
+                    <div onClick={this.handleNonStop}>0</div>
+                  </Dropdown.Item>
+                  <Dropdown.Item as="button">
+                    <div onClick={this.handleOneStop}>1</div>
+                  </Dropdown.Item>
+                  <Dropdown.Item as="button">
+                    <div onClick={this.handleTwoStop}>2</div>
+                  </Dropdown.Item>
+                </DropdownButton>
+              </InputGroup.Prepend>
+              <FormControl
+                placeholder="Where from?"
+                aria-label="sourceCity"
+                aria-describedby="basic-addon2"
+                value={this.state.sourceCity}
+                onChange={this.handlesourceCitysearch}
+              />
+              <FormControl
+                placeholder="Where to?"
+                aria-label="destCity"
+                aria-describedby="basic-addon2"
+                value={this.state.destCity}
+                onChange={this.handledestCitysearch}
+              />
+            </InputGroup>
+            <Button bsStyle="primary" size="lg" onClick={this.submitall} block>Find Recommended Flights!</Button>
+          </div>
+          <div className="jumbotron">
+            <div className="results-container" id="results">
+              {this.state.routes}
             </div>
           </div>
         </div>
-      );
-    }else if(this.state.selectstop == 1){
-      return (
-        <div className="FlightSearch">
-          <div className="container flightsearch-container">
-            <div className="jumbotron">
-              <div className="h5">Flight Search</div>
-              <br></br>
-              <div className="dropdown-container">Stops:{"\t"}
-                  <select value={this.state.selectstop} onChange={this.handlestopsselect} 
-                  className="dropdown" id="stopsDropdown">
-                      {this.state.stops}
-                  </select>
-              </div>
-              <div className="input-container">
-                  <input
-                  type="text"
-                  placeholder="Enter sourceCity Name"
-                  value={this.state.sourceCity}
-                  onChange={this.handlesourceCitysearch}
-                  id="sourceCityName"
-                  className="sourceCity-input"
-                  />
-                  <input
-                  type="text"
-                  placeholder="Enter destCity Name"
-                  value={this.state.destCity}
-                  onChange={this.handledestCitysearch}
-                  id="destCityName"
-                  className="destCity-input"
-                  />
-                  <button className="submit-btn" id="submitBtn" onClick={this.submitall}>Submit</button>
-              </div>
-            </div>
-            <div className="jumbotron">
-              <div className="header-container">
-                <div className="h6">Available Airlines</div>
-                <div className="headers">
-                  <div className="header">
-                    <strong>Source Airport</strong>
-                  </div>
-                  <div className="header">
-                    <strong>Transit Airport</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Destination Airport</strong>
-                  </div> 
-                  <div className="header">
-                    <strong>Total Time(h)</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>First Airline ID</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Second Airline ID</strong>
-                  </div>          
-                </div>
-              </div>
-              <div className="results-container" id="results">
-                {this.state.routes}
-              </div>  
-            </div>
-          </div>
-        </div>
-      );
-    }else{
-      return (
-        <div className="FlightSearch">
-          <div className="container flightsearch-container">
-            <div className="jumbotron">
-              <div className="h5">Flight Search</div>
-              <br></br>
-              <div className="dropdown-container">Stops:{"\t"}
-                  <select value={this.state.selectstop} onChange={this.handlestopsselect} 
-                  className="dropdown" id="stopsDropdown">
-                      {this.state.stops}
-                  </select>
-              </div>
-              <div className="input-container">
-                  <input
-                  type="text"
-                  placeholder="Enter sourceCity Name"
-                  value={this.state.sourceCity}
-                  onChange={this.handlesourceCitysearch}
-                  id="sourceCityName"
-                  className="sourceCity-input"
-                  />
-                  <input
-                  type="text"
-                  placeholder="Enter destCity Name"
-                  value={this.state.destCity}
-                  onChange={this.handledestCitysearch}
-                  id="destCityName"
-                  className="destCity-input"
-                  />
-                  <button className="submit-btn" id="submitBtn" onClick={this.submitall}>Submit</button>
-              </div>
-            </div>
-            <div className="jumbotron">
-              <div className="header-container">
-                <div className="h6">Available Airlines</div>
-                <div className="headers">
-                  <div className="header">
-                    <strong>Source Airport</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Transit Airport 1</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Transit Airport 2</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Destination Airport</strong>
-                  </div> 
-                  <div className="header">
-                    <strong>Time(h)</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Airline ID 1</strong>
-                  </div> 
-                  <div className="header">
-                    <strong>Airline ID 2</strong>
-                  </div>  
-                  <div className="header">
-                    <strong>Airline ID 3</strong>
-                  </div>         
-                </div>
-              </div>
-              <div className="results-container" id="results">
-                {this.state.routes}
-              </div>
-              
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-  };
-};
+      </div>
+    );    
+  }
+}
