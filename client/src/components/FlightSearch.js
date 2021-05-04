@@ -1,5 +1,5 @@
 import React from "react";
-import { InputGroup, DropdownButton, FormControl, Dropdown, Button} from 'react-bootstrap';
+import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, Row} from 'react-bootstrap';
 import FlightSearchRow_NONSTOP from "./FlightSearchRow";
 import FlightSearchRow_ONESTOP from "./FlightSearchRow";
 import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
@@ -119,9 +119,9 @@ export default class FlightSearch extends React.Component {
   render() {
     return (
       <div className="FlightSearch">
-          <div className="flight_photo">
-            <img src={picture} height="200" width="300"  alt="BigCo Inc. logo"/>
-          </div>
+        <Container>
+          <Row><img src={picture} height="200" width="300"  alt="BigCo Inc. logo"/></Row>
+        </Container>
         <div className="container flightsearch-container">
           <div className="jumbotron">
             <h1 className="text-center">Flight Search</h1>
