@@ -251,14 +251,14 @@ try {
       from routes
       join airports sa on sa.airportid = routes.source_airportid
       join airports da on da.airportid = routes.destination_airportid
-      where sa.city =:destCity
+      where sa.city =:sourceCity
     ),
     to_dest as(
       select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
       from routes
       join airports sa on sa.airportid = routes.source_airportid
       join airports da on da.airportid = routes.destination_airportid
-      where da.city =:sourceCity
+      where da.city =:destCity
     )
     select a2.name as source_airport, td.source_airport as mid_airport, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_2, td.airlineid as airlineid_1
     from to_dest td join airports a1 on a1.name = td.source_airport
@@ -295,13 +295,13 @@ try {
     from to_dest td join airports a1 on a1.name = td.source_airport
     join routes on routes.destination_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.source_airportid
-    where a2.city =:sourceCity
+    where a2.city =:sourceCity and a2.name <> td.mid_airport
     union
     select fs.source_airport as source_airport, fs.mid_airport as mid_airport_1, fs.dest_airport as mid_airport_2, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid_1, fs.airlineid_2, routes.airlineid as airlineid_3
     from from_source fs join airports a1 on a1.name = fs.dest_airport
     join routes on routes.source_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.destination_airportid
-    where a2.city =:destCity
+    where a2.city =:destCity and a2.name <> fs.mid_airport
     order by time asc fetch next 5 rows only`;
   }
   const result = await connection.execute(query, [sourceCity, destCity], {

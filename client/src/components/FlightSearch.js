@@ -2,7 +2,7 @@ import React from "react";
 import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, Row, Card, Col,} from 'react-bootstrap';
 import "../style/FlightSearch.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import * as GiIcon from "react-icons/gi";
+import * as FaIcon from "react-icons/fa";
 
 export default class FlightSearch extends React.Component {
   
@@ -71,11 +71,11 @@ export default class FlightSearch extends React.Component {
               <Card className="card_item">
                 <Card.Body>
               <Row className="justify-content-md-center">
-                <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
                 <Col >{routeObj.SOURCE_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
                 <Col >{routeObj.DEST_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
                 <Col md="auto">{routeObj.TIME}h</Col>
                 <Col >airlineid:{routeObj.AIRLINEID}</Col>
               </Row>
@@ -90,15 +90,15 @@ export default class FlightSearch extends React.Component {
               <Card className="card_item">
                 <Card.Body>
               <Row className="justify-content-md-center">
-                <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
                 <Col >{routeObj.SOURCE_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
                 <Col >{routeObj.MID_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
                 <Col >{routeObj.DEST_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
                 <Col md="auto">{routeObj.TIME}h</Col>
-                <Col md="auto">airlineid1:{routeObj.AIRLINEID_1}</Col>
-                <Col md="auto">airlineid2:{routeObj.AIRLINEID_2}</Col>
+                <Col md="auto">airlineid:{routeObj.AIRLINEID_1},{routeObj.AIRLINEID_2} </Col>
               </Row>
               </Card.Body>
               </Card>
@@ -109,17 +109,17 @@ export default class FlightSearch extends React.Component {
               <Card className="card_item">
                 <Card.Body>
               <Row className="justify-content-md-center">
-                <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
                 <Col >{routeObj.SOURCE_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
                 <Col >{routeObj.MID_AIRPORT_1}</Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
                 <Col >{routeObj.MID_AIRPORT_2}</Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
                 <Col >{routeObj.DEST_AIRPORT}</Col>
-                <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
                 <Col md="auto">{routeObj.TIME}h</Col>
-                <Col md="auto">airlineid1:{routeObj.AIRLINEID_1}</Col>
-                <Col md="auto">airlineid2:{routeObj.AIRLINEID_2}</Col>
-                <Col md="auto">airlineid3:{routeObj.AIRLINEID_3}</Col>
+                <Col md="auto">airlineid:{routeObj.AIRLINEID_1}, {routeObj.AIRLINEID_2}, {routeObj.AIRLINEID_3}</Col>
               </Row>
               </Card.Body>
               </Card>                 
