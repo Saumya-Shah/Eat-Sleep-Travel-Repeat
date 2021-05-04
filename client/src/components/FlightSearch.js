@@ -1,13 +1,7 @@
 import React from "react";
-import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, Row} from 'react-bootstrap';
-import { Card, CardGroup, Col,} from 'react-bootstrap';
-import FlightSearchRow_NONSTOP from "./FlightSearchRow";
-import FlightSearchRow_ONESTOP from "./FlightSearchRow";
-import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
+import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, Row, Card, Col,} from 'react-bootstrap';
 import "../style/FlightSearch.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import picture from "../style/flight.jpg";
-import {View, Image, StyleSheet} from "react-native";
 import * as GiIcon from "react-icons/gi";
 
 export default class FlightSearch extends React.Component {
@@ -128,11 +122,7 @@ export default class FlightSearch extends React.Component {
                 <Col md="auto">airlineid3:{routeObj.AIRLINEID_3}</Col>
               </Row>
               </Card.Body>
-              </Card>
-              
-                
-                
-              
+              </Card>                 
             ));
             console.log(routeDivs);
           }
