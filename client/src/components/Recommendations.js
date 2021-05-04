@@ -4,6 +4,7 @@ import "../style/Recommendations.css";
 import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
+import DropDownCity from "./ResCityDropdown";
 
 export default class Recommendations extends React.Component {
   constructor(props) {
@@ -20,15 +21,24 @@ export default class Recommendations extends React.Component {
       flag: 1,
       day: "",
       star: 1,
+      currentLoc: "",
+      citiesDropdown: "",
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
-    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(
-      this
-    );
+    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
+    this.onCityInputChange = this.onCityInputChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange = this.handletimestartChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+  }
+
+
+  onCityInputChange(e,{value}){
+    console.log("changedddd",this);
+    this.setState({
+      restaurantName: value,
+    });
   }
 
   onChange(e) {
@@ -41,7 +51,7 @@ export default class Recommendations extends React.Component {
       options.splice(index, 1);
     }
     this.setState({ crusine: options });
-    console.log(this.state.crusine);
+    // console.log(this.state.crusine);
   }
 
   componentDidMount() {
@@ -56,6 +66,7 @@ export default class Recommendations extends React.Component {
         }
       );
     };
+    this.setState({citiesDropdown: <DropDownCity onInputChange={this.onCityInputChange}></DropDownCity>})
 
     function error() {
       console.log("Unable to retrieve your location");
@@ -134,6 +145,7 @@ export default class Recommendations extends React.Component {
           this.setState({
             recrestaurants: RecommendationsRowDivs,
             restaurantName: restaurantList[0].CITY,
+            currentLoc: restaurantList[0].CITY,
             day: day,
             time_start: time_now,
           });
@@ -167,9 +179,11 @@ export default class Recommendations extends React.Component {
     });
   }
 
-  submitrestaurant() {
+  async submitrestaurant() {
     const url = new URL("http://localhost:8082/recommendations/");
-
+    if (this.state.restaurantName==="Current Location"){
+      await this.setState({restaurantName: this.state.currentLoc});
+    }
     Axios.post(url, {
       lat: this.state.Latitude,
       lon: this.state.Longitude,
@@ -196,7 +210,7 @@ export default class Recommendations extends React.Component {
           if (!restaurantList) return;
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
-          console.log(restaurantList);
+          // console.log(restaurantList);
 
           const RecommendationsRowDivs = restaurantList.map(
             (restaurantObj, i) => (
@@ -234,14 +248,7 @@ export default class Recommendations extends React.Component {
             <div className="h5">Restaurant Recommendations</div>
             <br></br>
             <div className="input-container">
-              <input
-                type="text"
-                placeholder="Enter restaurant Name"
-                value={this.state.restaurantName}
-                onChange={this.handlerestaurantNameChange}
-                id="restaurantName"
-                className="restaurant-input"
-              />
+              
                 <input
                 type="text"
                 placeholder="Enter start time"
@@ -279,7 +286,6 @@ export default class Recommendations extends React.Component {
                   />
                 </div>
               </fieldset>
-
               <div class="txt-center">
                 <form>
                   <div class="rating">
@@ -337,12 +343,13 @@ export default class Recommendations extends React.Component {
                   </div>
                 </form>
               </div>
-
+              {this.state.citiesDropdown}
               <button
                 id="submitrestaurantBtn"
                 className="submit-btn"
                 onClick={this.submitrestaurant}
               >
+                
                 Submit
               </button>
             </div>
