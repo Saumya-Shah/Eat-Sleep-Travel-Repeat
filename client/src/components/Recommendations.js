@@ -25,6 +25,7 @@ export default class Recommendations extends React.Component {
       currentLoc: "",
       currentState: "",
       citiesDropdown: "",
+    
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
