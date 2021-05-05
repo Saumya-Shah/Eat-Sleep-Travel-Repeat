@@ -127,7 +127,7 @@ export default class Recommendations extends React.Component {
     ];
     var day = days[date.getDay()];
 
-    const url = new URL("http://localhost:8082/recommendations/");
+    const url = new URL("https://localhost:8082/recommendations/");
     Axios.post(url, {
       lat: this.state.Latitude,
       lon: this.state.Longitude,
@@ -211,7 +211,7 @@ export default class Recommendations extends React.Component {
   }
 
   async submitrestaurant() {
-    const url = new URL("http://localhost:8082/recommendations/");
+    const url = new URL("https://localhost:8082/recommendations/");
     if (this.state.restaurantCityName==="Current Location"){
       await this.setState({restaurantCityName: this.state.currentLoc, restaurantStateName: this.state.currentState});
     }

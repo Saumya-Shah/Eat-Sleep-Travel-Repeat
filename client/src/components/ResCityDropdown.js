@@ -16,7 +16,7 @@ export default class DropDownCity extends React.Component {
 
     componentDidMount(){
         console.log("component did mount called");
-        Axios.get("http://localhost:8082/get_res_cities").then((response) => {
+        Axios.get("https://localhost:8082/get_res_cities").then((response) => {
         var cityOptions = response.data.map((cityObj, i)=> ({
             key: i+1, 
             text: cityObj.CITY + ", " + cityObj.STATE, 

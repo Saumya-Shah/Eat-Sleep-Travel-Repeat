@@ -58,7 +58,7 @@ export default class FlightSearch extends React.Component {
   submitall(){
     console.log(this.state.selectstop);
     fetch(
-      "http://localhost:8082/FlightSearch/" + this.state.sourceCity + "/" + this.state.destCity + "/" + this.state.selectstop,
+      "https://localhost:8082/FlightSearch/" + this.state.sourceCity + "/" + this.state.destCity + "/" + this.state.selectstop,
       {
         method: "GET"
       })

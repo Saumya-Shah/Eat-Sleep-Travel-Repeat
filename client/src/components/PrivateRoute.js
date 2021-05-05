@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const [isLoggedIn, setLoggedIn] = useState(true);
 
   useEffect(() => {
-    Axios.get("http://localhost:8082/login").then((response) => {
+    Axios.get("https://localhost:8082/login").then((response) => {
       console.log(response.data);
       if (response.data.loggedIn) {
         setLoggedIn(true);

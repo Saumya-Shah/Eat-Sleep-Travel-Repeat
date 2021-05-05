@@ -17,7 +17,7 @@ describe('Dashboard page', () => {
           .withCapabilities(webdriver.Capabilities.chrome())
           .build();
       try {
-          await driver.get('http://localhost:3000/');
+          await driver.get('https://localhost:3000/');
           for (const keyword of TOP_20_KEYWORDS) {
             // console.log(`------- Q1a: Testing that Button for Keyword = ${keyword} Exists -------`);
             await driver.wait(until.elementLocated(By.id(`button-${keyword}`)), 3000);
@@ -38,7 +38,7 @@ describe('Dashboard page', () => {
           .withCapabilities(webdriver.Capabilities.chrome())
           .build();
       try {
-          await driver.get('http://localhost:3000/');
+          await driver.get('https://localhost:3000/');
           for (const keyword in TOP_10) {
             await driver.wait(until.elementLocated(By.id(`button-${keyword}`)), 10000);
             const button = await driver.findElement(By.id(`button-${keyword}`));
@@ -79,7 +79,7 @@ describe('Recommendation page', () => {
           .build();
       try {
           for (const title of Object.keys(RECOMMEND)) {
-            await driver.get('http://localhost:3000/recommendations');
+            await driver.get('https://localhost:3000/recommendations');
             const inputBox = await driver.findElement(By.id('movieName'));
             // Type in the movie title
             await inputBox.sendKeys(title);
@@ -120,7 +120,7 @@ describe('Best of Decade and Genre page', () => {
           for (const decadegenre of Object.keys(BEST_DECADEGENRES)) {
             const selectedDecade = decadegenre.substring(0,4);
             const selectedGenre = decadegenre.substring(5);
-            await driver.get('http://localhost:3000/bestmovies');
+            await driver.get('https://localhost:3000/bestmovies');
             await driver.sleep(2000); // Wait for decades to load.
             const dropdown = await driver.findElement(By.id('decadesDropdown'));
             await dropdown.click();

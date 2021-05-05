@@ -25,7 +25,7 @@ export default class Cityaroundme extends React.Component {
   }
   componentDidMount() {
     /* show popular city */
-    let url = "http://localhost:8082/popularCity/";
+    let url = "https://localhost:8082/popularCity/";
     Axios.get(url)
       .then((res) => {
           console.log(res);
@@ -52,7 +52,7 @@ export default class Cityaroundme extends React.Component {
       })
       .catch(error => console.log(error));
     /* show recommended trips */
-    url = "http://localhost:8082/trip/";
+    url = "https://localhost:8082/trip/";
     Axios.get(url)
       .then((res) => {
           console.log(res);
@@ -135,7 +135,7 @@ export default class Cityaroundme extends React.Component {
     navigator.geolocation.getCurrentPosition(success, error);
   }
   submitUsr(e) {
-    let url = "http://localhost:8082/FlightSearch/"+ this.state.usrCity + "/" + e.target.value + "/0";
+    let url = "https://localhost:8082/FlightSearch/"+ this.state.usrCity + "/" + e.target.value + "/0";
     Axios.get(url)
       .then((res) => {
           // console.log(res.data);
@@ -169,7 +169,7 @@ export default class Cityaroundme extends React.Component {
       .catch(error => console.log(error));
   }
   submitCity() {
-    const url = new URL("http://localhost:8082/cityaroundme/");
+    const url = new URL("https://localhost:8082/cityaroundme/");
     Axios.post(url, {
       lat: this.state.Latitude,
       lon: this.state.Longitude,

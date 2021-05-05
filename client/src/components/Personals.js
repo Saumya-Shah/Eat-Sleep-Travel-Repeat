@@ -31,12 +31,12 @@ export default class Personals extends React.Component {
       this.state.mode === "fav_restaurants" 
     ) {
       this.setState({button_text: "Favorite Restaurants", is_active: 1});
-      url = "http://localhost:8082/get_fav_res";
+      url = "https://localhost:8082/get_fav_res";
       this.get_restaurants(url);
     } 
     else if(this.state.mode === "visited_restaurants"){
       this.setState({button_text: "Visited Restaurants", is_active: 2});
-      url = "http://localhost:8082/get_visi_res";
+      url = "https://localhost:8082/get_visi_res";
       console.log("going to:",url);
       this.get_restaurants(url);
     }
