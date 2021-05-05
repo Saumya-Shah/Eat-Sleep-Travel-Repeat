@@ -5,6 +5,7 @@ import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 import DropDownCity from "./ResCityDropdown";
+import DropDownCrusine from "./ResCrusineDropdown";
 
 export default class Recommendations extends React.Component {
   constructor(props) {
@@ -25,11 +26,12 @@ export default class Recommendations extends React.Component {
       currentLoc: "",
       currentState: "",
       citiesDropdown: "",
+      crusineDropdown:"",
     
     };
     // this.componentDidMount = this.componentDidMount(this);
-    // this.getUpdate=this.getUpdate(this);
     this.onCityInputChange = this.onCityInputChange.bind(this);
+    this.onCrusineInputChange=this.onCrusineInputChange.bind(this);    
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange = this.handletimestartChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
@@ -48,18 +50,37 @@ export default class Recommendations extends React.Component {
     });}
   }
 
-  onChange(e) {
-    const options = this.state.crusine;
-    let index;
-    if (e.target.checked) {
-      options.push(e.target.value);
-    } else {
-      index = options.indexOf(e.target.value);
-      options.splice(index, 1);
-    }
-    this.setState({ crusine: options });
-    // console.log(this.state.crusine);
+
+ async onCrusineInputChange(e,{value}){
+    console.log("changedddd crusine",this);
+    console.log("changedddd crusine value",value);
+    await this.setState({crusine: value});
+    console.log("changedddd crusine value state",this.state.crusine);
+
+    // if (value==="Current Location"){
+    //   this.setState({restaurantCityName: value});
+    // }
+    // else{
+    // this.setState({
+    //   restaurantCityName: value.substring(0,value.length-4),
+    //   restaurantStateName: value.substring(value.length-2),
+    // });}
   }
+
+
+
+  // onChange(e) {
+  //   const options = this.state.crusine;
+  //   let index;
+  //   if (e.target.checked) {
+  //     options.push(e.target.value);
+  //   } else {
+  //     index = options.indexOf(e.target.value);
+  //     options.splice(index, 1);
+  //   }
+  //   this.setState({ crusine: options });
+  //   // console.log(this.state.crusine);
+  // }
 
   componentDidMount() {
     const success = (position) => {
@@ -74,6 +95,9 @@ export default class Recommendations extends React.Component {
       );
     };
     this.setState({citiesDropdown: <DropDownCity onInputChange={this.onCityInputChange}></DropDownCity>})
+    this.setState({crusineDropdown: <DropDownCrusine onInputCrusineChange={this.onCrusineInputChange} ></DropDownCrusine>})
+
+    console.log("crusineDropdown:->",this.state.crusineDropdown);
 
     function error() {
       console.log("Unable to retrieve your location");
@@ -270,7 +294,8 @@ export default class Recommendations extends React.Component {
               <br></br>
               <fieldset>
                 <legend>Choose your Crusine</legend>
-                <div>
+                {this.state.crusineDropdown}
+                {/* <div>
                   <label>Italian</label>
                   <input
                     type="checkbox"
@@ -293,7 +318,7 @@ export default class Recommendations extends React.Component {
                     value="CHINESE"
                     onChange={this.onChange.bind(this)}
                   />
-                </div>
+                </div> */}
               </fieldset>
               <div class="txt-center">
                 <form>

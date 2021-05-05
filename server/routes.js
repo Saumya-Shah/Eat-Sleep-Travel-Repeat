@@ -35,6 +35,7 @@ try {
   }
   else{  
   var cru = req.body.cru;
+  console.log(cru);
   var city_name = req.body.city.toUpperCase();
   var state_name = req.body.state.toUpperCase();
   var lat= req.body.lat;
@@ -109,7 +110,7 @@ else{
 } catch (err) {
   console.log(err);
 } finally {
-  // console.log("end");
+  console.log("end");
 }
 };
 
