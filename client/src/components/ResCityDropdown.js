@@ -1,6 +1,6 @@
 import React from 'react';
 import Axios from "axios";
-import { Dropdown } from 'semantic-ui-react'
+import {Button,  Dropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
 
@@ -30,12 +30,22 @@ export default class DropDownCity extends React.Component {
     }
 
     render() { 
-        return <Dropdown placeholder='City' 
-        search 
-        selection 
-        fluid
+        return  <Button.Group color='grey'>   <Dropdown 
+        style={{height: '30px', width : '200px'}}
         options={this.state.cityNames} 
-        onChange={this.props.onInputChange}/>;
+        onChange={this.props.onInputChange}
+        button
+        className='icon'
+        floating
+        labeled
+        icon='world'
+        search
+        text='Select City'        
+        
+        />;
+ 
+
+      </Button.Group>
     }
 }
 

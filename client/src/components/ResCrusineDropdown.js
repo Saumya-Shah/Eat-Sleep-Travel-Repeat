@@ -107,11 +107,7 @@ export default class DropDownCrusine extends React.Component {
     
     
 
-    componentDidMount(){
-        console.log("component did mount called for crusines");    
-    //    this.setState({CrusinesNames: ['INDIAN','ITALIAN','CHINESE']})
-       console.log("CrusinesNames",this.state.CrusinesNames)
-    }
+
 
     render() { 
         return <Dropdown placeholder='Cuisine' 

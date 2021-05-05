@@ -5,6 +5,7 @@ import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 import DropDownCity from "./ResCityDropdown";
+import { Button,Input } from 'semantic-ui-react'
 import DropDownCrusine from "./ResCrusineDropdown";
 
 export default class Recommendations extends React.Component {
@@ -27,9 +28,12 @@ export default class Recommendations extends React.Component {
       currentState: "",
       citiesDropdown: "",
       crusineDropdown:"",
+      advancefilterchoice:false,
     
     };
     // this.componentDidMount = this.componentDidMount(this);
+    this.advancefilter=this.advancefilter.bind(this);
+    this.advancefilterdisplay=this.advancefilterdisplay.bind(this);
     this.onCityInputChange = this.onCityInputChange.bind(this);
     this.onCrusineInputChange=this.onCrusineInputChange.bind(this);    
     this.submitrestaurant = this.submitrestaurant.bind(this);
@@ -52,35 +56,14 @@ export default class Recommendations extends React.Component {
 
 
  async onCrusineInputChange(e,{value}){
-    console.log("changedddd crusine",this);
-    console.log("changedddd crusine value",value);
-    await this.setState({crusine: value});
-    console.log("changedddd crusine value state",this.state.crusine);
 
-    // if (value==="Current Location"){
-    //   this.setState({restaurantCityName: value});
-    // }
-    // else{
-    // this.setState({
-    //   restaurantCityName: value.substring(0,value.length-4),
-    //   restaurantStateName: value.substring(value.length-2),
-    // });}
+    await this.setState({crusine: value});   
+
+
   }
 
 
 
-  // onChange(e) {
-  //   const options = this.state.crusine;
-  //   let index;
-  //   if (e.target.checked) {
-  //     options.push(e.target.value);
-  //   } else {
-  //     index = options.indexOf(e.target.value);
-  //     options.splice(index, 1);
-  //   }
-  //   this.setState({ crusine: options });
-  //   // console.log(this.state.crusine);
-  // }
 
   componentDidMount() {
     const success = (position) => {
@@ -273,16 +256,24 @@ export default class Recommendations extends React.Component {
       );
   }
 
-  render() {
-    return (
-      <div className="Recommendations">
-        <div className="container recommendations-container">
-          <div className="jumbotron jumbotron-custom">
-            <div className="h5">Restaurant Recommendations</div>
-            <br></br>
-            <div className="input-container">
-              
-                <input
+
+  async advancefilter(e){
+
+    await this.setState({advancefilterchoice: !this.state.advancefilterchoice});
+    console.log("this.state.advancefilterchoice",this.state.advancefilterchoice);
+
+  }
+
+  advancefilterdisplay(){
+    console.log("advancefilterdisplay")
+    if (this.state.advancefilterchoice){
+      return (
+  
+        <div className="input-container">  
+
+                
+          <Input
+          icon='search'
                 type="text"
                 placeholder="Enter start time"
                 value={this.state.time_start}
@@ -291,102 +282,127 @@ export default class Recommendations extends React.Component {
                 className="restaurant-input"
               />
 
-              <br></br>
-              <fieldset>
-                <legend>Choose your Crusine</legend>
+
+        <legend>Choose your Crusine</legend>
                 {this.state.crusineDropdown}
-                {/* <div>
-                  <label>Italian</label>
-                  <input
-                    type="checkbox"
-                    value="ITALIAN"
-                    onChange={this.onChange.bind(this)}
-                  />
-                </div>
-                <div>
-                  <label>Indian</label>
-                  <input
-                    type="checkbox"
-                    value="INDIAN"
-                    onChange={this.onChange.bind(this)}
-                  />
-                </div>
-                <div>
-                  <label>Chinese</label>
-                  <input
-                    type="checkbox"
-                    value="CHINESE"
-                    onChange={this.onChange.bind(this)}
-                  />
-                </div> */}
-              </fieldset>
-              <div class="txt-center">
-                <form>
-                  <div class="rating">
-                    <input
-                      id="star5"
-                      name="star"
-                      type="radio"
-                      value="5"
-                      class="radio-btn hide"
-                      checked={this.state.star.toString() === "5"}
-                      onChange={this.handleRadioChange}
-                    />
-                    <label for="star5">☆</label>
-                    <input
-                      id="star4"
-                      name="star"
-                      type="radio"
-                      value="4"
-                      class="radio-btn hide"
-                      checked={this.state.star.toString() === "4"}
-                      onChange={this.handleRadioChange}
-                    />
-                    <label for="star4">☆</label>
-                    <input
-                      id="star3"
-                      name="star"
-                      type="radio"
-                      value="3"
-                      class="radio-btn hide"
-                      checked={this.state.star.toString() === "3"}
-                      onChange={this.handleRadioChange}
-                    />
-                    <label for="star3">☆</label>
-                    <input
-                      id="star2"
-                      name="star"
-                      type="radio"
-                      value="2"
-                      class="radio-btn hide"
-                      checked={this.state.star.toString() === "2"}
-                      onChange={this.handleRadioChange}
-                    />
-                    <label for="star2">☆</label>
-                    <input
-                      id="star1"
-                      name="star"
-                      type="radio"
-                      value="1"
-                      class="radio-btn hide"
-                      checked={this.state.star.toString() === "1"}
-                      onChange={this.handleRadioChange}
-                    />
-                    <label for="star1">☆</label>
-                    <div class="clear"></div>
-                  </div>
-                </form>
-              </div>
+           
+      <div class="txt-center">
+      <form>
+        <div class="rating">
+          <input
+            id="star5"
+            name="star"
+            type="radio"
+            value="5"
+            class="radio-btn hide"
+            checked={this.state.star.toString() === "5"}
+            onChange={this.handleRadioChange}
+          />
+          <label for="star5">☆</label>
+          <input
+            id="star4"
+            name="star"
+            type="radio"
+            value="4"
+            class="radio-btn hide"
+            checked={this.state.star.toString() === "4"}
+            onChange={this.handleRadioChange}
+          />
+          <label for="star4">☆</label>
+          <input
+            id="star3"
+            name="star"
+            type="radio"
+            value="3"
+            class="radio-btn hide"
+            checked={this.state.star.toString() === "3"}
+            onChange={this.handleRadioChange}
+          />
+          <label for="star3">☆</label>
+          <input
+            id="star2"
+            name="star"
+            type="radio"
+            value="2"
+            class="radio-btn hide"
+            checked={this.state.star.toString() === "2"}
+            onChange={this.handleRadioChange}
+          />
+          <label for="star2">☆</label>
+          <input
+            id="star1"
+            name="star"
+            type="radio"
+            value="1"
+            class="radio-btn hide"
+            checked={this.state.star.toString() === "1"}
+            onChange={this.handleRadioChange}
+          />
+          <label for="star1">☆</label>
+          <div class="clear"></div>
+        </div>
+      </form>
+    </div>
+    </div>
+
+      
+    );
+      }
+      
+  }
+
+
+
+
+  
+
+  
+  render() {
+    return (
+
+      // <style> .button2 {background-color: #008CBA;} </style>
+      
+      <div className="Recommendations">
+        <div className="container recommendations-container">
+          <div className="jumbotron jumbotron-custom">
+            <div className="h5">Restaurant Recommendations</div>
+            <br></br>
+            {/* <div className="input-container"> */}
+      
               {this.state.citiesDropdown}
-              <button
-                id="submitrestaurantBtn"
-                className="submit-btn"
-                onClick={this.submitrestaurant}
+
+                  
+      <br></br>
+      <br></br>
+              <Button.Group>
+              <Button 
+         
+              style={{height: '30px', width : '130px'}}
+              animated='vertical'
+              color='blue'
+              onClick={this.advancefilter}
               >
+              <Button.Content hidden>Advancefiltering</Button.Content>
+              <Button.Content visible>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+  <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+</svg>
+        
+              </Button.Content>    
                 
-                Submit
-              </button>
-            </div>
+              </Button>
+              <Button.Or />
+              <Button 
+              style={{height: '30px', width : '130px'}}
+              color='teal'
+              id="submitrestaurantBtn"
+              className="submit-btn"
+              onClick={this.submitrestaurant}
+              >Submit</Button>
+              </Button.Group>
+                    
+              {this.advancefilterdisplay()}            
+  
             <div className="header-container">
               <div className="h6">You may like ...</div>
             </div>
