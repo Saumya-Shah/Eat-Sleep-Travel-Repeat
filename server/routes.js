@@ -99,7 +99,7 @@ else{
           select business_id, name, address,city,state ,stars,review_count, photo_id from output fetch first 10 rows only`;
 
 
-        // console.log(query);
+        console.log(query);
             result = await connection.execute(query, [city_name,state_name, str,ts], {
               outFormat: oracledb.OUT_FORMAT_OBJECT,
             }); 
