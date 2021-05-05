@@ -4,7 +4,7 @@ Based on the passion and demand to travel and enjoy delicious food post pandemic
 
 This is a class project for CIS 550.
 
-Contributors: Megha Mishra, Saumya Shah, Shumin Yuan, Zhuo Chen
+**Contributors**: Megha Mishra, Saumya Shah, Shumin Yuan, Zhuo Chen
 
 ### Images
 
@@ -20,7 +20,7 @@ The project uses https, and thus, you need to create SSL certificates for localh
 
 ### Database 
 
-Install oracle db as per the instructions here: http://oracle.github.io/node-oracledb/INSTALL.html
+Install oracle db client as per the instructions here: http://oracle.github.io/node-oracledb/INSTALL.html
 
 ### Running the project
 
