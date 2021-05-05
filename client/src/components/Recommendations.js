@@ -11,7 +11,8 @@ export default class Recommendations extends React.Component {
     super(props);
 
     this.state = {
-      restaurantName: "Las Vegas",
+      restaurantCityName: "Las Vegas",
+      restaurantStateName: "NV",
       crusine: [],
       recrestaurants: [],
       Latitude: 0,
@@ -22,12 +23,12 @@ export default class Recommendations extends React.Component {
       day: "",
       star: 1,
       currentLoc: "",
+      currentState: "",
       citiesDropdown: "",
     
     };
     // this.componentDidMount = this.componentDidMount(this);
     // this.getUpdate=this.getUpdate(this);
-    this.handlerestaurantNameChange = this.handlerestaurantNameChange.bind(this);
     this.onCityInputChange = this.onCityInputChange.bind(this);
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange = this.handletimestartChange.bind(this);
@@ -37,9 +38,14 @@ export default class Recommendations extends React.Component {
 
   onCityInputChange(e,{value}){
     console.log("changedddd",this);
+    if (value==="Current Location"){
+      this.setState({restaurantCityName: value});
+    }
+    else{
     this.setState({
-      restaurantName: value,
-    });
+      restaurantCityName: value.substring(0,value.length-4),
+      restaurantStateName: value.substring(value.length-2),
+    });}
   }
 
   onChange(e) {
@@ -102,7 +108,8 @@ export default class Recommendations extends React.Component {
       lat: this.state.Latitude,
       lon: this.state.Longitude,
       cru: this.state.crusine,
-      city: this.state.restaurantName,
+      city: this.state.restaurantCityName,
+      state: this.state.restaurantStateName,
       ts: time_now,
       te: this.state.time_end,
       day: day,
@@ -146,8 +153,10 @@ export default class Recommendations extends React.Component {
 
           this.setState({
             recrestaurants: RecommendationsRowDivs,
-            restaurantName: restaurantList[0].CITY,
+            restaurantCityName: restaurantList[0].CITY,
+            restaurantStateName: restaurantList[0].STATE,
             currentLoc: restaurantList[0].CITY,
+            currentState: restaurantList[0].STATE,
             day: day,
             time_start: time_now,
           });
@@ -159,11 +168,7 @@ export default class Recommendations extends React.Component {
       );
   }
 
-  handlerestaurantNameChange(e) {
-    this.setState({
-      restaurantName: e.target.value,
-    });
-  }
+  
 
   handletimestartChange(e) {
     this.setState({
@@ -183,14 +188,15 @@ export default class Recommendations extends React.Component {
 
   async submitrestaurant() {
     const url = new URL("http://localhost:8082/recommendations/");
-    if (this.state.restaurantName==="Current Location"){
-      await this.setState({restaurantName: this.state.currentLoc});
+    if (this.state.restaurantCityName==="Current Location"){
+      await this.setState({restaurantCityName: this.state.currentLoc, restaurantStateName: this.state.currentState});
     }
     Axios.post(url, {
       lat: this.state.Latitude,
       lon: this.state.Longitude,
       cru: this.state.crusine,
-      city: this.state.restaurantName,
+      city: this.state.restaurantCityName,
+      state: this.state.restaurantStateName,
       ts: this.state.time_start,
       te: this.state.time_end,
       day: this.state.day,

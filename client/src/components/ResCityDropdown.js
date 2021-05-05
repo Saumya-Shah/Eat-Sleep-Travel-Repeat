@@ -19,8 +19,8 @@ export default class DropDownCity extends React.Component {
         Axios.get("http://localhost:8082/get_res_cities").then((response) => {
         var cityOptions = response.data.map((cityObj, i)=> ({
             key: i+1, 
-            text: cityObj.CITY, 
-            value: cityObj.CITY, 
+            text: cityObj.CITY + ", " + cityObj.STATE, 
+            value: cityObj.CITY + ", " + cityObj.STATE, 
         }));
         cityOptions.unshift({key:0, text: "Current Location", value: "Current Location"});
         // console.log(cityOptions);

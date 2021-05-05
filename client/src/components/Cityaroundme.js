@@ -1,11 +1,10 @@
 import React from "react";
 import { Card, CardGroup, Button, Container, Row, Col,} from 'react-bootstrap';
-import FlightSearchRow_NONSTOP from "./FlightSearchRow";
-import {Redirect} from 'react-router-dom';
 import "../style/Cityaroundme.css";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as GiIcon from "react-icons/gi";
+import * as FaIcon from "react-icons/fa";
 
 export default class Cityaroundme extends React.Component {
   constructor(props) {
@@ -18,12 +17,14 @@ export default class Cityaroundme extends React.Component {
       usrCountry: "",
       nearbyCities: [],
       popularCities:[],
+      trips:[],
       routes: [],
     };
     this.submitUsr = this.submitUsr.bind(this);
 
   }
   componentDidMount() {
+    /* show popular city */
     let url = "http://localhost:8082/popularCity/";
     Axios.get(url)
       .then((res) => {
@@ -31,7 +32,6 @@ export default class Cityaroundme extends React.Component {
           return res.data;
         },
         (err) => {
-          // Print the error if there is one.
           console.log(err);
         }
       )
@@ -51,7 +51,74 @@ export default class Cityaroundme extends React.Component {
         this.setState({popularCities: popularCityDivs});
       })
       .catch(error => console.log(error));
-    const success = (position) => {
+    /* show recommended trips */
+    url = "http://localhost:8082/trip/";
+    Axios.get(url)
+      .then((res) => {
+          console.log(res);
+          return res.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+      .then((res) => {
+        const tripDivs = res.map(
+          (tripObj, i) => (
+            <CardGroup>
+              <Card className="card_item">
+                <Card.Header>First Stop</Card.Header>
+                <Card.Body>
+                  <Row className="justify-content-md-center">
+                    <Col md="auto"> <FaIcon.FaCity/></Col>
+                    <Col>{tripObj.CITY1}</Col>
+                    <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                    <Col>{tripObj.REST1}</Col>
+                    <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                    <Col>{tripObj.ADD1}</Col>
+                    <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                    <Col md="auto">{tripObj.STAR1}</Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+              <Card className="card_item">
+                <Card.Header>Second Stop</Card.Header>
+                <Card.Body>
+                  <Row className="justify-content-md-center">
+                    <Col md="auto"> <FaIcon.FaCity/></Col>
+                    <Col>{tripObj.CITY2}</Col>
+                    <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                    <Col>{tripObj.REST2}</Col>
+                    <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                    <Col>{tripObj.ADD2}</Col>
+                    <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                    <Col>{tripObj.STAR2}</Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+              <Card className="card_item">
+                <Card.Header>Third Stop</Card.Header>
+                <Card.Body>
+                  <Row className="justify-content-md-center">
+                    <Col md="auto"> <FaIcon.FaCity/></Col>
+                    <Col>{tripObj.CITY3}</Col>
+                    <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                    <Col>{tripObj.REST3}</Col>
+                    <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                    <Col>{tripObj.ADD3}</Col>
+                    <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                    <Col>{tripObj.STAR3}</Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </CardGroup>
+          )
+        );
+        this.setState({trips: tripDivs});
+      })
+      .catch(error => console.log(error));
+    /* show nearby city */
+      const success = (position) => {
       this.setState(
         {
           Latitude: position.coords.latitude,
@@ -75,7 +142,6 @@ export default class Cityaroundme extends React.Component {
           return res.data;
         },
         (err) => {
-          // Print the error if there is one.
           console.log(err);
         }
       )
@@ -83,18 +149,18 @@ export default class Cityaroundme extends React.Component {
         const routeRows = res.map(
           (routeObj, i) => ( 
             <Card className="card_item">
-                <Card.Body>
-            <Row className="justify-content-md-center">
-              <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
-              <Col md="auto">{routeObj.SOURCE_AIRPORT}</Col>
-              <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
-              <Col md="auto">{routeObj.DEST_AIRPORT}</Col>
-              <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
-              <Col >{routeObj.TIME}h</Col>
-              <Col >airlineid:{routeObj.AIRLINEID}</Col>
-            </Row>
-            </Card.Body>
-              </Card>
+              <Card.Body>
+                <Row className="justify-content-md-center">
+                  <Col md="auto"> <GiIcon.GiAirplaneDeparture /></Col>
+                  <Col md="auto">{routeObj.SOURCE_AIRPORT}</Col>
+                  <Col md="auto"> <GiIcon.GiAirplaneArrival /></Col>
+                  <Col md="auto">{routeObj.DEST_AIRPORT}</Col>
+                  <Col md="auto"> <GiIcon.GiAlarmClock /></Col>
+                  <Col >{routeObj.TIME}h</Col>
+                  <Col >airlineid:{routeObj.AIRLINEID}</Col>
+                </Row>
+              </Card.Body>
+            </Card>
           )
         );
         this.setState({routes: routeRows});
@@ -170,9 +236,13 @@ export default class Cityaroundme extends React.Component {
                 <h2 className="text-center">Flight Results</h2>
                 {this.state.routes}
               </Container>
-            }           
+            }   
+            <br></br>      
           </div>
-          
+        </div>
+        <div class="jumbotron jumbotron-fluid">
+          <h1 className="text-center">Recommended Trips</h1>
+          <Container fluid={true}>{this.state.trips}</Container>   
         </div>
       </div>  
     );
