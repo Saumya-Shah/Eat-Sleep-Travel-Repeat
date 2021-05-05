@@ -1,14 +1,11 @@
 import React from "react";
-import { InputGroup, DropdownButton, FormControl, Dropdown, Button} from 'react-bootstrap';
-// import DropdownButton from 'react-bootstrap/DropdownButton'
-// import Dropdown from 'react-bootstrap/Dropdown'
-import FlightSearchRow_NONSTOP from "./FlightSearchRow";
-import FlightSearchRow_ONESTOP from "./FlightSearchRow";
-import FlightSearchRow_TWOSTOP from "./FlightSearchRow";
+import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, Row, Card, Col,} from 'react-bootstrap';
 import "../style/FlightSearch.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import * as FaIcon from "react-icons/fa";
 
 export default class FlightSearch extends React.Component {
+  
   constructor(props) {
     super(props);
 
@@ -71,37 +68,61 @@ export default class FlightSearch extends React.Component {
           var routeDivs;
           if(this.state.selectstop == 0){// nonstop
             routeDivs = selectroute.map((routeObj,i) =>(
-              <FlightSearchRow_NONSTOP
-                source_airport = {routeObj.SOURCE_AIRPORT}
-                dest_airport={routeObj.DEST_AIRPORT}
-                time={routeObj.TIME}
-                airlineid={routeObj.AIRLINEID}
-              />
+              <Card className="card_item">
+                <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
+                <Col >{routeObj.SOURCE_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
+                <Col >{routeObj.DEST_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
+                <Col md="auto">{routeObj.TIME}h</Col>
+                <Col >airlineid:{routeObj.AIRLINEID}</Col>
+              </Row>
+              </Card.Body>
+              </Card>
+                
+              
             ));
           }else if (this.state.selectstop == 1){// one stop
             console.log("[FlightSearch.js]: one stop case!");
             routeDivs = selectroute.map((routeObj,i) =>(
-              <FlightSearchRow_ONESTOP
-                source_airport = {routeObj.SOURCE_AIRPORT}
-                mid_airport = {routeObj.MID_AIRPORT}
-                dest_airport={routeObj.DEST_AIRPORT}
-                time={routeObj.TIME}
-                airlineid_1={routeObj.AIRLINEID_1}
-                airlineid_2={routeObj.AIRLINEID_2}
-              />
+              <Card className="card_item">
+                <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
+                <Col >{routeObj.SOURCE_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
+                <Col >{routeObj.MID_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
+                <Col >{routeObj.DEST_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
+                <Col md="auto">{routeObj.TIME}h</Col>
+                <Col md="auto">airlineid:{routeObj.AIRLINEID_1},{routeObj.AIRLINEID_2} </Col>
+              </Row>
+              </Card.Body>
+              </Card>
+             
             ));
           }else{// two stop
             routeDivs = selectroute.map((routeObj,i) =>(
-              <FlightSearchRow_TWOSTOP
-                source_airport = {routeObj.SOURCE_AIRPORT}
-                mid_airport_1 = {routeObj.MID_AIRPORT_1}
-                mid_airport_2 = {routeObj.MID_AIRPORT_2}
-                dest_airport={routeObj.DEST_AIRPORT}
-                time={routeObj.TIME}
-                airlineid_1={routeObj.AIRLINEID_1}
-                airlineid_2={routeObj.AIRLINEID_2}
-                airlineid_3={routeObj.AIRLINEID_3}
-              />
+              <Card className="card_item">
+                <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaPlaneDeparture /></Col>
+                <Col >{routeObj.SOURCE_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
+                <Col >{routeObj.MID_AIRPORT_1}</Col>
+                <Col md="auto"> <FaIcon.FaRegPauseCircle /></Col>
+                <Col >{routeObj.MID_AIRPORT_2}</Col>
+                <Col md="auto"> <FaIcon.FaPlaneArrival /></Col>
+                <Col >{routeObj.DEST_AIRPORT}</Col>
+                <Col md="auto"> <FaIcon.FaClock /></Col>
+                <Col md="auto">{routeObj.TIME}h</Col>
+                <Col md="auto">airlineid:{routeObj.AIRLINEID_1}, {routeObj.AIRLINEID_2}, {routeObj.AIRLINEID_3}</Col>
+              </Row>
+              </Card.Body>
+              </Card>                 
             ));
             console.log(routeDivs);
           }
@@ -117,8 +138,9 @@ export default class FlightSearch extends React.Component {
   render() {
     return (
       <div className="FlightSearch">
+        
         <div className="container flightsearch-container">
-          <div className="jumbotron">
+          <div className="FlightSearchbg">
             <h1 className="text-center">Flight Search</h1>
             <br></br>
             <InputGroup className="mb-3">
@@ -152,10 +174,11 @@ export default class FlightSearch extends React.Component {
             </InputGroup>
             <Button bsStyle="primary" size="lg" onClick={this.submitall} block>Find Recommended Flights!</Button>
           </div>
-          <div className="jumbotron">
-            <div className="results-container" id="results">
-              {this.state.routes}
-            </div>
+          <div className="flightres">
+          <br></br>
+              <Container className="card_container" fluid>{this.state.routes}</Container>
+          <br></br>
+            
           </div>
         </div>
       </div>

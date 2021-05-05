@@ -11,8 +11,22 @@
   align-items: center;
   height: 40px;
 }
-
+.results-container-flight{
+  display: flex;
+  font-style: italic;
+  color: green;
+  flex-flow: column nowrap;
+  height: 180px;
+  width: 100%;
+}
 .CityResults .city,
 .headers .header {
   flex: 2 0 25%;
+}
+hr.solid {
+  border-top: 3px solid #000;
+}
+.flight_photo{
+  position: absolute;
+  left:100;
 }

@@ -252,14 +252,14 @@ try {
       from routes
       join airports sa on sa.airportid = routes.source_airportid
       join airports da on da.airportid = routes.destination_airportid
-      where sa.city =:destCity
+      where sa.city =:sourceCity
     ),
     to_dest as(
       select sa.name as source_airport, da.name as dest_airport, round(111.138 * sqrt(power(((sa.Latitude) - da.latitude), 2) + power(((sa.Longitude) - da.longitude), 2)) / 500, 1) as time, airlineid
       from routes
       join airports sa on sa.airportid = routes.source_airportid
       join airports da on da.airportid = routes.destination_airportid
-      where da.city =:sourceCity
+      where da.city =:destCity
     )
     select a2.name as source_airport, td.source_airport as mid_airport, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_2, td.airlineid as airlineid_1
     from to_dest td join airports a1 on a1.name = td.source_airport
@@ -296,13 +296,13 @@ try {
     from to_dest td join airports a1 on a1.name = td.source_airport
     join routes on routes.destination_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.source_airportid
-    where a2.city =:sourceCity
+    where a2.city =:sourceCity and a2.name <> td.mid_airport
     union
     select fs.source_airport as source_airport, fs.mid_airport as mid_airport_1, fs.dest_airport as mid_airport_2, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid_1, fs.airlineid_2, routes.airlineid as airlineid_3
     from from_source fs join airports a1 on a1.name = fs.dest_airport
     join routes on routes.source_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.destination_airportid
-    where a2.city =:destCity
+    where a2.city =:destCity and a2.name <> fs.mid_airport
     order by time asc fetch next 5 rows only`;
   }
   const result = await connection.execute(query, [sourceCity, destCity], {
@@ -318,13 +318,13 @@ try {
 }
 };
 
-const getCity = async (req, res) => {
+const getNearbyCity = async (req, res) => {
 try {
   var lat = req.body.lat;
   var lon = req.body.lon;
   console.log(lat, lon);
   var query = `with nearby_cities_dist as(
-    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 4)) as distance
+    select a1.city, a1.country, min(round(111.138 * sqrt(power(((a1.Latitude) - :lat), 2) + power(((a1.Longitude) - :lon), 2)), 0)) as distance
     from airports a1
     group by a1.city, a1.country
 )
@@ -343,6 +343,40 @@ fetch next 5 rows only`;
 }
 };
 
+const getPopularCity = async (req, res) => {
+  try {
+    var query = `with popular_flight_city as (
+      select ap.city as city, count(*) AS flt_cnt
+      from Routes r join airports ap on r.destination_airportid = ap.airportid
+      where ap.country = 'United States'
+      group by ap.city
+  ),
+  city_restaurants_cnt as (
+      select
+          city,
+          count(restaurants.business_id) as rest_cnt
+      from
+          restaurants
+          join restaurants_features on restaurants_features.business_id = restaurants.business_id
+      where
+          restaurants_features.stars > 3
+      group by
+          city
+  )
+  select pfc.city
+  from popular_flight_city pfc join city_restaurants_cnt cr on pfc.city = cr.city
+  order by flt_cnt+rest_cnt DESC fetch next 5 rows only`;
+    const result = await connection.execute(query, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    console.log("end");
+  }
+  };
+
 
 module.exports = {
   getRecs: getRecs,
@@ -350,7 +384,8 @@ module.exports = {
   login: login,
   getFavoriteRestaurants: getFavoriteRestaurants,
   getVisitedRestaurants: getVisitedRestaurants,
-  getCity: getCity,
+  getNearbyCity: getNearbyCity,
+  getPopularCity: getPopularCity,
   FlightSearch: FlightSearch,
   getRestaurantsCities: getRestaurantsCities,
   

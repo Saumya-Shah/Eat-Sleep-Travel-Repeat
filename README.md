@@ -6,6 +6,7 @@ This is a class project for CIS 550.
 
 Contributors: Megha Mishra, Saumya Shah, Shumin Yuan, Zhuo Chen
 
+Download res_pics directory from [here](https://drive.google.com/drive/folders/1qmXI027Z-Qr2r-4XdxqtKQI1ZMDp7HEU?usp=sharing) and place it under client/public/ directory for rendering pics.
 
 Install oracle db as per the instructions here: http://oracle.github.io/node-oracledb/INSTALL.html
 

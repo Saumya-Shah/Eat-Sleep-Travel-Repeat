@@ -31,20 +31,14 @@ order by distance ASC
 fetch next 20 rows only;
 
 /* 
- query 2(easy): recommend user with 10 cities to travel to in the united states
+ query 2(easy): recommend user with popular cities to travel to in the united states
  popular city defination: the city that appears as "destination" in routes table most frequently and has most restaurants with star>3
  */
 with popular_flight_city as (
-    select
-        ap.city as city,
-        count(*) AS flt_cnt
-    from
-        Routes r
-        join airports ap on r.destination_airportid = ap.airportid
-    where
-        ap.country = 'United States'
-    group by
-        ap.city
+    select ap.city as city, count(*) AS flt_cnt
+    from Routes r join airports ap on r.destination_airportid = ap.airportid
+    where ap.country = 'United States'
+    group by ap.city
 ),
 city_restaurants_cnt as (
     select
@@ -58,14 +52,9 @@ city_restaurants_cnt as (
     group by
         city
 )
-select
-    pfc.city
-from
-    popular_flight_city pfc
-    join city_restaurants_cnt cr on pfc.city = cr.city
-order by
-    flt_cnt,
-    rest_cnt DESC fetch next 10 rows only;
+select pfc.city
+from popular_flight_city pfc join city_restaurants_cnt cr on pfc.city = cr.city
+order by flt_cnt+rest_cnt DESC fetch next 5 rows only;
 
 /* 
  query 3(easy): flight search based on:
