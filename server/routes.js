@@ -375,6 +375,103 @@ const getPopularCity = async (req, res) => {
     console.log("end");
   }
   };
+  const getTrip = async (req, res) => {
+    try {
+      var query = `with popular_flight_city as (
+        select
+            ap.city as city,
+            count(*) AS flt_cnt
+        from
+            Routes r
+            join airports ap on r.destination_airportid = ap.airportid
+        where
+            ap.country = 'United States'
+        group by
+            ap.city
+    ),
+    city_restaurants_cnt as (
+        select
+            city,
+            count(restaurants.business_id) as rest_cnt
+        from
+            restaurants
+            join restaurants_features on restaurants_features.business_id = restaurants.business_id
+        where
+            restaurants_features.stars > 3
+        group by
+            city
+    ),
+    popular_city as(
+        select
+            pfc.city
+        from
+            popular_flight_city pfc
+            join city_restaurants_cnt cr on pfc.city = cr.city
+        where
+            rownum < 10
+        order by
+            flt_cnt,
+            rest_cnt DESC
+    ),
+    two_popular_city as (
+        select
+            pc1.city as source_city,
+            pc2.city as destination_city
+        from
+            popular_city pc1
+            cross join popular_city pc2
+            join airports ap1 on ap1.city = pc1.city
+            join airports ap2 on ap2.city = pc2.city
+            join routes on routes.source_airportid = ap1.airportid
+            and routes.destination_airportid = ap2.airportid
+        where
+            pc1.city <> pc2.city
+            and power(ap1.Latitude - ap2.Latitude, 2) + power(ap1.longitude - ap2.longitude, 2) < 100
+    ),
+    three_popular_city as (
+        select
+            tpc1.source_city as city1,
+            tpc1.destination_city as city2,
+            tpc2.destination_city as city3
+        from
+            two_popular_city tpc1
+            join two_popular_city tpc2 on tpc1.destination_city = tpc2.source_city
+        where
+            tpc1.source_city <> tpc2.destination_city
+    )
+    select
+        city1 as city1,
+        rest1.name as rest1,
+        rest1.address as add1,
+        rest1.stars as star1,
+        city2 as city2,
+        rest2.name as rest2,
+        rest2.address as add2,
+        rest2.stars as star2,
+        city3 as city3,
+        rest3.name as rest3,
+        rest3.address as add3,
+        rest3.stars as star3
+    from
+        three_popular_city tpc
+        join restaurants_full rest1 on tpc.city1 = rest1.city
+        join restaurants_full rest2 on tpc.city2 = rest2.city
+        join restaurants_full rest3 on tpc.city3 = rest3.city
+    where
+        rest1.stars > 4
+        and rest2.stars > 4
+        and rest3.stars > 4
+    fetch next 5 rows only`;
+      const result = await connection.execute(query, [], {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      });
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log("end");
+    }
+    };
 
 
 module.exports = {
@@ -385,6 +482,7 @@ module.exports = {
   getVisitedRestaurants: getVisitedRestaurants,
   getNearbyCity: getNearbyCity,
   getPopularCity: getPopularCity,
+  getTrip: getTrip,
   FlightSearch: FlightSearch,
   getRestaurantsCities: getRestaurantsCities,
   

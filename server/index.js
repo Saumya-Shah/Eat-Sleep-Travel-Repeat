@@ -50,6 +50,7 @@ app.get("/test", routes.getRecs);
 // app.get("/cityaroundme/",routes.getCity);
 app.post("/cityaroundme/", routes.getNearbyCity);
 app.get("/popularCity", routes.getPopularCity);
+app.get("/trip", routes.getTrip);
 app.get("/FlightSearch/:sourceCity/:destCity/:stops",routes.FlightSearch);
 
 
