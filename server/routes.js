@@ -36,6 +36,7 @@ try {
   else{  
   var cru = req.body.cru;
   var city_name = req.body.city.toUpperCase();
+  var state_name = req.body.state.toUpperCase();
   var lat= req.body.lat;
   var lon= req.body.lon;  
   var ts=req.body.ts;
@@ -89,7 +90,7 @@ else{
     q=q+` final_table as ( select * from city_restaurants NATURAL JOIN restaurants_features ), `;
   }
         
-  query=`with city_restaurants as (select * from restaurants where  UPPER(city)=:city_name), `+ q + 
+  query=`with city_restaurants as (select * from restaurants where  UPPER(city)=:city_name and UPPER(state)=:state_name), `+ q + 
   `top_rating AS (  SELECT * FROM final_table  WHERE stars >= :str ),
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
@@ -98,7 +99,7 @@ else{
 
 
         // console.log(query);
-            result = await connection.execute(query, [city_name,str,ts], {
+            result = await connection.execute(query, [city_name,state_name, str,ts], {
               outFormat: oracledb.OUT_FORMAT_OBJECT,
             }); 
 }
@@ -218,7 +219,7 @@ const getVisitedRestaurants = async (req, res) => {
 
 const getRestaurantsCities = async (req, res) => {
   try {
-    var query = `select distinct UPPER(city) as CITY from restaurants order by CITY`;
+    var query = `select distinct UPPER(city) as city, UPPER(state) as state from restaurants order by CITY`;
     const result = await connection.execute(query, [], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });
