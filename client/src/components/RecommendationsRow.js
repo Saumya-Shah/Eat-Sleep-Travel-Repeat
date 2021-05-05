@@ -25,7 +25,7 @@ export default class RecommendationsRow extends React.Component {
 
     console.log("this.state.checked after",this.state.checked)
 
-    const url = new URL("http://localhost:8082/recommendations/");
+    const url = new URL("https://localhost:8082/recommendations/");
 
     console.log("this.props.flag2",this.props.flag2)
     

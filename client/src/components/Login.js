@@ -27,7 +27,7 @@ export default class Login extends React.Component {
 
   submitRegistration() {
     console.log("Submit registration called");
-    Axios.post("http://localhost:8082/register", {
+    Axios.post("https://localhost:8082/register", {
       username: this.state.usernameReg,
       password: this.state.passwordReg,
       firstname: this.state.firstnameReg,
@@ -39,7 +39,7 @@ export default class Login extends React.Component {
 
   submitLogin() {
     // console.log("Submit login called");
-    Axios.post("http://localhost:8082/login", {
+    Axios.post("https://localhost:8082/login", {
       username: this.state.usernameLog,
       password: this.state.passwordLog,
     }).then((response) => {
@@ -57,13 +57,13 @@ export default class Login extends React.Component {
 
   handleLogout() {
     console.log("Logging out");
-    Axios.get("http://localhost:8082/logout").then((response) => {
+    Axios.get("https://localhost:8082/logout").then((response) => {
       this.setState({ loggedIn: false, loginStatus: "" });
     });
   }
 
   componentDidMount() {
-    Axios.get("http://localhost:8082/login").then((response) => {
+    Axios.get("https://localhost:8082/login").then((response) => {
       // console.log(response.data);
       if (response.data.loggedIn)
         this.setState({
