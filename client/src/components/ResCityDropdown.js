@@ -30,8 +30,8 @@ export default class DropDownCity extends React.Component {
     }
 
     render() { 
-        return  <Button.Group color='grey'>   <Dropdown 
-        style={{height: '30px', width : '200px'}}
+        return  <Button.Group color='#ffffff'>   <Dropdown 
+        style={{height: '30px', width : '350px'}}
         options={this.state.cityNames} 
         onChange={this.props.onInputChange}
         button
@@ -40,8 +40,7 @@ export default class DropDownCity extends React.Component {
         labeled
         icon='world'
         search
-        text='Select City'        
-        
+        placeholder="Select City"
         />;
  
 
