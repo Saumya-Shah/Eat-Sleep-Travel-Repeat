@@ -8,6 +8,12 @@ Contributors: Megha Mishra, Saumya Shah, Shumin Yuan, Zhuo Chen
 
 Download res_pics directory from [here](https://drive.google.com/drive/folders/1qmXI027Z-Qr2r-4XdxqtKQI1ZMDp7HEU?usp=sharing) and place it under client/public/ directory for rendering pics.
 
+The project uses https, and thus, you need to create SSL certificates for localhost. Follow these steps to get the certificates:
+1. Install mkcert following the instructions [here](https://github.com/FiloSottile/mkcert#installation) 
+2. Go to the project root directory and run the following commands to generate the certificate and key.
+3. `mkcert -install`
+4. `mkcert -cert-file ./cert.pem -key-file ./key.pem localhost`
+
 Install oracle db as per the instructions here: http://oracle.github.io/node-oracledb/INSTALL.html
 
 Run `npm install` from client and server directory.
