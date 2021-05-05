@@ -2,4 +2,6 @@ node_modules
 public/
 .env
 res_pics/
+cert.pem
+key.pem
 client/package-lock.json
