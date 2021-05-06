@@ -1,12 +1,13 @@
-import React from "react";
+import React  from "react";
 import RecommendationsRow from "./RecommendationsRow";
 import "../style/Recommendations.css";
-import "../style/stars.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 import DropDownCity from "./ResCityDropdown";
-import { Button,Input } from 'semantic-ui-react'
+import { Button,Input,Rating,Checkbox } from 'semantic-ui-react'
 import DropDownCrusine from "./ResCrusineDropdown";
+
+
 
 export default class Recommendations extends React.Component {
   constructor(props) {
@@ -29,6 +30,8 @@ export default class Recommendations extends React.Component {
       citiesDropdown: "",
       crusineDropdown:"",
       advancefilterchoice:false,
+      parking:false,
+      covid:false,
     
     };
     // this.componentDidMount = this.componentDidMount(this);
@@ -39,6 +42,8 @@ export default class Recommendations extends React.Component {
     this.submitrestaurant = this.submitrestaurant.bind(this);
     this.handletimestartChange = this.handletimestartChange.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleparking=this.handleparking.bind(this);
+    this.handlecovid=this.handlecovid.bind(this);
   }
 
 
@@ -59,10 +64,29 @@ export default class Recommendations extends React.Component {
 
     await this.setState({crusine: value});   
 
+  }
 
+  async handleparking(e){
+    await this.setState(
+      {
+        parking: !this.state.parking
+    
+      });
+
+      console.log("this.state.parking",this.state.parking);
   }
 
 
+  
+  async handlecovid(e){
+    await this.setState(
+      {
+        covid: !this.state.covid
+    
+      });
+
+      console.log("this.state.covid",this.state.covid);
+  }
 
 
   componentDidMount() {
@@ -122,6 +146,8 @@ export default class Recommendations extends React.Component {
       day: day,
       flag: 1,
       star: this.state.star,
+      parking:this.state.parking,
+      covid:this.state.covid,
     })
       .then(
         (res) => {
@@ -134,7 +160,7 @@ export default class Recommendations extends React.Component {
         }
       )
       .then(
-        (restaurantList) => {
+        async (restaurantList) => {
           if (!restaurantList) return;
           console.log("restaurantList", restaurantList);
           // Map each keyword in this.state.keywords to an HTML element:
@@ -158,7 +184,7 @@ export default class Recommendations extends React.Component {
 
           // Set the state of the keywords list to the value returned by the HTTP response from the server.
 
-          this.setState({
+          await this.setState({
             recrestaurants: RecommendationsRowDivs,
             restaurantCityName: restaurantList[0].CITY,
             restaurantStateName: restaurantList[0].STATE,
@@ -177,19 +203,19 @@ export default class Recommendations extends React.Component {
 
   
 
-  handletimestartChange(e) {
-    this.setState({
+  async handletimestartChange(e) {
+    await this.setState({
       time_start: e.target.value,
     });
 
     console.log("this.state.time_start", this.state.time_start);
   }
 
-  handleRadioChange(event) {
-    let s = parseInt(event.target.value);
-    console.log(" s iss", s);
+  handleRadioChange(e, { rating, maxRating }) {
+    // let s = parseInt(e.target.value);
+    console.log(" starts are",rating);
     this.setState({
-      star: s,
+      star: rating,
     });
   }
 
@@ -209,6 +235,8 @@ export default class Recommendations extends React.Component {
       day: this.state.day,
       star: this.state.star,
       flag: 0,
+      parking:this.state.parking,
+      covid:this.state.covid,
     })
       .then(
         (res) => {
@@ -266,83 +294,35 @@ export default class Recommendations extends React.Component {
 
   advancefilterdisplay(){
     console.log("advancefilterdisplay")
+    console.log("this.state.time_start",this.state.time_start)
+   
     if (this.state.advancefilterchoice){
       return (
   
         <div className="input-container">  
 
-                
+{this.state.crusineDropdown}  
+<br></br>
           <Input
-          icon='search'
-                type="text"
-                placeholder="Enter start time"
+          style={{height: '30px', width : '200px',  left: "-120px"}}
+           size='mini'
+                // icon='search'
+                type="time"
+                // placeholder="Enter start time"
                 value={this.state.time_start}
                 onChange={this.handletimestartChange}
                 id="starttime"
                 className="restaurant-input"
               />
+    
 
 
-        <legend>Choose your Crusine</legend>
-                {this.state.crusineDropdown}
+    {/* ☆ */}
+    <Rating icon='star'  defaultRating={1} maxRating={5}  size='small' onRate={this.handleRadioChange} style={{left: "-80px"}}/>
+    <Checkbox label='Parking' style={{height: '30px',  left: "80px"}}  onClick={this.handleparking}/>
+    <Checkbox label='Covid available'  style={{height: '30px', left: "130px"}} onClick={this.handlecovid}/>
            
-      <div class="txt-center">
-      <form>
-        <div class="rating">
-          <input
-            id="star5"
-            name="star"
-            type="radio"
-            value="5"
-            class="radio-btn hide"
-            checked={this.state.star.toString() === "5"}
-            onChange={this.handleRadioChange}
-          />
-          <label for="star5">☆</label>
-          <input
-            id="star4"
-            name="star"
-            type="radio"
-            value="4"
-            class="radio-btn hide"
-            checked={this.state.star.toString() === "4"}
-            onChange={this.handleRadioChange}
-          />
-          <label for="star4">☆</label>
-          <input
-            id="star3"
-            name="star"
-            type="radio"
-            value="3"
-            class="radio-btn hide"
-            checked={this.state.star.toString() === "3"}
-            onChange={this.handleRadioChange}
-          />
-          <label for="star3">☆</label>
-          <input
-            id="star2"
-            name="star"
-            type="radio"
-            value="2"
-            class="radio-btn hide"
-            checked={this.state.star.toString() === "2"}
-            onChange={this.handleRadioChange}
-          />
-          <label for="star2">☆</label>
-          <input
-            id="star1"
-            name="star"
-            type="radio"
-            value="1"
-            class="radio-btn hide"
-            checked={this.state.star.toString() === "1"}
-            onChange={this.handleRadioChange}
-          />
-          <label for="star1">☆</label>
-          <div class="clear"></div>
-        </div>
-      </form>
-    </div>
+
     </div>
 
       
@@ -367,22 +347,22 @@ export default class Recommendations extends React.Component {
           <div className="jumbotron jumbotron-custom">
             <div className="h5">Restaurant Recommendations</div>
             <br></br>
-            {/* <div className="input-container"> */}
+            <Button.Group>
       
               {this.state.citiesDropdown}
 
-                  
-      <br></br>
-      <br></br>
-              <Button.Group>
+
+              <Button.Or />
+             
               <Button 
          
-              style={{height: '30px', width : '130px'}}
+              style={{height: '30px', width : '140px'}}
               animated='vertical'
               color='blue'
               onClick={this.advancefilter}
               >
-              <Button.Content hidden>Advancefiltering</Button.Content>
+              <Button.Content hidden>Advance filtering</Button.Content>
+
               <Button.Content visible>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
   <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
@@ -391,7 +371,14 @@ export default class Recommendations extends React.Component {
               </Button.Content>    
                 
               </Button>
-              <Button.Or />
+              </Button.Group>
+
+                 <br></br>
+                 <br></br>
+
+                 {this.advancefilterdisplay()}   
+
+
               <Button 
               style={{height: '30px', width : '130px'}}
               color='teal'
@@ -399,12 +386,12 @@ export default class Recommendations extends React.Component {
               className="submit-btn"
               onClick={this.submitrestaurant}
               >Submit</Button>
-              </Button.Group>
+             
                     
-              {this.advancefilterdisplay()}            
+                       
   
             <div className="header-container">
-              <div className="h6">You may like ...</div>
+              {/* <div className="h6">You may like ...</div> */}
             </div>
             <div>{this.state.recrestaurants}</div>
           </div>

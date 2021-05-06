@@ -45,6 +45,8 @@ try {
   var ds=req.body.day+"_start";
   var de=req.body.day+"_end";
   var str=req.body.star;
+  var parking=req.body.parking.toString();
+  var cov=req.body.covid.toString();
   var result="";
   let query="";
 
@@ -90,13 +92,29 @@ else{
   else{
     q=q+` final_table as ( select * from city_restaurants NATURAL JOIN restaurants_features ), `;
   }
-        
+  
+  var park=``
+  
+  if (parking==='true' && cov==='true')
+  {
+    park= `where parking='True' and covid='True'`;
+  }
+  else if (cov==='true')
+  {
+    park= `where covid='True'`;
+  }
+  else if (parking==='true'){
+    park= `where parking='True' `;
+  }
+ 
+
+
   query=`with city_restaurants as (select * from restaurants where  UPPER(city)=:city_name and UPPER(state)=:state_name), `+ q + 
   `top_rating AS (  SELECT * FROM final_table  WHERE stars >= :str ),
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
           output as (select * from final_table2 ft natural join restaurants_pics2 rp)
-          select business_id, name, address,city,state ,stars,review_count, photo_id from output fetch first 10 rows only`;
+          select business_id, name, address,city,state ,stars,review_count, photo_id from output ` + park+` fetch first 10 rows only`;
 
 
         console.log(query);

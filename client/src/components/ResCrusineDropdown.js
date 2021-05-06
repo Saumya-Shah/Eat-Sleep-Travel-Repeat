@@ -1,8 +1,7 @@
 import React from 'react';
-import Axios from "axios";
 import { Dropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-
+import "../style/DropdownCuisine.css";
 
 export default class DropDownCrusine extends React.Component {
     constructor(props) {
@@ -110,11 +109,13 @@ export default class DropDownCrusine extends React.Component {
 
 
     render() { 
-        return <Dropdown placeholder='Cuisine' 
+        return <Dropdown placeholder="Choose your Cuisine"  class="custom"
+        // style={{height: '30px', width : '465px',   left: "640px", top: "230px"}}
+        style={{height: '30px', width : '465px',left:"270px", }}
         fluid
         multiple
         search
-        selection     
+        selection  
         options={this.state.CrusinesNames} 
         onChange={this.props.onInputCrusineChange}
         />;

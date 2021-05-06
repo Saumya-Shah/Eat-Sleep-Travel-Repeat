@@ -89,7 +89,7 @@ export default class RecommendationsRow extends React.Component {
 
           </Box>
 
-          <HeartCheckbox checked={this.state.checked} onClick={this.onClick} />
+          <HeartCheckbox checked={this.state.checked} onClick={this.onClick}  style={{left: "000px"}} />
         </Flex>
         <hr class="solid" />
       </div>
