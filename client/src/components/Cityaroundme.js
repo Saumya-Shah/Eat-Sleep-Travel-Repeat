@@ -21,12 +21,15 @@ export default class Cityaroundme extends React.Component {
       allPopularCities: [],
       popularCities:[],
       popularCitiesIdx: 0,//initially load first 5 results to be presented on the page
+      allTrips:[],
       trips:[],
+      tripIdx: 0,
       routes: [],
     };
     this.submitUsr = this.submitUsr.bind(this);
     this.changePopularCityIdx = this.changePopularCityIdx.bind(this);
     this.changeNearbyCitiesIdx = this.changeNearbyCitiesIdx.bind(this);
+    this.changeTripIdx = this.changeTripIdx.bind(this);
     this.submitCity = this.submitCity.bind(this);
   }
   componentDidMount() {
@@ -70,7 +73,8 @@ export default class Cityaroundme extends React.Component {
         }
       )
       .then((res) => {
-        const tripDivs = res.map(
+        this.setState({allTrips: res});
+        const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
           (tripObj, i) => (
             <CardGroup>
               <Card className="card_item">
@@ -145,7 +149,6 @@ export default class Cityaroundme extends React.Component {
     let url = "https://localhost:8082/FlightSearch/"+ this.state.usrCity + "/" + e.target.value + "/0";
     Axios.get(url)
       .then((res) => {
-          // console.log(res.data);
           return res.data;
         },
         (err) => {
@@ -254,6 +257,61 @@ export default class Cityaroundme extends React.Component {
       nearbyCities: nearbyCityDivs,
     });
   }
+  changeTripIdx(){
+    this.setState({tripIdx: this.state.tripIdx + 5});
+    const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
+      (tripObj, i) => (
+        <CardGroup>
+          <Card className="card_item">
+            <Card.Header>First Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY1}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST1}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD1}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col md="auto">{tripObj.STAR1}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Card className="card_item">
+            <Card.Header>Second Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY2}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST2}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD2}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col>{tripObj.STAR2}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Card className="card_item">
+            <Card.Header>Third Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY3}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST3}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD3}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col>{tripObj.STAR3}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </CardGroup>
+      )
+    );
+    this.setState({trips: tripDivs});
+  }
   render() {
     return (
       <div className="city recommendation">
@@ -283,6 +341,7 @@ export default class Cityaroundme extends React.Component {
         </div>
         <div class="jumbotron jumbotron-fluid">
           <h1 className="text-center">Recommended Trips</h1>
+          <Button onClick={this.changeTripIdx}><FaIcon.FaEllipsisH/></Button>
           <Container fluid={true}>{this.state.trips}</Container>   
         </div>
       </div>  

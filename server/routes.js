@@ -481,7 +481,7 @@ const getPopularCity = async (req, res) => {
         rest1.stars > 4
         and rest2.stars > 4
         and rest3.stars > 4
-    fetch next 5 rows only`;
+    fetch next 100 rows only`;
       const result = await connection.execute(query, [], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
       });
