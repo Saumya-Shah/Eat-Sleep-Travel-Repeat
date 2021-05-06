@@ -384,7 +384,7 @@ const getPopularCity = async (req, res) => {
   )
   select pfc.city
   from popular_flight_city pfc join city_restaurants_cnt cr on pfc.city = cr.city
-  order by flt_cnt+rest_cnt DESC fetch next 5 rows only`;
+  order by flt_cnt+rest_cnt DESC fetch next 100 rows only`;
     const result = await connection.execute(query, [], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     });

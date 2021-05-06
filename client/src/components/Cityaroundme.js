@@ -16,11 +16,14 @@ export default class Cityaroundme extends React.Component {
       usrCity: "",
       usrCountry: "",
       nearbyCities: [],
+      allPopularCities: [],
       popularCities:[],
+      popularCitiesIdx: 0,//1st 5 results to be presented on the page
       trips:[],
       routes: [],
     };
     this.submitUsr = this.submitUsr.bind(this);
+    this.changePopularCityIdx = this.changePopularCityIdx.bind(this);
 
   }
   componentDidMount() {
@@ -36,7 +39,8 @@ export default class Cityaroundme extends React.Component {
         }
       )
       .then((res) => {
-        const popularCityDivs = res.map(
+        this.setState({allPopularCities: res});
+        const popularCityDivs = this.state.allPopularCities.slice(this.state.popularCitiesIdx, this.state.popularCitiesIdx+5).map(
           (cityObj, i) => (
             <Card className="card_item" key={i}>
               <Card.Body>
@@ -214,7 +218,24 @@ export default class Cityaroundme extends React.Component {
         }
       );
   }
-
+  changePopularCityIdx(){
+    this.setState({
+      popularCitiesIdx: this.state.popularCitiesIdx+5
+    });
+    const popularCityDivs = this.state.allPopularCities.slice(this.state.popularCitiesIdx, this.state.popularCitiesIdx+5).map(
+      (cityObj, i) => (
+        <Card className="card_item" key={i}>
+          <Card.Body>
+            <Card.Title className="shopTitle">{cityObj.CITY}</Card.Title>
+            <div>
+              <Button type="submit" bsStyle="primary" value={cityObj.CITY} onClick={this.submitUsr}>Go!</Button>
+            </div>
+          </Card.Body>
+        </Card>
+      )
+    );
+    this.setState({popularCities: popularCityDivs});
+  }
   render() {
     return (
       <div className="city recommendation">
@@ -227,7 +248,8 @@ export default class Cityaroundme extends React.Component {
         </div>
         <div className="container popularCity-container">
           <div className="jumbotron">
-          <h1 className="text-center">Popular City</h1>
+            <h1 className="text-center">Popular City</h1>
+            <Button onClick={this.changePopularCityIdx}><FaIcon.FaEllipsisH/></Button>
             <br></br>
             <CardGroup className="card_container">{this.state.popularCities}</CardGroup> 
             <br></br>

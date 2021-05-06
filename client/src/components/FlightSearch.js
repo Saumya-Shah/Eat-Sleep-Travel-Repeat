@@ -66,7 +66,7 @@ export default class FlightSearch extends React.Component {
         .then(selectroute =>{
           console.log("[submitall]: returned result from server:", selectroute);
           var routeDivs;
-          if(this.state.selectstop == 0){// nonstop
+          if(this.state.selectstop === 0){// nonstop
             routeDivs = selectroute.map((routeObj,i) =>(
               <Card className="card_item">
                 <Card.Body>
@@ -84,7 +84,7 @@ export default class FlightSearch extends React.Component {
                 
               
             ));
-          }else if (this.state.selectstop == 1){// one stop
+          }else if (this.state.selectstop === 1){// one stop
             console.log("[FlightSearch.js]: one stop case!");
             routeDivs = selectroute.map((routeObj,i) =>(
               <Card className="card_item">
