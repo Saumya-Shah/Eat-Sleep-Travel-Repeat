@@ -115,7 +115,7 @@ export default class DropDownCrusine extends React.Component {
         fluid
         multiple
         search
-        selection  
+        selection
         options={this.state.CrusinesNames} 
         onChange={this.props.onInputCrusineChange}
         />;
