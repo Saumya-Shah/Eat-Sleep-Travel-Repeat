@@ -27,9 +27,12 @@ export default class Cityaroundme extends React.Component {
       routes: [],
     };
     this.submitUsr = this.submitUsr.bind(this);
-    this.changePopularCityIdx = this.changePopularCityIdx.bind(this);
-    this.changeNearbyCitiesIdx = this.changeNearbyCitiesIdx.bind(this);
-    this.changeTripIdx = this.changeTripIdx.bind(this);
+    this.decPopularCityIdx = this.decPopularCityIdx.bind(this);
+    this.incPopularCityIdx = this.incPopularCityIdx.bind(this);
+    this.decNearbyCitiesIdx = this.decNearbyCitiesIdx.bind(this);
+    this.incNearbyCitiesIdx = this.incNearbyCitiesIdx.bind(this);
+    this.decTripIdx = this.decTripIdx.bind(this);
+    this.incTripIdx = this.incTripIdx.bind(this);
     this.submitCity = this.submitCity.bind(this);
   }
   componentDidMount() {
@@ -222,9 +225,9 @@ export default class Cityaroundme extends React.Component {
         }
       );
   }
-  changePopularCityIdx(){
+  incPopularCityIdx(){
     this.setState({
-      popularCitiesIdx: this.state.popularCitiesIdx+5
+      popularCitiesIdx: this.state.popularCitiesIdx+5 >= this.state.allPopularCities.length? 0: this.state.popularCitiesIdx+5
     });
     const popularCityDivs = this.state.allPopularCities.slice(this.state.popularCitiesIdx, this.state.popularCitiesIdx+5).map(
       (cityObj, i) => (
@@ -240,8 +243,26 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({popularCities: popularCityDivs});
   }
-  changeNearbyCitiesIdx(){
-    this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx + 5});
+  decPopularCityIdx(){
+    this.setState({
+      popularCitiesIdx: this.state.popularCitiesIdx-5 <0? 0 :this.state.popularCitiesIdx-5
+    });
+    const popularCityDivs = this.state.allPopularCities.slice(this.state.popularCitiesIdx, this.state.popularCitiesIdx+5).map(
+      (cityObj, i) => (
+        <Card className="card_item" key={i}>
+          <Card.Body>
+            <Card.Title className="shopTitle">{cityObj.CITY}</Card.Title>
+            <div>
+              <Button type="submit" bsStyle="primary" value={cityObj.CITY} onClick={this.submitUsr}>Go!</Button>
+            </div>
+          </Card.Body>
+        </Card>
+      )
+    );
+    this.setState({popularCities: popularCityDivs});
+  }
+  incNearbyCitiesIdx(){
+    this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx + 5 >= this.state.allNearbyCities.length? 0 : this.state.nearbyCitiesIdx + 5});
     const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
       (CityObj, i) => (
         <Card className="card_item" key={i}>
@@ -257,8 +278,80 @@ export default class Cityaroundme extends React.Component {
       nearbyCities: nearbyCityDivs,
     });
   }
-  changeTripIdx(){
-    this.setState({tripIdx: this.state.tripIdx + 5});
+  decNearbyCitiesIdx(){
+    this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx - 5 < 0? 0 : this.state.nearbyCitiesIdx - 5});
+    const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
+      (CityObj, i) => (
+        <Card className="card_item" key={i}>
+          <Card.Body>
+            <Card.Title className="shopTitle">{CityObj.CITY}, {CityObj.COUNTRY}</Card.Title>
+            <Card.Text>distance: {CityObj.DISTANCE}km</Card.Text>
+          </Card.Body>
+        </Card>
+      )
+    );
+    // Set the state of the keywords list to the value returned by the HTTP response from the server.
+    this.setState({
+      nearbyCities: nearbyCityDivs,
+    });
+  }
+  incTripIdx(){
+    this.setState({tripIdx: this.state.tripIdx + 5 >= this.state.allTrips.length? 0 : this.state.tripIdx + 5});
+    const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
+      (tripObj, i) => (
+        <CardGroup>
+          <Card className="card_item">
+            <Card.Header>First Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY1}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST1}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD1}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col md="auto">{tripObj.STAR1}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Card className="card_item">
+            <Card.Header>Second Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY2}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST2}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD2}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col>{tripObj.STAR2}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Card className="card_item">
+            <Card.Header>Third Stop</Card.Header>
+            <Card.Body>
+              <Row className="justify-content-md-center">
+                <Col md="auto"> <FaIcon.FaCity/></Col>
+                <Col>{tripObj.CITY3}</Col>
+                <Col md="auto"> <FaIcon.FaPizzaSlice/></Col>
+                <Col>{tripObj.REST3}</Col>
+                <Col md="auto"> <FaIcon.FaMapMarkerAlt/></Col>
+                <Col>{tripObj.ADD3}</Col>
+                <Col md="auto"> <FaIcon.FaRegStar/></Col>
+                <Col>{tripObj.STAR3}</Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </CardGroup>
+      )
+    );
+    this.setState({trips: tripDivs});
+  }
+  decTripIdx(){
+    this.setState({tripIdx: this.state.tripIdx - 5 < 0? 0 : this.state.tripIdx - 5});
     const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
       (tripObj, i) => (
         <CardGroup>
@@ -318,7 +411,8 @@ export default class Cityaroundme extends React.Component {
         <div className="container nearbyCity-container">
           <div className="jumbotron">
             <h1 className="text-center">Nearby City</h1>
-            <Button onClick={this.changeNearbyCitiesIdx}><FaIcon.FaEllipsisH/></Button>
+            <Button onClick={this.decNearbyCitiesIdx}><FaIcon.FaArrowAltCircleLeft/></Button>
+            <Button onClick={this.incNearbyCitiesIdx}><FaIcon.FaArrowAltCircleRight/></Button>
             <br></br>
             <CardGroup className="card_container">{this.state.nearbyCities}</CardGroup>            
           </div>
@@ -326,7 +420,8 @@ export default class Cityaroundme extends React.Component {
         <div className="container popularCity-container">
           <div className="jumbotron">
             <h1 className="text-center">Popular City</h1>
-            <Button onClick={this.changePopularCityIdx}><FaIcon.FaEllipsisH/></Button>
+            <Button onClick={this.decPopularCityIdx}><FaIcon.FaArrowAltCircleLeft/></Button>
+            <Button onClick={this.incPopularCityIdx}><FaIcon.FaArrowAltCircleRight/></Button>
             <br></br>
             <CardGroup className="card_container">{this.state.popularCities}</CardGroup> 
             <br></br>
@@ -341,7 +436,8 @@ export default class Cityaroundme extends React.Component {
         </div>
         <div class="jumbotron jumbotron-fluid">
           <h1 className="text-center">Recommended Trips</h1>
-          <Button onClick={this.changeTripIdx}><FaIcon.FaEllipsisH/></Button>
+          <Button onClick={this.decTripIdx}><FaIcon.FaArrowAltCircleLeft/></Button>
+          <Button onClick={this.incTripIdx}><FaIcon.FaArrowAltCircleRight/></Button>
           <Container fluid={true}>{this.state.trips}</Container>   
         </div>
       </div>  
