@@ -15,16 +15,19 @@ export default class Cityaroundme extends React.Component {
       Longitude: 0,
       usrCity: "",
       usrCountry: "",
+      allNearbyCities:[],
       nearbyCities: [],
+      nearbyCitiesIdx: 0,//initially load first 5 results to be presented on the page, note that the first is the current usr city
       allPopularCities: [],
       popularCities:[],
-      popularCitiesIdx: 0,//1st 5 results to be presented on the page
+      popularCitiesIdx: 0,//initially load first 5 results to be presented on the page
       trips:[],
       routes: [],
     };
     this.submitUsr = this.submitUsr.bind(this);
     this.changePopularCityIdx = this.changePopularCityIdx.bind(this);
-
+    this.changeNearbyCitiesIdx = this.changeNearbyCitiesIdx.bind(this);
+    this.submitCity = this.submitCity.bind(this);
   }
   componentDidMount() {
     /* show popular city */
@@ -189,15 +192,13 @@ export default class Cityaroundme extends React.Component {
         }
       )
       .then(
-        (CityList) => {
-          if (!CityList) return;
+        (res) => {
           this.setState({
-            usrCity: CityList[0].CITY,
-            usrCountry: CityList[0].COUNTRY,
+            usrCity: res[0].CITY,
+            usrCountry: res[0].COUNTRY,
           });
-          CityList = CityList.splice(1, 4);
-          console.log(CityList);
-          const nearbyCityDivs = CityList.map(
+          this.setState({allNearbyCities: res.slice(1)});
+          const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
             (CityObj, i) => (
               <Card className="card_item" key={i}>
                 <Card.Body>
@@ -236,12 +237,30 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({popularCities: popularCityDivs});
   }
+  changeNearbyCitiesIdx(){
+    this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx + 5});
+    const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
+      (CityObj, i) => (
+        <Card className="card_item" key={i}>
+          <Card.Body>
+            <Card.Title className="shopTitle">{CityObj.CITY}, {CityObj.COUNTRY}</Card.Title>
+            <Card.Text>distance: {CityObj.DISTANCE}km</Card.Text>
+          </Card.Body>
+        </Card>
+      )
+    );
+    // Set the state of the keywords list to the value returned by the HTTP response from the server.
+    this.setState({
+      nearbyCities: nearbyCityDivs,
+    });
+  }
   render() {
     return (
       <div className="city recommendation">
         <div className="container nearbyCity-container">
           <div className="jumbotron">
-          <h1 className="text-center">Nearby City</h1>
+            <h1 className="text-center">Nearby City</h1>
+            <Button onClick={this.changeNearbyCitiesIdx}><FaIcon.FaEllipsisH/></Button>
             <br></br>
             <CardGroup className="card_container">{this.state.nearbyCities}</CardGroup>            
           </div>

@@ -350,7 +350,7 @@ try {
 select *
 from nearby_cities_dist
 order by distance ASC
-fetch next 5 rows only`;
+fetch next 100 rows only`;
   const result = await connection.execute(query, [lat, lon], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
