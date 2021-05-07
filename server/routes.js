@@ -61,7 +61,7 @@ try {
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
     output as (select * from final_table cr natural join restaurants_pics2 rp)
-      select business_id, name, address,city,state,stars,review_count, photo_id from output ORDER BY distance fetch first 10 rows only`;
+      select business_id, name, address,city,state,stars,review_count, photo_id from output ORDER BY distance fetch first 100 rows only`;
 
       result = await connection.execute(query, [lat,lon,ts], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -74,7 +74,7 @@ else{
   if (cru.length>0){
 
     for (var i=0;i<cru.length;i++){
-        q=q+cru[i]+ ` as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%`+cru[i]+`,%' and rf.covid='True'\
+        q=q+cru[i]+ ` as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%`+cru[i]+`,%'\
                 order by rf.stars desc, rf.review_count desc fetch first 5 rows only), `       
       }
               
@@ -114,7 +114,7 @@ else{
   time_table AS (SELECT business_id FROM  restaurants_time WHERE `+ ds+` < :ts),
   final_table2 AS (  SELECT  *  FROM  time_table natural  JOIN top_rating),
           output as (select * from final_table2 ft natural join restaurants_pics2 rp)
-          select business_id, name, address,city,state ,stars,review_count, photo_id from output ` + park+` fetch first 10 rows only`;
+          select business_id, name, address,city,state ,stars,review_count, photo_id from output ` + park+` fetch first 100 rows only `;
 
 
         console.log(query);

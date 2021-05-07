@@ -6,7 +6,7 @@ import Axios from "axios";
 import DropDownCity from "./ResCityDropdown";
 import { Button,Input,Rating,Checkbox } from 'semantic-ui-react'
 import DropDownCrusine from "./ResCrusineDropdown";
-
+import * as FaIcon from "react-icons/fa";
 
 
 export default class Recommendations extends React.Component {
@@ -18,6 +18,8 @@ export default class Recommendations extends React.Component {
       restaurantStateName: "NV",
       crusine: [],
       recrestaurants: [],
+      recrestaurants_selected:[],
+      recrestaurants_selected_index:0,
       Latitude: 0,
       Longitude: 0,
       time_start: "",
@@ -44,6 +46,9 @@ export default class Recommendations extends React.Component {
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.handleparking=this.handleparking.bind(this);
     this.handlecovid=this.handlecovid.bind(this);
+    this.decNearbyrest=this.decNearbyrest.bind(this);
+    this.incNearbyrest=this.incNearbyrest.bind(this);
+
   }
 
 
@@ -113,6 +118,76 @@ export default class Recommendations extends React.Component {
     navigator.geolocation.getCurrentPosition(success, error);
   }
 
+  async decNearbyrest(){
+    console.log(" inside decNearbyrest");
+    console.log("recrestaurants_selected_index",this.state.recrestaurants_selected_index);
+    await this.setState({recrestaurants_selected_index: this.state.recrestaurants_selected_index - 5<0 ? 0 : this.state.recrestaurants_selected_index - 5});
+    const RecommendationsRowDivs = this.state.recrestaurants.slice(this.state.recrestaurants_selected_index, this.state.recrestaurants_selected_index+5).map(
+      (restaurantObj, i) => (
+        <RecommendationsRow
+          business_id={restaurantObj.BUSINESS_ID}
+          name={restaurantObj.NAME}
+          address={restaurantObj.ADDRESS}
+          city={restaurantObj.CITY}
+          state={restaurantObj.STATE}
+          stars={restaurantObj.STARS}
+          reviews={restaurantObj.REVIEW_COUNT}
+          flag2={11}
+          pic={restaurantObj.PHOTO_ID}
+
+        />
+      )
+    );
+
+
+    await this.setState({
+      recrestaurants_selected: RecommendationsRowDivs,
+      restaurantCityName: this.state.recrestaurants[this.state.recrestaurants_selected_index].CITY,
+      restaurantStateName: this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
+      currentLoc: this.state.recrestaurants[this.state.recrestaurants_selected_index].CITY,
+      currentState:this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
+
+    });
+
+  }
+
+  async incNearbyrest(){
+  console.log(" inside incNearbyrest");
+  
+  await this.setState({recrestaurants_selected_index: this.state.recrestaurants_selected_index + 5 >= this.state.recrestaurants.length? 0 : this.state.recrestaurants_selected_index + 5});
+    console.log("recrestaurants_selected_index",this.state.recrestaurants_selected_index);
+    const RecommendationsRowDivs = this.state.recrestaurants.slice(this.state.recrestaurants_selected_index, this.state.recrestaurants_selected_index+5).map(
+      (restaurantObj, i) => (
+        <RecommendationsRow
+          business_id={restaurantObj.BUSINESS_ID}
+          name={restaurantObj.NAME}
+          address={restaurantObj.ADDRESS}
+          city={restaurantObj.CITY}
+          state={restaurantObj.STATE}
+          stars={restaurantObj.STARS}
+          reviews={restaurantObj.REVIEW_COUNT}
+          flag2={11}
+          pic={restaurantObj.PHOTO_ID}
+
+        />
+      )
+    );
+
+
+    await this.setState({
+      recrestaurants_selected: RecommendationsRowDivs,
+      restaurantCityName: this.state.recrestaurants[this.state.recrestaurants_selected_index].CITY,
+      restaurantStateName: this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
+      currentLoc: this.state.recrestaurants[this.state.recrestaurants_selected_index].CITY,
+      currentState:this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
+
+    });
+
+
+
+  }
+
+
   getUpdate() {
     console.log("this.state.Latitude", this.state.Latitude);
     console.log("this.state.Longitude", this.state.Longitude);
@@ -163,9 +238,11 @@ export default class Recommendations extends React.Component {
         async (restaurantList) => {
           if (!restaurantList) return;
           console.log("restaurantList", restaurantList);
+
+
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
-          const RecommendationsRowDivs = restaurantList.map(
+          const RecommendationsRowDivs = restaurantList.slice(0,5).map(
             (restaurantObj, i) => (
               <RecommendationsRow
                 business_id={restaurantObj.BUSINESS_ID}
@@ -185,7 +262,8 @@ export default class Recommendations extends React.Component {
           // Set the state of the keywords list to the value returned by the HTTP response from the server.
 
           await this.setState({
-            recrestaurants: RecommendationsRowDivs,
+            recrestaurants:restaurantList,
+            recrestaurants_selected: RecommendationsRowDivs,
             restaurantCityName: restaurantList[0].CITY,
             restaurantStateName: restaurantList[0].STATE,
             currentLoc: restaurantList[0].CITY,
@@ -255,7 +333,7 @@ export default class Recommendations extends React.Component {
           // A button which triggers the showrestaurants function for each keyword.
           // console.log(restaurantList);
 
-          const RecommendationsRowDivs = restaurantList.map(
+          const RecommendationsRowDivs = restaurantList.slice(0,5).map(
             (restaurantObj, i) => (
               <RecommendationsRow
                 business_id={restaurantObj.BUSINESS_ID}
@@ -274,7 +352,8 @@ export default class Recommendations extends React.Component {
 
           // Set the state of the keywords list to the value returned by the HTTP response from the server.
           this.setState({
-            recrestaurants: RecommendationsRowDivs,
+            recrestaurants:restaurantList,
+            recrestaurants_selected: RecommendationsRowDivs,
           });
         },
         (err) => {
@@ -391,9 +470,13 @@ export default class Recommendations extends React.Component {
                        
   
             <div className="header-container">
-              {/* <div className="h6">You may like ...</div> */}
+        
             </div>
-            <div>{this.state.recrestaurants}</div>
+            <div>{this.state.recrestaurants_selected}</div>
+
+            <Button onClick={this.decNearbyrest}><FaIcon.FaArrowAltCircleLeft/></Button>
+            <Button onClick={this.incNearbyrest}><FaIcon.FaArrowAltCircleRight/></Button>
+
           </div>
         </div>
       </div>

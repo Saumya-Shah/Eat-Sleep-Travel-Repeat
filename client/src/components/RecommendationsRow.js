@@ -25,7 +25,7 @@ export default class RecommendationsRow extends React.Component {
 
     const url = new URL("https://localhost:8082/recommendations/");    
 
-    if ( this.state.checked==true ){      
+    if ( this.state.checked===true ){      
           Axios.post(
             url, {
             bid:this.props.business_id,       
@@ -48,7 +48,7 @@ export default class RecommendationsRow extends React.Component {
 
  
   componentDidMount() {
-       if (this.props.flag2==10)  
+       if (this.props.flag2===10)  
           {this.setState({ checked: true});}
     }
 
