@@ -399,7 +399,7 @@ export default class Recommendations extends React.Component {
     {/* ☆ */}
     <Rating icon='star'  defaultRating={1} maxRating={5}  size='small' onRate={this.handleRadioChange} style={{left: "-80px"}}/>
     <Checkbox label='Parking' style={{height: '30px',  left: "80px"}}  onClick={this.handleparking}/>
-    <Checkbox label='Covid available'  style={{height: '30px', left: "130px"}} onClick={this.handlecovid}/>
+    <Checkbox label='Open during pandemic'  style={{height: '30px', left: "130px"}} onClick={this.handlecovid}/>
            
 
     </div>

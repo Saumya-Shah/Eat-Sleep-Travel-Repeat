@@ -2,6 +2,8 @@ import React from "react";
 import "../style/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
+import { View, Text } from "react-native";
+import { withWidth } from "@material-ui/core";
 
 Axios.defaults.withCredentials = true;
 export default class Login extends React.Component {
@@ -80,13 +82,24 @@ export default class Login extends React.Component {
     if (this.state.loggedIn === true) {
       console.log("Logged In");
       return (
-        <div className="registration">
+        <div className="registration" >
           <h1> {this.state.loginStatus + ", welcome! "}</h1>
+          <h1>{"Let's Eat-Sleep-Travel-Repeat! "}</h1>
+          <View style={{
+              alignItems: 'center',
+              justifyContent: 'center', 
+              // backgroundColor: 'white',
+              
+              text: 'white',
+              width: '66%',               
+          }}>
+          <Text style={{ color: 'black', fontSize: 20, lineHeight: 30,textAlign: 'justify', }}>{"People have been trapped at home due to COVID-19 for a long time and the trend to travel after the quarantine/covid-19 ends will be quite popular. Based on the passion and demand to travel and enjoy delicious food, our team has decided to implement this web application that helps you find restaurants/places based on your favorites, geolocation, personal habit and word-of-mouth rating. The project is to design a web application based on two dataset: Yelp restaurant dataset and Airlines within the United states. We intend to deliver a convenient way for users to choose and plan where to go and what to eat. "}</Text>
+          </View>
           <button
             id="registerBtn"
             className="button2"
             onClick={this.handleLogout}
-          >
+            >
             Logout
           </button>
         </div>
@@ -140,7 +153,7 @@ export default class Login extends React.Component {
           </div>
           <br />
           <br />
-          <div className="login">
+          <div className="login" style={{height: '100%'}}>
             <h3>
               {" "}
               Already have an account? <br />

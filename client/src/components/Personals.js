@@ -34,17 +34,18 @@ export default class Personals extends React.Component {
       url = "https://localhost:8082/get_fav_res";
       this.get_restaurants(url);
     } 
-    else if(this.state.mode === "visited_restaurants"){
-      this.setState({button_text: "Visited Restaurants", is_active: 2});
-      url = "https://localhost:8082/get_visi_res";
-      console.log("going to:",url);
-      this.get_restaurants(url);
-    }
+    // else if(this.state.mode === "visited_restaurants"){
+    //   this.setState({button_text: "Visited Restaurants", is_active: 2});
+    //   url = "https://localhost:8082/get_visi_res";
+    //   console.log("going to:",url);
+    //   this.get_restaurants(url);
+    // }
     else {
       if (this.state.mode==="fav_places"){this.setState({button_text: "Favorite Places", is_active: 3,});}
+      if (this.state.mode==="visited_restaurants"){this.setState({button_text: "Visited Restaurants", is_active: 2,});}
       if (this.state.mode==="visited_places"){this.setState({button_text: "Visited Places", is_active: 4})}
       this.setState({
-        displayFields: <h5>"Application not yet ready for this!"</h5>,
+        displayFields: <h5>"Application can be extended to include these later!"</h5>,
       });
     }
   }
