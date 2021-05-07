@@ -18,7 +18,7 @@ export default class Recommendations extends React.Component {
       restaurantStateName: "NV",
       crusine: [],
       recrestaurants: [],
-      recrestaurants_selected:[],
+      recrestaurants_selected:<h5>"No restaurant satisfy the selected criteria!"</h5>,
       recrestaurants_selected_index:0,
       Latitude: 0,
       Longitude: 0,
@@ -34,6 +34,8 @@ export default class Recommendations extends React.Component {
       advancefilterchoice:false,
       parking:false,
       covid:false,
+      empty:false,
+      page_buttons: "",
     
     };
     // this.componentDidMount = this.componentDidMount(this);
@@ -48,6 +50,8 @@ export default class Recommendations extends React.Component {
     this.handlecovid=this.handlecovid.bind(this);
     this.decNearbyrest=this.decNearbyrest.bind(this);
     this.incNearbyrest=this.incNearbyrest.bind(this);
+    this.setButtons = this.setButtons.bind(this);
+  
 
   }
 
@@ -148,7 +152,23 @@ export default class Recommendations extends React.Component {
       currentState:this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
 
     });
+    this.setButtons();
+    
 
+  }
+
+  async setButtons(){
+    console.log("type",this.state.recrestaurants_selected.type);
+    if (this.state.recrestaurants_selected.type==="h5"){
+      await this.setState({page_buttons : <p></p>});
+    }
+    else{
+      await this.setState({page_buttons: <div> 
+        <Button onClick={this.decNearbyrest}><FaIcon.FaArrowAltCircleLeft/></Button>
+        <Button onClick={this.incNearbyrest}><FaIcon.FaArrowAltCircleRight/></Button>
+        </div>})
+     
+    }
   }
 
   async incNearbyrest(){
@@ -182,13 +202,14 @@ export default class Recommendations extends React.Component {
       currentState:this.state.recrestaurants[this.state.recrestaurants_selected_index].STATE,
 
     });
+    this.setButtons();
 
 
 
   }
 
 
-  getUpdate() {
+   getUpdate() {
     console.log("this.state.Latitude", this.state.Latitude);
     console.log("this.state.Longitude", this.state.Longitude);
 
@@ -236,7 +257,16 @@ export default class Recommendations extends React.Component {
       )
       .then(
         async (restaurantList) => {
-          if (!restaurantList) return;
+          // console.log("=====================================================",restaurantList);
+          // if (!restaurantList){
+          //   console.log("entered here=======================");
+          //   await this.setState({empty:true});
+          //   return;
+          // }
+          // else{
+          //   await this.setState({empty:false});
+          // };
+
           console.log("restaurantList", restaurantList);
 
 
@@ -271,6 +301,7 @@ export default class Recommendations extends React.Component {
             day: day,
             time_start: time_now,
           });
+          this.setButtons();
         },
         (err) => {
           // Print the error if there is one.
@@ -327,8 +358,19 @@ export default class Recommendations extends React.Component {
         }
       )
       .then(
-        (restaurantList) => {
-          if (!restaurantList) return;
+        async (restaurantList) => {
+          console.log("=====================================================",restaurantList);
+          if (restaurantList.length===0){
+            console.log("entered here=======================");
+            await this.setState({empty:true});   
+            await this.setState( {recrestaurants_selected:<h5>"No restaurant satisfy the selected criteria!"</h5>});  
+            await this.setButtons();
+            await console.log(this.state.recrestaurants_selected);
+            return;
+          }
+          else{
+            await this.setState({empty:false});
+          };
           // Map each keyword in this.state.keywords to an HTML element:
           // A button which triggers the showrestaurants function for each keyword.
           // console.log(restaurantList);
@@ -355,6 +397,7 @@ export default class Recommendations extends React.Component {
             recrestaurants:restaurantList,
             recrestaurants_selected: RecommendationsRowDivs,
           });
+          this.setButtons();
         },
         (err) => {
           // Print the error if there is one.
@@ -417,6 +460,8 @@ export default class Recommendations extends React.Component {
 
   
   render() {
+    // console.log("this.state.empty",this.state.empty);
+  
     return (
 
       // <style> .button2 {background-color: #008CBA;} </style>
@@ -473,13 +518,12 @@ export default class Recommendations extends React.Component {
         
             </div>
             <div>{this.state.recrestaurants_selected}</div>
-
-            <Button onClick={this.decNearbyrest}><FaIcon.FaArrowAltCircleLeft/></Button>
-            <Button onClick={this.incNearbyrest}><FaIcon.FaArrowAltCircleRight/></Button>
-
+            <br></br>
+            {this.state.page_buttons}
           </div>
         </div>
       </div>
     );
   }
+
 }
