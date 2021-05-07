@@ -517,8 +517,9 @@ export default class Recommendations extends React.Component {
             <div className="header-container">
         
             </div>
-            <div>{this.state.recrestaurants_selected}</div>
             <br></br>
+            <br></br>
+            <div>{this.state.recrestaurants_selected}</div>
             {this.state.page_buttons}
           </div>
         </div>
