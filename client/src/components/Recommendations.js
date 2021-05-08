@@ -33,7 +33,7 @@ export default class Recommendations extends React.Component {
       crusineDropdown:"",
       advancefilterchoice:false,
       parking:false,
-      covid:false,
+      covid:true,
       empty:false,
       page_buttons: "",
     
@@ -257,16 +257,6 @@ export default class Recommendations extends React.Component {
       )
       .then(
         async (restaurantList) => {
-          // console.log("=====================================================",restaurantList);
-          // if (!restaurantList){
-          //   console.log("entered here=======================");
-          //   await this.setState({empty:true});
-          //   return;
-          // }
-          // else{
-          //   await this.setState({empty:false});
-          // };
-
           console.log("restaurantList", restaurantList);
 
 
@@ -442,7 +432,7 @@ export default class Recommendations extends React.Component {
     {/* ☆ */}
     <Rating icon='star'  defaultRating={1} maxRating={5}  size='small' onRate={this.handleRadioChange} style={{left: "-80px"}}/>
     <Checkbox label='Parking' style={{height: '30px',  left: "80px"}}  onClick={this.handleparking}/>
-    <Checkbox label='Open during pandemic'  style={{height: '30px', left: "130px"}} onClick={this.handlecovid}/>
+    <Checkbox label='Open during pandemic'  style={{height: '30px', left: "130px"}} onClick={this.handlecovid} defaultChecked/>
            
 
     </div>

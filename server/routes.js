@@ -70,12 +70,16 @@ try {
     
 
 else{
+  var n=100;
   var q=``; 
   if (cru.length>0){
 
+    n=Math.round(100/cru.length);
+    console.log("fetch first n",n);
+
     for (var i=0;i<cru.length;i++){
         q=q+cru[i]+ ` as (select * from city_restaurants natural join restaurants_features rf where upper(rf.categories) like '%`+cru[i]+`,%'\
-                order by rf.stars desc, rf.review_count desc fetch first 5 rows only), `       
+                order by rf.stars desc, rf.review_count desc fetch first `+ n.toString()+ ` rows only), `       
       }
               
     q=q+` final_table as ( `;
