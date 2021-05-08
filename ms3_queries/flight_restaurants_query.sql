@@ -99,7 +99,40 @@ join routes on routes.source_airportid = a1.airportid
 join airports a2 on a2.airportid = routes.destination_airportid
 where a2.city = 'New York'
 order by time asc;
--- case3: two-stop case
+-- case3: two-stop case, ORIGINAL
+with from_source as(
+  select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+  from routes r1, airports sa, airports ma, routes r2, airports da
+  where sa.airportid = r1.source_airportid
+  and ma.airportid = r1.destination_airportid
+  and r2.source_airportid = ma.airportid
+  and da.airportid = r2.destination_airportid
+  and sa.airportid <> da.airportid and sa.city = 'Chicago'
+),
+to_dest as(
+  select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+  from routes r1, airports sa, airports ma, routes r2, airports da
+  where sa.airportid = r1.source_airportid
+  and ma.airportid = r1.destination_airportid
+  and r2.source_airportid = ma.airportid
+  and da.airportid = r2.destination_airportid
+  and sa.airportid <> da.airportid and da.city = 'New York'
+)
+select a2.name as source_airport, td.source_airport as mid_airport_1, td.mid_airport as mid_airport_2, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_1, td.airlineid_1 as airlineid_2, td.airlineid_2 as airlineid_3
+from to_dest td, airports a1, routes, airports a2
+where a1.name = td.source_airport
+and routes.destination_airportid = a1.airportid
+and a2.airportid = routes.source_airportid
+and a2.city = 'Chicago'
+union
+select fs.source_airport as source_airport, fs.mid_airport as mid_airport_1, fs.dest_airport as mid_airport_2, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid_1, fs.airlineid_2, routes.airlineid as airlineid_3
+from from_source fs, airports a1, routes, airports a2
+where a1.name = fs.dest_airport
+and routes.source_airportid = a1.airportid
+and a2.airportid = routes.destination_airportid
+and a2.city = 'New York'
+order by time asc;
+-- case3: two-stop case, cross product -> join 
 with from_source as(
   select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
   from routes r1
@@ -130,6 +163,39 @@ join routes on routes.source_airportid = a1.airportid
 join airports a2 on a2.airportid = routes.destination_airportid
 where a2.city = 'New York'
 order by time asc;
+
+-- case3: two-stop case, decrease intermediate and final result size
+with from_source as(
+  select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+  from routes r1
+  join airports sa on sa.airportid = r1.source_airportid
+  join airports ma on ma.airportid = r1.destination_airportid
+  join routes r2 on r2.source_airportid = ma.airportid
+  join airports da on da.airportid = r2.destination_airportid
+  where sa.airportid <> da.airportid and sa.city = 'Chicago' and rownum < 100
+),
+to_dest as(
+  select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
+  from routes r1
+  join airports sa on sa.airportid = r1.source_airportid
+  join airports ma on ma.airportid = r1.destination_airportid
+  join routes r2 on r2.source_airportid = ma.airportid
+  join airports da on da.airportid = r2.destination_airportid
+  where sa.airportid <> da.airportid and da.city = 'New York' and rownum < 100
+)
+select a2.name as source_airport, td.source_airport as mid_airport_1, td.mid_airport as mid_airport_2, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_1, td.airlineid_1 as airlineid_2, td.airlineid_2 as airlineid_3
+from to_dest td join airports a1 on a1.name = td.source_airport
+join routes on routes.destination_airportid = a1.airportid
+join airports a2 on a2.airportid = routes.source_airportid
+where a2.city = 'Chicago' and rownum < 50
+union
+select fs.source_airport as source_airport, fs.mid_airport as mid_airport_1, fs.dest_airport as mid_airport_2, a2.name as dest_airport, (fs.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, fs.airlineid_1, fs.airlineid_2, routes.airlineid as airlineid_3
+from from_source fs join airports a1 on a1.name = fs.dest_airport
+join routes on routes.source_airportid = a1.airportid
+join airports a2 on a2.airportid = routes.destination_airportid
+where a2.city = 'New York' and rownum < 50
+order by time asc;
+
 
 /* 
  query 4(complex): recommend user with 10 trips(city+restaurant) inside the united states such that
