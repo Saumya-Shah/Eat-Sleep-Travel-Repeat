@@ -229,8 +229,7 @@ where
     rest1.stars > 4
     and rest2.stars > 4
     and rest3.stars > 4
-ORDER BY
-    RAND() fetch next 10 rows only;
+fetch next 100 rows only;
 
 /* 
  query 5(complex): recommend several restaurants for three users from different cities to meet
