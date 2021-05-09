@@ -304,7 +304,8 @@ try {
       join airports ma on ma.airportid = r1.destination_airportid
       join routes r2 on r2.source_airportid = ma.airportid
       join airports da on da.airportid = r2.destination_airportid
-      where sa.airportid <> da.airportid and sa.city =:sourceCity
+      where sa.airportid <> da.airportid and sa.city =:sourceCity 
+      fetch next 100 rows only
     ),
     to_dest as(
       select sa.name as source_airport, da.name as dest_airport, ma.name as mid_airport, round(111.138 * sqrt(power(((sa.Latitude) - ma.latitude), 2) + power(((sa.Longitude) - ma.longitude), 2)) / 500, 1) + round(111.138 * sqrt(power(((ma.Latitude) - da.latitude), 2) + power(((ma.Longitude) - da.longitude), 2)) / 500, 1) as time, r1.airlineid as airlineid_1, r2.airlineid as airlineid_2
@@ -314,6 +315,7 @@ try {
       join routes r2 on r2.source_airportid = ma.airportid
       join airports da on da.airportid = r2.destination_airportid
       where sa.airportid <> da.airportid and da.city =:destCity
+      fetch next 100 rows only
     )
     select a2.name as source_airport, td.source_airport as mid_airport_1, td.mid_airport as mid_airport_2, td.dest_airport, (td.time + round(111.138 * sqrt(power(((a1.Latitude) - a2.latitude), 2) + power(((a1.Longitude) - a2.longitude), 2)) / 500, 1)) as time, routes.airlineid as airlineid_1, td.airlineid_1 as airlineid_2, td.airlineid_2 as airlineid_3
     from to_dest td join airports a1 on a1.name = td.source_airport
@@ -326,7 +328,8 @@ try {
     join routes on routes.source_airportid = a1.airportid
     join airports a2 on a2.airportid = routes.destination_airportid
     where a2.city =:destCity and a2.name <> fs.mid_airport
-    order by time asc fetch next 5 rows only`;
+    order by time asc 
+    fetch next 5 rows only`;
   }
   const result = await connection.execute(query, [sourceCity, destCity], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
