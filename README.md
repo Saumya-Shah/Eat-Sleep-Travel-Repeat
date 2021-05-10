@@ -8,7 +8,7 @@ This is a class project for CIS 550.
 
 ### Images
 
-Download res_pics directory from [here](https://drive.google.com/drive/folders/1qmXI027Z-Qr2r-4XdxqtKQI1ZMDp7HEU?usp=sharing) and place it under client/public/ directory for rendering pics.
+Download res_pics directory from [here](https://drive.google.com/drive/folders/1MZbh086C9SiyylmORk8dhzLMeitbZMrE?usp=sharing) and place it under client/public/ directory for rendering pics.
 
 ### HTTPS
 
@@ -32,3 +32,7 @@ Run `npm start` from client and server directory.
 *note: for Mac users(Catalina and above), please add this line below into "scripts" of package.json file under the server folder:
 
 "postinstall": "ln -s $HOME/Downloads/instantclient_19_8/libclntsh.dylib $(npm root)/oracledb/build/Release",
+
+### Demo and Report
+
+You can also find the live demo video and report [here](https://drive.google.com/drive/folders/1MZbh086C9SiyylmORk8dhzLMeitbZMrE?usp=sharing)
