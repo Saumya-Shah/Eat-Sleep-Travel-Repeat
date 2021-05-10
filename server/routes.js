@@ -12,7 +12,6 @@ connection = await oracledb.getConnection(dbConfig);
 }
 
 set_connection();
-
 const getRecs = async (req, res) => {
 try {
   var me=req.session.user.USER_NAME;
@@ -255,7 +254,13 @@ const getRestaurantsCities = async (req, res) => {
   }
 };
 
-
+/**
+ * Flight search from source city to destination city with specified stops
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const FlightSearch = async (req, res) => {
 try {
   var sourceCity = req.params.sourceCity;
@@ -334,8 +339,6 @@ try {
   const result = await connection.execute(query, [sourceCity, destCity], {
     outFormat: oracledb.OUT_FORMAT_OBJECT,
   });
-  // console.log(result.metaData);
-  // console.log(result.rows[0]);
   res.json(result.rows);
 } catch (err) {
   console.log(err);
@@ -343,7 +346,13 @@ try {
   // console.log("end");
 }
 };
-
+/**
+ * Filter nearby cities to current user location, order by the distance
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const getNearbyCity = async (req, res) => {
 try {
   var lat = req.body.lat;
@@ -368,7 +377,13 @@ fetch next 100 rows only`;
   console.log("end");
 }
 };
-
+/**
+ * Recommend popular city defined as 1) having most flights TO there and 2)most retaurants rating higher than 3, order the result by #flights to there and #restaurants rating>3
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const getPopularCity = async (req, res) => {
   try {
     var query = `with popular_flight_city as (

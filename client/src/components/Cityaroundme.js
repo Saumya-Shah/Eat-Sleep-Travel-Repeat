@@ -5,7 +5,9 @@ import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as GiIcon from "react-icons/gi";
 import * as FaIcon from "react-icons/fa";
-
+/**
+ * component for trip recommendation page
+ */
 export default class Cityaroundme extends React.Component {
   constructor(props) {
     super(props);
@@ -148,6 +150,10 @@ export default class Cityaroundme extends React.Component {
     }
     navigator.geolocation.getCurrentPosition(success, error);
   }
+  /**
+   * search for flights from current user location to selected city upon click
+   * @param {*} e , event
+   */
   submitUsr(e) {
     let url = "https://localhost:8082/FlightSearch/"+ this.state.usrCity + "/" + e.target.value + "/0";
     Axios.get(url)
@@ -181,6 +187,9 @@ export default class Cityaroundme extends React.Component {
       })
       .catch(error => console.log(error));
   }
+  /**
+   * load the trip recommendation page
+   */
   submitCity() {
     const url = new URL("https://localhost:8082/cityaroundme/");
     Axios.post(url, {
@@ -225,6 +234,9 @@ export default class Cityaroundme extends React.Component {
         }
       );
   }
+  /**
+   * load next 5 popular city recommendations upon clicking
+   */
   incPopularCityIdx(){
     this.setState({
       popularCitiesIdx: this.state.popularCitiesIdx+5 >= this.state.allPopularCities.length? 0: this.state.popularCitiesIdx+5
@@ -243,6 +255,9 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({popularCities: popularCityDivs});
   }
+  /**
+   * load previous 5 popular city recommendations upon clicking
+   */
   decPopularCityIdx(){
     this.setState({
       popularCitiesIdx: this.state.popularCitiesIdx-5 <0? 0 :this.state.popularCitiesIdx-5
@@ -261,6 +276,9 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({popularCities: popularCityDivs});
   }
+  /**
+   * load next 5 nearby city recommendations upon clicking
+   */
   incNearbyCitiesIdx(){
     this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx + 5 >= this.state.allNearbyCities.length? 0 : this.state.nearbyCitiesIdx + 5});
     const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
@@ -273,11 +291,13 @@ export default class Cityaroundme extends React.Component {
         </Card>
       )
     );
-    // Set the state of the keywords list to the value returned by the HTTP response from the server.
     this.setState({
       nearbyCities: nearbyCityDivs,
     });
   }
+  /**
+   * load previous 5 nearby city recommendations upon clicking
+   */
   decNearbyCitiesIdx(){
     this.setState({nearbyCitiesIdx: this.state.nearbyCitiesIdx - 5 < 0? 0 : this.state.nearbyCitiesIdx - 5});
     const nearbyCityDivs = this.state.allNearbyCities.slice(this.state.nearbyCitiesIdx, this.state.nearbyCitiesIdx+5).map(
@@ -290,11 +310,13 @@ export default class Cityaroundme extends React.Component {
         </Card>
       )
     );
-    // Set the state of the keywords list to the value returned by the HTTP response from the server.
     this.setState({
       nearbyCities: nearbyCityDivs,
     });
   }
+  /**
+   * load next 5 trip recommendations upon clicking
+   */
   incTripIdx(){
     this.setState({tripIdx: this.state.tripIdx + 5 >= this.state.allTrips.length? 0 : this.state.tripIdx + 5});
     const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
@@ -350,6 +372,9 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({trips: tripDivs});
   }
+  /**
+   * load previous 5 trip recommendations upon clicking
+   */
   decTripIdx(){
     this.setState({tripIdx: this.state.tripIdx - 5 < 0? 0 : this.state.tripIdx - 5});
     const tripDivs = this.state.allTrips.slice(this.state.tripIdx, this.state.tripIdx+5).map(
@@ -405,6 +430,7 @@ export default class Cityaroundme extends React.Component {
     );
     this.setState({trips: tripDivs});
   }
+
   render() {
     return (
       <div className="city recommendation">

@@ -3,7 +3,9 @@ import { InputGroup, DropdownButton, FormControl, Dropdown, Button, Container, R
 import "../style/FlightSearch.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as FaIcon from "react-icons/fa";
-
+/**
+ * component for flight search page
+ */
 export default class FlightSearch extends React.Component {
   
   constructor(props) {
@@ -26,35 +28,53 @@ export default class FlightSearch extends React.Component {
 
   componentDidMount(){
   };
-
+  /**
+   * store the user specified source city to the state.sourceCity upon submitting 
+   * @param {*} e , click event
+   */
   handlesourceCitysearch(e) {
 		this.setState({
 			sourceCity: e.target.value
 		});
 		
 	};
+  /**
+   * store the user specified destination city to the state.destCity upon submitting 
+   * @param {*} e , click event
+   */
   handledestCitysearch(e) {
 		this.setState({
 			destCity: e.target.value
 		});
 		
 	};
+  /**
+   * store the user specified stops to the state.selectedstop upon submitting 
+   */
   handleNonStop(){
     this.setState({
       selectstop: 0
     });
   }
+  /**
+   * store the user specified stops to the state.selectedstop upon submitting 
+   */
   handleOneStop(){
     this.setState({
       selectstop: 1
     });
   }
+  /**
+   * store the user specified stops to the state.selectedstop upon submitting 
+   */
   handleTwoStop(){
     this.setState({
       selectstop: 2
     });
   }
-	
+	/**
+   * query server for flight results between source city and destination city with certain stops 
+   */
   submitall(){
     console.log(this.state.selectstop);
     fetch(
@@ -66,7 +86,7 @@ export default class FlightSearch extends React.Component {
         .then(selectroute =>{
           console.log("[submitall]: returned result from server:", selectroute);
           var routeDivs;
-          if(this.state.selectstop === 0){// nonstop
+          if(this.state.selectstop === 0){// nonstop case
             routeDivs = selectroute.map((routeObj,i) =>(
               <Card className="card_item">
                 <Card.Body>
@@ -81,10 +101,8 @@ export default class FlightSearch extends React.Component {
               </Row>
               </Card.Body>
               </Card>
-                
-              
             ));
-          }else if (this.state.selectstop === 1){// one stop
+          }else if (this.state.selectstop === 1){// one stop case
             console.log("[FlightSearch.js]: one stop case!");
             routeDivs = selectroute.map((routeObj,i) =>(
               <Card className="card_item">
@@ -104,7 +122,7 @@ export default class FlightSearch extends React.Component {
               </Card>
              
             ));
-          }else{// two stop
+          }else{// two stop case
             routeDivs = selectroute.map((routeObj,i) =>(
               <Card className="card_item">
                 <Card.Body>
@@ -138,7 +156,6 @@ export default class FlightSearch extends React.Component {
   render() {
     return (
       <div className="FlightSearch">
-        
         <div className="container flightsearch-container">
           <div className="FlightSearchbg">
             <h1 className="text-center">Flight Search</h1>

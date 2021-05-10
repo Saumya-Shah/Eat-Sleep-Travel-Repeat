@@ -2,9 +2,8 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../style/FlightSearchRow.css";
 import "../style/FlightSearch.css";
-
+/** backup render style for flight search page */
 export default class FlightSearchRow_NONSTOP extends React.Component {
-  /* ---- Q2 (Recommendations) ---- */
   render() {
     const renderAirportSwitch = () =>{
       if (this.props.mid_airport == null && this.props.mid_airport_1 == null){
