@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import Axios from "axios";
 
+/**
+ * Private route component helps move forward to a specific page only if user is logged in
+ * Mainly used for pages which provide personalized experience to users and require them to be logged in.
+ */
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  // Add your own authentication on the below line.
+  
   const [isLoading, setLoading] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(true);
 

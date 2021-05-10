@@ -3,9 +3,11 @@ import "../style/Personals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Axios from "axios";
 import RecommendationsRow from "./RecommendationsRow";
-// import { RadioGroup, RadioButton } from "react-radio-buttons";
 import Dropdown from 'react-bootstrap/Dropdown'
 
+/**
+ * Component for Personals page 
+ */
 export default class Personals extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +26,9 @@ export default class Personals extends React.Component {
     this.update_display = this.update_display.bind(this);
   }
 
+  /**
+   * Updates the display when a particular option is selected.
+   */
   update_display() {
     var url;
     console.log(this.state.mode)
@@ -34,12 +39,6 @@ export default class Personals extends React.Component {
       url = "https://localhost:8082/get_fav_res";
       this.get_restaurants(url);
     } 
-    // else if(this.state.mode === "visited_restaurants"){
-    //   this.setState({button_text: "Visited Restaurants", is_active: 2});
-    //   url = "https://localhost:8082/get_visi_res";
-    //   console.log("going to:",url);
-    //   this.get_restaurants(url);
-    // }
     else {
       if (this.state.mode==="fav_places"){this.setState({button_text: "Favorite Places", is_active: 3,});}
       if (this.state.mode==="visited_restaurants"){this.setState({button_text: "Visited Restaurants", is_active: 2,});}
@@ -56,6 +55,9 @@ export default class Personals extends React.Component {
 
 
 
+  /**
+   * This function requests for restaurant rows for the corresponding url
+   */
   get_restaurants(url) {
     Axios.get(url)
       .then(
@@ -95,8 +97,6 @@ export default class Personals extends React.Component {
       });
   }
   componentDidMount(){
-    // const temp = document.getElementById("defaultButton");
-    // temp.click();
     this.update_display();
   }
 

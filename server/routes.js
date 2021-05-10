@@ -135,6 +135,13 @@ else{
 }
 };
 
+/**
+ * Registers the user in the database
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const register = async (req, res) => {
 try {
   // console.log("inside final register");
@@ -162,6 +169,14 @@ try {
 }
 };
 
+/**
+ * Checks for login credentials and returns required information 
+ * depending on valid or invalid login
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const login = async (req, res) => {
 try {
   // console.log("inside final register");
@@ -199,6 +214,13 @@ try {
 }
 };
 
+/**
+ * Gets favorite restaurants for the user
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const getFavoriteRestaurants = async (req, res) => {
 try {
   // console.log(req.session.user.USER_NAME);
@@ -219,6 +241,13 @@ try {
 }
 };
 
+/**
+ * Gets visited restaurants for the user
+ * @param {*} req 
+ * @param {*} res 
+ * 
+ * @returns {*} sql result from the database
+ */
 const getVisitedRestaurants = async (req, res) => {
   try {
     // console.log(req.session.user.USER_NAME);

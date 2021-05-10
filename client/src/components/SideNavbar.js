@@ -6,6 +6,9 @@ import { SidebarData } from "./SidebarData";
 import "../style/SideNavbar.css";
 import { IconContext } from "react-icons";
 
+/**
+ * Side navigation bar component
+ */
 export default class SideNavbar extends React.Component {
   constructor(props) {
     super(props);

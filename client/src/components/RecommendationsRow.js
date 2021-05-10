@@ -5,6 +5,9 @@ import Axios from "axios";
 import Rating from "@material-ui/lab/Rating";
 import HeartCheckbox from 'react-heart-checkbox';
 
+/**
+ * Component for each restaurant row result display 
+ */
 export default class RecommendationsRow extends React.Component {
   /* ---- Q2 (Recommendations) ---- */
 

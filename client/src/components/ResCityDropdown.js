@@ -3,7 +3,9 @@ import Axios from "axios";
 import {Button,  Dropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
-
+/**
+ * Component for dropdown for the city input field in restaurants search page
+ */
 export default class DropDownCity extends React.Component {
     constructor(props) {
         super(props);

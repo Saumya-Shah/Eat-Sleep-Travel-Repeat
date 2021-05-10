@@ -3,6 +3,9 @@ import { Dropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import "../style/DropdownCuisine.css";
 
+/**
+ * This component is used for dropdown for the cuisine field on restaurant search page
+ */
 export default class DropDownCrusine extends React.Component {
     constructor(props) {
         super(props);

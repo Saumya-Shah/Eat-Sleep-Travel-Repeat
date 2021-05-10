@@ -6,6 +6,9 @@ import { View, Text } from "react-native";
 import { withWidth } from "@material-ui/core";
 
 Axios.defaults.withCredentials = true;
+/**
+ * Component for login/registration page
+ */
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -28,6 +31,9 @@ export default class Login extends React.Component {
   }
 
   submitRegistration() {
+    /**
+     * Function called on clicking register button, adds the user to database if valid.
+     */
     console.log("Submit registration called");
     Axios.post("https://localhost:8082/register", {
       username: this.state.usernameReg,
@@ -39,8 +45,11 @@ export default class Login extends React.Component {
     });
   }
 
+  /**
+   * Function called on clicking login button, logs in the user if credentials valid. 
+   * Else, shows error.
+   */
   submitLogin() {
-    // console.log("Submit login called");
     Axios.post("https://localhost:8082/login", {
       username: this.state.usernameLog,
       password: this.state.passwordLog,
@@ -57,6 +66,9 @@ export default class Login extends React.Component {
     });
   }
 
+  /**
+   * To handle the logout function
+   */
   handleLogout() {
     console.log("Logging out");
     Axios.get("https://localhost:8082/logout").then((response) => {
@@ -78,6 +90,9 @@ export default class Login extends React.Component {
     });
   }
 
+  /**
+   * Render page as per the state, i.e. if the user is logged in or not.
+   */
   render_login_page() {
     if (this.state.loggedIn === true) {
       console.log("Logged In");

@@ -69,9 +69,6 @@ app.get("/get_visi_res", routes.getVisitedRestaurants);
 app.get("/get_fav_places", routes.getFavoriteRestaurants);
 app.get("/get_visited_places", routes.getFavoriteRestaurants);
 
-// app.listen(8082, () => {
-//   console.log(`Server listening on PORT 8082`);
-// });
 
 process.on("SIGINT", function () {
   console.log("\nGracefully shutting down from SIGINT (Ctrl-C)");

@@ -9,6 +9,9 @@ import DropDownCrusine from "./ResCrusineDropdown";
 import * as FaIcon from "react-icons/fa";
 
 
+/**
+ * Component for Restaurant recommendation page.  
+ */
 export default class Recommendations extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +41,6 @@ export default class Recommendations extends React.Component {
       page_buttons: "",
     
     };
-    // this.componentDidMount = this.componentDidMount(this);
     this.advancefilter=this.advancefilter.bind(this);
     this.advancefilterdisplay=this.advancefilterdisplay.bind(this);
     this.onCityInputChange = this.onCityInputChange.bind(this);
@@ -56,6 +58,9 @@ export default class Recommendations extends React.Component {
   }
 
 
+  /**
+   * Called on change in city input field, sets the corresponding states. 
+   */
   onCityInputChange(e,{value}){
     console.log("changedddd",this);
     if (value==="Current Location"){
@@ -69,12 +74,17 @@ export default class Recommendations extends React.Component {
   }
 
 
+  /**
+   * Called on change in cuisine input field, sets the corresponding states. 
+   */
  async onCrusineInputChange(e,{value}){
-
     await this.setState({crusine: value});   
 
   }
 
+  /**
+   * Called on change in parking checkbox field, sets the corresponding states. 
+   */
   async handleparking(e){
     await this.setState(
       {
@@ -87,6 +97,9 @@ export default class Recommendations extends React.Component {
 
 
   
+  /**
+   * Called on change in covid checkbox field, sets the corresponding states. 
+   */
   async handlecovid(e){
     await this.setState(
       {
@@ -122,6 +135,9 @@ export default class Recommendations extends React.Component {
     navigator.geolocation.getCurrentPosition(success, error);
   }
 
+  /**
+   * Get previous 5 restaurants
+   */
   async decNearbyrest(){
     console.log(" inside decNearbyrest");
     console.log("recrestaurants_selected_index",this.state.recrestaurants_selected_index);
@@ -157,6 +173,10 @@ export default class Recommendations extends React.Component {
 
   }
 
+  /**
+  * To set buttons such that we show previous and next buttons 
+  * only if there are restaurants
+  */
   async setButtons(){
     console.log("type",this.state.recrestaurants_selected.type);
     if (this.state.recrestaurants_selected.type==="h5"){
@@ -171,6 +191,9 @@ export default class Recommendations extends React.Component {
     }
   }
 
+  /**
+   * Get next 5 restaurants
+   */
   async incNearbyrest(){
   console.log(" inside incNearbyrest");
   
@@ -209,6 +232,9 @@ export default class Recommendations extends React.Component {
   }
 
 
+  /**
+   * Gets the user location and current time and generates search results.
+   */
    getUpdate() {
     console.log("this.state.Latitude", this.state.Latitude);
     console.log("this.state.Longitude", this.state.Longitude);
@@ -302,6 +328,9 @@ export default class Recommendations extends React.Component {
 
   
 
+  /**
+  * Called on change in time input field, sets the corresponding states
+  */
   async handletimestartChange(e) {
     await this.setState({
       time_start: e.target.value,
@@ -310,14 +339,19 @@ export default class Recommendations extends React.Component {
     console.log("this.state.time_start", this.state.time_start);
   }
 
+  /**
+   * Called on change in rating input field, sets the corresponding states
+   */
   handleRadioChange(e, { rating, maxRating }) {
-    // let s = parseInt(e.target.value);
     console.log(" starts are",rating);
     this.setState({
       star: rating,
     });
   }
 
+  /**
+   * Called on clicking submit, generates search results based on the selected filters
+   */
   async submitrestaurant() {
     const url = new URL("https://localhost:8082/recommendations/");
     if (this.state.restaurantCityName==="Current Location"){
@@ -397,13 +431,18 @@ export default class Recommendations extends React.Component {
   }
 
 
+  /**
+   * Called on clicking advanced filters, sets the corresponding state
+   */
   async advancefilter(e){
-
     await this.setState({advancefilterchoice: !this.state.advancefilterchoice});
     console.log("this.state.advancefilterchoice",this.state.advancefilterchoice);
 
   }
 
+  /**
+   * Changes the UI based on advanced filter selection
+   */
   advancefilterdisplay(){
     console.log("advancefilterdisplay")
     console.log("this.state.time_start",this.state.time_start)
