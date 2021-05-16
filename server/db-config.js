@@ -1,5 +1,6 @@
 // Private. Will not be included in submission
 // Replace <Your Pennkey> and <Your Password>
+// This database is no longer active. Contact contributors to gain more info.
 module.exports = {
   user: "kepler123",
   password: "einstein",
